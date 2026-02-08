@@ -1,265 +1,303 @@
 <div align="center">
 
-<!-- CIRCULAR LOGO WITH GLOW HACK -->
-<svg width="250" height="250" viewBox="0 0 250 250">
-  <defs>
-    <filter id="glow">
-      <feGaussianBlur stdDeviation="6" result="coloredBlur"/>
-      <feMerge>
-        <feMergeNode in="coloredBlur"/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
-    </filter>
-    <pattern id="logoPattern" x="15" y="15" width="220" height="220" patternUnits="userSpaceOnUse">
-      <image x="0" y="0" width="220" height="220" href="https://raw.githubusercontent.com/JonniTech/Tervux-WhatsApp-Bot/main/public/tervus-logo.png" />
-    </pattern>
-  </defs>
-  <!-- Animated Pulse Outer Circle -->
-  <circle cx="125" cy="125" r="115" fill="none" stroke="#25D366" stroke-width="2" opacity="0.6">
-     <animate attributeName="r" values="115;120;115" dur="3s" repeatCount="indefinite" />
-     <animate attributeName="opacity" values="0.6;0;0.6" dur="3s" repeatCount="indefinite" />
-  </circle>
-  
-  <circle cx="125" cy="125" r="112" fill="none" stroke="#25D366" stroke-width="4" opacity="0.8" filter="url(#glow)" />
-  <circle cx="125" cy="125" r="110" fill="url(#logoPattern)" stroke="#25D366" stroke-width="3" />
-</svg>
+<img src="./public/tervus-logo.png" alt="Tervux Bot Logo" width="200" height="200" style="border-radius: 50%;">
 
-<br>
+# Tervux WhatsApp Bot
 
-<!-- PRIMARY ANIMATED HEADER -->
+<!-- Animated Header via External Service (Safe for GitHub) -->
 <a href="https://git.io/typing-svg">
-  <img src="https://readme-typing-svg.herokuapp.com?font=Orbitron&weight=900&size=45&pause=1000&color=25D366&background=00000000&center=true&vCenter=true&width=800&height=100&lines=TERVUX+WHATSAPP+BOT;SIMPLE+➖+SMART+➖+SECURE;DEPLOY+IN+SECONDS+🚀" alt="Animated Header" />
+  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=600&size=25&pause=1000&color=25D366&center=true&vCenter=true&width=435&lines=Simple.+Powerful.+Secure.;Deploy+on+Railway+%7C+Render;Supports+Multi-Device+Login;Made+by+Nyaganya+Malima+Nyaganya+%F0%9F%9A%80" alt="Typing Animation" />
 </a>
 
 <p align="center">
-  <img src="https://img.shields.io/github/stars/JonniTech/Tervux-WhatsApp-Bot?style=for-the-badge&logo=github&color=FFD700&labelColor=1a1a1b" alt="Stars" />
-  <img src="https://img.shields.io/github/forks/JonniTech/Tervux-WhatsApp-Bot?style=for-the-badge&logo=github&color=00BFFF&labelColor=1a1a1b" alt="Forks" />
-  <img src="https://img.shields.io/github/issues/JonniTech/Tervux-WhatsApp-Bot?style=for-the-badge&logo=github&color=FF4500&labelColor=1a1a1b" alt="Issues" />
+  <a href="https://github.com/JonniTech/Tervux-WhatsApp-Bot/stargazers"><img src="https://img.shields.io/github/stars/JonniTech/Tervux-WhatsApp-Bot?color=yellow&label=Stars&logo=github&style=for-the-badge" alt="Stars"/></a>
+  <a href="https://github.com/JonniTech/Tervux-WhatsApp-Bot/forks"><img src="https://img.shields.io/github/forks/JonniTech/Tervux-WhatsApp-Bot?color=blue&label=Forks&logo=github&style=for-the-badge" alt="Forks"/></a>
+  <a href="https://github.com/JonniTech/Tervux-WhatsApp-Bot/issues"><img src="https://img.shields.io/github/issues/JonniTech/Tervux-WhatsApp-Bot?color=red&label=Issues&logo=github&style=for-the-badge" alt="Issues"/></a>
+  <br>
+  <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="JavaScript"/>
+  <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" alt="Node.js"/>
+  <img src="https://img.shields.io/badge/Baileys-Library-blue?style=for-the-badge" alt="Baileys"/>
 </p>
 
-<!-- LANGUAGE SELECTOR -->
-<table align="center" border="0" cellspacing="20">
-  <tr>
-    <td>
-      <a href="#english-documentation">
-        <img src="https://img.shields.io/badge/📖_DOCUMENTATION-ENGLISH-00BFFF?style=for-the-badge&labelColor=111" height="40">
-      </a>
-    </td>
-    <td>
-      <a href="#maelekezo-ya-kiswahili">
-        <img src="https://img.shields.io/badge/📖_MAELEKEZO-KISWAHILI-25D366?style=for-the-badge&labelColor=111" height="40">
-      </a>
-    </td>
-  </tr>
-</table>
+<hr>
+
+<h2>🌍 Select Language / Chagua Lugha</h2>
+
+<!-- Simple Image Links for Language Selection -->
+<a href="#-english-instructions-">
+  <img src="https://img.shields.io/badge/English-Instructions-blue?style=for-the-badge&logo=google-translate&logoColor=white" alt="English"/>
+</a>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="#-maelekezo-ya-kiswahili-">
+  <img src="https://img.shields.io/badge/Kiswahili-Maelekezo-green?style=for-the-badge&logo=google-translate&logoColor=white" alt="Swahili"/>
+</a>
 
 </div>
 
 <br><br>
+
+<!-- ENGLISH SECTION -->
+<h1 id="-english-instructions-">🇺🇸 English Instructions</h1>
+
+## ✨ Introduction
+
+**Tervux WhatsApp Bot** is a feature-rich, easy-to-deploy WhatsApp bot designed for everyone. Whether you want to manage groups, play games, download media, or use utility tools, Tervux Bot handles it all with style!
+
+It is built on **Node.js** using the powerful **Baileys** library, ensuring stability and speed. Best of all, it's completely free to self-host!
+
+<br>
+<div align="center">
+  <!-- Use standard HTML img for local files, relative path -->
+  <img src="./public/welcome-message.jpeg" alt="Welcome Message" width="80%">
+  <p><i>The bot's friendly welcome message!</i></p>
+</div>
+<br>
+
+## 🚀 Features
+
+| Feature | Description | Icon |
+| :--- | :--- | :---: |
+| **Media Downloader** | Download YouTube Music & Videos, Instagram, TikTok without watermark. | 🎬 |
+| **Fun Games** | Truth or Dare, Ship, Fancy Text generator, Jokes, Facts. | 🎮 |
+| **Group Management** | Admin tools like Anti-Delete, Anti-Call, Auto-Read. | 🛡️ |
+| **Utility Tools** | Calculator, QR Code Generator, Translator, Weather. | 🛠️ |
+| **Always Online** | Keeps your presence online 24/7 (configurable). | 🟢 |
+| **Fancy Fonts** | All responses use premium Unicode fonts for a unique look. | 🎨 |
+
+<br>
+<div align="center">
+  <h3>📸 Screenshots</h3>
+  <table>
+    <tr>
+      <td align="center">
+        <img src="./public/help-menu-start.jpeg" alt="Help Menu Start" width="300">
+        <br><b>Help Menu Header</b>
+      </td>
+      <td align="center">
+        <img src="./public/help-menu-end.jpeg" alt="Help Menu End" width="300">
+        <br><b>Help Menu Footer</b>
+      </td>
+    </tr>
+  </table>
+</div>
+<br>
+
+---
+
+## 🛠️ Requirements
+
+Before you start, make sure you have:
+1.  **A GitHub Account** (to fork the repo).
+2.  **WhatsApp App** on your phone (linked to the number you want to use as a bot).
+3.  **Accounts** on Render or Railway (if deploying to cloud).
+
+---
+
+## 📲 Deployment Guide
+
+Follow these simple steps to get your bot running in minutes!
+
+### Step 1: Fork the Repository 🍴
+Click the **Fork** button at the top right of this page to create your own copy of the code.
+
+<br>
+
+### Step 2: Choose Your Platform ☁️
+
+#### Option A: Deploy on Railway 🚂
+Railway offers great uptime and speed.
+
+<a href="https://railway.app/new">
+<img src="https://railway.app/button.svg" alt="Deploy on Railway">
+</a>
+
+1.  Create an account on [Railway.app](https://railway.app/).
+2.  Click **New Project** > **Deploy from GitHub repo**.
+3.  Select your forked repo `Tervux-WhatsApp-Bot`.
+4.  Go to **Settings** > **Variables** and add `PHONE` (optional).
+5.  Wait for deployment. Go to the **Deployments** tab and view logs to scan the QR code.
+
+#### Option B: Deploy on Render ☁️
+Render is a solid alternative for hosting.
+
+<a href="https://render.com/deploy">
+<img src="https://render.com/images/deploy-to-render-button.svg" alt="Deploy to Render">
+</a>
+
+1.  Create an account on [Render.com](https://render.com/).
+2.  Click **New +** > **Web Service**.
+3.  Connect your GitHub and select the repo.
+4.  **Important:**
+    *   **Build Command:** `npm install`
+    *   **Start Command:** `npm start`
+5.  Click **Create Web Service**.
+6.  Once live, check the **Logs** tab to scan the QR code.
+
+#### Option C: Local Installation 💻
+Run the bot on your own computer (PC/Termux).
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/JonniTech/Tervux-WhatsApp-Bot.git
+
+# 2. Enter the directory
+cd Tervux-WhatsApp-Bot
+
+# 3. Install dependencies
+npm install
+
+# 4. Start the bot
+npm start
+```
+
+---
+
+## ❓ FAQ
+
+**Q: Where do I find the QR Code?**
+A: Check the **Logs** (or Terminal) of your deployment platform immediately after starting the bot.
+
+**Q: The session file expired?**
+A: If the `auth_info` folder is deleted or corrupted, restart the bot to generate a new QR code.
+
+**Q: How do I become the owner?**
+A: The bot automatically recognizes the number that scans the QR code as the owner. Additional owners can be configured in `config.json`.
+
+---
+
+<br><br><br>
+
+<!-- SWAHILI SECTION -->
+<h1 id="-maelekezo-ya-kiswahili-">🇹🇿 Maelekezo ya Kiswahili</h1>
+
+## ✨ Utangulizi
+
+**Tervux WhatsApp Bot** ni bot ya WhatsApp yenye nguvu na rahisi kutumia, iliyotengenezwa kwa ajili ya kila mtu. Iwe unataka kusimamia magroup, kucheza games, kupakua nyimbo na video, au kutumia zana mbalimbali, Tervux Bot inafanya yote haya kwa urahisi na mvuto!
+
+Imetengenezwa kwa kutumia **Node.js** na library ya **Baileys**, ikihakikisha ufanisi na kasi. Na kizuri zaidi, ni **bure kabisa** kutumia!
+
+<br>
+<div align="center">
+  <img src="./public/welcome-message.jpeg" alt="Ujumbe wa Karibu" width="80%">
+  <p><i>Ujumbe wa kukaribisha wa bot!</i></p>
+</div>
+<br>
+
+## 🚀 Vipengele
+
+| Kipengele | Maelezo | Ikoni |
+| :--- | :--- | :---: |
+| **Media Downloader** | Pakua miziki na video kutoka YouTube, Instagram, TikTok bila watermark. | 🎬 |
+| **Games za Kuburudisha** | Truth or Dare, Ship (Upendo), Fancy Text, Vichekesho, Ukweli. | 🎮 |
+| **Usimamizi wa Group** | Zana za Admin kama Anti-Delete, Anti-Call, Auto-Read. | 🛡️ |
+| **Zana Mbalimbali** | Calculator, Kutengeneza QR Code, Translator (Mkalimani), Hali ya Hewa. | 🛠️ |
+| **Always Online** | Inaweka status yako kuwa 'Online' muda wote (inawezekana kuzima). | 🟢 |
+| **Mwandiko wa Mapambo** | Majibu yote yanatumia fonti nzuri za Unicode kupendezesha chat. | 🎨 |
+
+<br>
+<div align="center">
+  <h3>📸 Picha za Skrini</h3>
+  <table>
+    <tr>
+      <td align="center">
+        <img src="./public/help-menu-start.jpeg" alt="Menyu ya Msaada Mwanzo" width="300">
+        <br><b>Kichwa cha Menyu</b>
+      </td>
+      <td align="center">
+        <img src="./public/help-menu-end.jpeg" alt="Menyu ya Msaada Mwisho" width="300">
+        <br><b>Mwisho wa Menyu</b>
+      </td>
+    </tr>
+  </table>
+</div>
+<br>
+
+---
+
+## 🛠️ Mahitaji
+
+Kabla ya kuanza, hakikisha una vitu hivi:
+1.  **Akaunti ya GitHub** (ili kufanya 'Fork' project hii).
+2.  **WhatsApp** kwenye simu yako (namba ambayo unataka iwe bot).
+3.  **Akaunti** kwenye Render au Railway (kama unataka kuweka mtandaoni).
+
+---
+
+## 📲 Jinsi ya Ku-Deploy (Kuweka Hewani)
+
+Fuata hatua hizi rahisi ili kuwasha bot yako ndani ya dakika chache!
+
+### Hatua ya 1: Fork Repository 🍴
+Bonyeza kitufe cha **Fork** juu kulia mwa ukurasa huu ili kutengeneza nakala yako ya code hizi.
+
+<br>
+
+### Hatua ya 2: Chagua Platform Yako ☁️
+
+#### Chaguo A: Deploy kwenye Railway 🚂
+Railway ni chaguo zuri kwa sababu inakaa hewani muda mrefu bila kuzima.
+
+<a href="https://railway.app/new">
+<img src="https://railway.app/button.svg" alt="Deploy on Railway">
+</a>
+
+1.  Tengeneza akaunti [Railway.app](https://railway.app/).
+2.  Bonyeza **New Project** > **Deploy from GitHub repo**.
+3.  Chagua repo uliyofanya fork `Tervux-WhatsApp-Bot`.
+4.  Nenda kwenye **Settings** > **Variables** na ongeza `PHONE` (kama unataka).
+5.  Subiri imalize. Nenda kwenye tab ya **Deployments** na angalia logs ili ku-scan QR.
+
+#### Chaguo B: Deploy kwenye Render ☁️
+Render ni mbadala mzuri wa Heroku.
+
+<a href="https://render.com/deploy">
+<img src="https://render.com/images/deploy-to-render-button.svg" alt="Deploy to Render">
+</a>
+
+1.  Tengeneza akaunti [Render.com](https://render.com/).
+2.  Bonyeza **New +** > **Web Service**.
+3.  Unganisha GitHub yako na chagua repo hii.
+4.  **Muhimu:**
+    *   **Build Command:** `npm install`
+    *   **Start Command:** `npm start`
+5.  Bonyeza **Create Web Service**.
+6.  Ikikamilika, angalia tab ya **Logs** ili kuona QR code na ku-scan.
+
+#### Chaguo C: Kuweka kwenye PC/Termux 💻
+Unaweza kuwasha bot kwenye kompyuta yako au kutumia Termux.
+
+```bash
+# 1. Clone repository hii
+git clone https://github.com/JonniTech/Tervux-WhatsApp-Bot.git
+
+# 2. Ingia ndani ya folda
+cd Tervux-WhatsApp-Bot
+
+# 3. Install dependencies (mahitaji)
+npm install
+
+# 4. Washa bot
+npm start
+```
+
+---
+
+## ❓ Maswali Yanayoulizwa Sana (FAQ)
+
+**Swali: QR Code nitaipata wapi?**
+Jibu: Angalia sehemu ya **Logs** (au Terminal) kwenye platform uliyotumia mara tu baada ya kuwasha bot.
+
+**Swali: Session ime-expire?**
+Jibu: Futa folda ya `auth_info` kama ipo, kisha washa bot upya (Restart) ili kupata QR code mpya.
+
+**Swali: Je, nani anakuwa mmiliki (Owner)?**
+Jibu: Namba inayotumika ku-scan QR code inatambulika kiotomatiki kama Owner. Unaweza kuongeza namba zingine kwenye `config.json`.
 
 ---
 
 <div align="center">
-  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=700&size=35&pause=1000&color=3399FF&center=true&vCenter=true&width=600&height=60&lines=ENGLISH+DOCUMENTATION" alt="English Header" id="english-documentation">
-</div>
-
-<br>
-
-<!-- WELCOME CARD -->
-<div align="center">
-  <img src="./public/welcome-message.jpeg" width="700" style="border-radius: 20px; border: 4px solid #25D366; box-shadow: 0 0 50px rgba(37, 211, 102, 0.3);">
-  <p align="center" style="font-size: 18px; color: #888;"><i>Powering your WhatsApp experience with speed and style.</i></p>
-</div>
-
-<br><br>
-
-
-<!-- DEPLOYMENT HEADER -->
-<div align="center">
-  <img src="https://readme-typing-svg.herokuapp.com?font=Orbitron&weight=900&size=40&pause=1000&color=3399FF&background=00000000&center=true&vCenter=true&width=800&height=80&lines=DEPLOYMENT+SETUP" alt="Deployment Header">
-</div>
-
-<br>
-
-<!-- PHASE 1: ENVIRONMENT SETUP -->
-<div align="center">
-  <svg width="800" height="200" viewBox="0 0 800 200">
-    <!-- Background & Border -->
-    <rect x="5" y="5" width="790" height="190" rx="30" fill="#0d1117" stroke="#00BFFF" stroke-width="4" />
-    
-    <!-- Big Number Backdrop -->
-    <text x="650" y="160" font-family="Arial Black" font-size="150" fill="#00BFFF" opacity="0.1">01</text>
-    
-    <!-- Content -->
-    <text x="40" y="60" font-family="Verdana" font-size="32" font-weight="bold" fill="#00BFFF">ENVIRONMENT SETUP</text>
-    
-    <text x="40" y="110" font-family="Consolas" font-size="20" fill="#EEEEEE">1. FORK this repository to your GitHub.</text>
-    <text x="40" y="145" font-family="Consolas" font-size="20" fill="#EEEEEE">2. Get a WhatsApp number ready.</text>
-
-    <!-- Animated Border Line -->
-    <rect x="5" y="5" width="790" height="190" rx="30" fill="none" stroke="#00BFFF" stroke-width="6" stroke-dasharray="40 20">
-      <animate attributeName="stroke-dashoffset" from="0" to="200" dur="2s" repeatCount="indefinite" />
-    </rect>
-  </svg>
-</div>
-
-<br><br>
-
-<!-- PHASE 2: CLOUD DEPLOYMENT -->
-<div align="center">
-  <img src="https://readme-typing-svg.herokuapp.com?font=Verdana&weight=800&size=25&pause=1000&color=AAAAAA&center=true&vCenter=true&width=400&height=40&lines=CHOOSE+YOUR+PLATFORM" alt="Choose Platform">
-</div>
-
-<br>
-
-<!-- METHOD A: RAILWAY -->
-<div align="center">
-  <svg width="800" height="220" viewBox="0 0 800 220">
-    <rect x="5" y="5" width="790" height="210" rx="30" fill="#0d1117" stroke="#A020F0" stroke-width="4" />
-    
-    <text x="650" y="180" font-family="Arial Black" font-size="150" fill="#A020F0" opacity="0.1">02</text>
-    
-    <text x="40" y="60" font-family="Verdana" font-size="32" font-weight="bold" fill="#A020F0">METHOD A: RAILWAY</text>
-    
-    <text x="40" y="100" font-family="Consolas" font-size="18" fill="#DDD">1. Link GitHub to Railway.app</text>
-    <text x="40" y="130" font-family="Consolas" font-size="18" fill="#DDD">2. Add 'PHONE' variable (Country Code included)</text>
-    <text x="40" y="160" font-family="Consolas" font-size="18" fill="#DDD">3. Deploy & Scan Pairing Code from Logs</text>
-
-    <rect x="5" y="5" width="790" height="210" rx="30" fill="none" stroke="#A020F0" stroke-width="6" stroke-dasharray="20 40">
-      <animate attributeName="stroke-dashoffset" from="0" to="-200" dur="3s" repeatCount="indefinite" />
-    </rect>
-  </svg>
-</div>
-
-<br>
-
-<!-- METHOD B: RENDER -->
-<div align="center">
-  <svg width="800" height="220" viewBox="0 0 800 220">
-    <rect x="5" y="5" width="790" height="210" rx="30" fill="#0d1117" stroke="#ffffff" stroke-width="4" />
-    
-    <text x="40" y="60" font-family="Verdana" font-size="32" font-weight="bold" fill="#ffffff">METHOD B: RENDER</text>
-    
-    <text x="40" y="100" font-family="Consolas" font-size="18" fill="#DDD">1. Create Web Service -> Connect GitHub</text>
-    <text x="40" y="130" font-family="Consolas" font-size="18" fill="#DDD">2. Build: npm install | Start: npm start</text>
-    <text x="40" y="160" font-family="Consolas" font-size="18" fill="#DDD">3. Wait for 'Live' status & Check Logs</text>
-
-    <rect x="5" y="5" width="790" height="210" rx="30" fill="none" stroke="#ffffff" stroke-width="4">
-      <animate attributeName="stroke-opacity" values="1;0.2;1" dur="2s" repeatCount="indefinite" />
-    </rect>
-  </svg>
-</div>
-
-<br><br>
-
-<!-- PHASE 3: LOCAL -->
-<div align="center">
-  <svg width="800" height="200" viewBox="0 0 800 200">
-    <rect x="5" y="5" width="790" height="190" rx="30" fill="#0d1117" stroke="#FF4500" stroke-width="4" />
-    
-    <text x="650" y="160" font-family="Arial Black" font-size="150" fill="#FF4500" opacity="0.1">03</text>
-    
-    <text x="40" y="60" font-family="Verdana" font-size="32" font-weight="bold" fill="#FF4500">LOCAL / TERMUX</text>
-    
-    <text x="40" y="100" font-family="Consolas" font-size="18" fill="#00FF00">git clone https://github.com/JonniTech/Tervux-WhatsApp-Bot</text>
-    <text x="40" y="130" font-family="Consolas" font-size="18" fill="#00FF00">cd Tervux-WhatsApp-Bot</text>
-    <text x="40" y="160" font-family="Consolas" font-size="18" fill="#00FF00">npm install && npm start</text>
-
-    <rect x="5" y="5" width="790" height="190" rx="30" fill="none" stroke="#FF4500" stroke-width="6" stroke-dasharray="10 10">
-      <animate attributeName="stroke-dashoffset" from="100" to="0" dur="1s" repeatCount="indefinite" />
-    </rect>
-  </svg>
-</div>
-
-<br><br><br>
-
----
-
-<br>
-
-<div align="center">
-  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=700&size=35&pause=1000&color=25D366&center=true&vCenter=true&width=600&height=60&lines=MAELEKEZO+YA+KISWAHILI" alt="Swahili Header" id="maelekezo-ya-kiswahili">
-</div>
-
-<br>
-
-<!-- WELCOME CARD -->
-<div align="center">
-  <img src="./public/welcome-message.jpeg" width="700" style="border-radius: 20px; border: 4px solid #00BFFF; box-shadow: 0 0 50px rgba(0, 191, 255, 0.3);">
-  <p align="center" style="font-size: 18px; color: #888;"><i>Karibu kwenye ulimwengu wa Tervux Bot.</i></p>
-</div>
-
-<br><br>
-
-<!-- HATUA 1: MAANDALIZI -->
-<div align="center">
-  <svg width="800" height="200" viewBox="0 0 800 200">
-    <rect x="5" y="5" width="790" height="190" rx="30" fill="#0d1117" stroke="#00BFFF" stroke-width="4" />
-    <text x="650" y="160" font-family="Arial Black" font-size="150" fill="#00BFFF" opacity="0.1">01</text>
-    <text x="40" y="60" font-family="Verdana" font-size="32" font-weight="bold" fill="#00BFFF">MAANDALIZI (SETUP)</text>
-    <text x="40" y="110" font-family="Consolas" font-size="20" fill="#EEEEEE">1. FORK hii repository kwenda kwako.</text>
-    <text x="40" y="145" font-family="Consolas" font-size="20" fill="#EEEEEE">2. Andaa namba ya simu ya WhatsApp.</text>
-    <rect x="5" y="5" width="790" height="190" rx="30" fill="none" stroke="#00BFFF" stroke-width="6" stroke-dasharray="40 20">
-      <animate attributeName="stroke-dashoffset" from="0" to="200" dur="2s" repeatCount="indefinite" />
-    </rect>
-  </svg>
-</div>
-
-<br><br>
-
-<!-- HATUA 2: MTANDAONI -->
-<div align="center">
-  <svg width="800" height="220" viewBox="0 0 800 220">
-    <rect x="5" y="5" width="790" height="210" rx="30" fill="#0d1117" stroke="#A020F0" stroke-width="4" />
-    <text x="650" y="180" font-family="Arial Black" font-size="150" fill="#A020F0" opacity="0.1">02</text>
-    <text x="40" y="60" font-family="Verdana" font-size="32" font-weight="bold" fill="#A020F0">RAILWAY (INASHAURIWA)</text>
-    <text x="40" y="100" font-family="Consolas" font-size="18" fill="#DDD">1. Unganisha GitHub na Railway.app</text>
-    <text x="40" y="130" font-family="Consolas" font-size="18" fill="#DDD">2. Weka 'PHONE' variable (Pamoja na kodi ya nchi)</text>
-    <text x="40" y="160" font-family="Consolas" font-size="18" fill="#DDD">3. Deploy na angalia Logs ili kuunga.</text>
-    <rect x="5" y="5" width="790" height="210" rx="30" fill="none" stroke="#A020F0" stroke-width="6" stroke-dasharray="20 40">
-      <animate attributeName="stroke-dashoffset" from="0" to="-200" dur="3s" repeatCount="indefinite" />
-    </rect>
-  </svg>
-</div>
-
-<br>
-
-<div align="center">
-  <svg width="800" height="220" viewBox="0 0 800 220">
-    <rect x="5" y="5" width="790" height="210" rx="30" fill="#0d1117" stroke="#ffffff" stroke-width="4" />
-    <text x="40" y="60" font-family="Verdana" font-size="32" font-weight="bold" fill="#ffffff">RENDER (MBADALA)</text>
-    <text x="40" y="100" font-family="Consolas" font-size="18" fill="#DDD">1. Tengeneza Web Service -> Unga GitHub</text>
-    <text x="40" y="130" font-family="Consolas" font-size="18" fill="#DDD">2. Build: npm install | Start: npm start</text>
-    <text x="40" y="160" font-family="Consolas" font-size="18" fill="#DDD">3. Subiri 'Live' na angalia Logs.</text>
-    <rect x="5" y="5" width="790" height="210" rx="30" fill="none" stroke="#ffffff" stroke-width="4">
-      <animate attributeName="stroke-opacity" values="1;0.2;1" dur="2s" repeatCount="indefinite" />
-    </rect>
-  </svg>
-</div>
-
-<br><br>
-
-<!-- HATUA 3: TERMUX -->
-<div align="center">
-  <svg width="800" height="200" viewBox="0 0 800 200">
-    <rect x="5" y="5" width="790" height="190" rx="30" fill="#0d1117" stroke="#FF4500" stroke-width="4" />
-    <text x="650" y="160" font-family="Arial Black" font-size="150" fill="#FF4500" opacity="0.1">03</text>
-    <text x="40" y="60" font-family="Verdana" font-size="32" font-weight="bold" fill="#FF4500">TERMUX / LOCALHOST</text>
-    <text x="40" y="100" font-family="Consolas" font-size="18" fill="#00FF00">git clone https://github.com/JonniTech/Tervux-WhatsApp-Bot</text>
-    <text x="40" y="130" font-family="Consolas" font-size="18" fill="#00FF00">cd Tervux-WhatsApp-Bot</text>
-    <text x="40" y="160" font-family="Consolas" font-size="18" fill="#00FF00">npm install && npm start</text>
-    <rect x="5" y="5" width="790" height="190" rx="30" fill="none" stroke="#FF4500" stroke-width="6" stroke-dasharray="10 10">
-      <animate attributeName="stroke-dashoffset" from="100" to="0" dur="1s" repeatCount="indefinite" />
-    </rect>
-  </svg>
-</div>
-
-<br><br><br>
-
-<div align="center">
-  <img src="https://media.giphy.com/media/L1R1TVThF8Ul39Z7X6/giphy.gif" width="120" height="auto">
-  <br>
-  <p style="font-size: 20px; font-weight: bold; color: #888;">CREATED BY NYAGANYA MALIMA NYAGANYA</p>
+  <p>Made with ❤️ by <b>Nyaganya Malima Nyaganya</b></p>
+  <img src="https://media.giphy.com/media/L1R1TVThF8Ul39Z7X6/giphy.gif" width="100" height="auto">
   <br>
   <a href="https://github.com/JonniTech/Tervux-WhatsApp-Bot">
     <img src="https://img.shields.io/badge/GITHUB-PROFILE-black?style=for-the-badge&logo=github&logoColor=white" height="40" />
