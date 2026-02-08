@@ -1,299 +1,291 @@
 <div align="center">
 
-  <img src="./public/tervus-logo.png" alt="Tervux Bot Logo" width="200" height="200" style="border-radius: 50%; box-shadow: 0 0 20px rgba(37, 211, 102, 0.5);">
+<!-- HEADER LOGO -->
+<p align="center">
+  <img src="./public/tervus-logo.png" alt="Tervux Bot" width="180" style="border-radius: 50%; box-shadow: 0 0 30px rgba(37, 211, 102, 0.4); border: 4px solid #25D366;">
+</p>
 
-  # 🤖 Tervux WhatsApp Bot
-
-  <!-- Typing SVG Animation -->
+<!-- TYPING ANIMATION -->
+<p align="center">
   <a href="https://git.io/typing-svg">
-    <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=600&size=25&pause=1000&color=25D366&center=true&vCenter=true&width=435&lines=The+Best+WhatsApp+Bot;Simple.+Powerful.+Free.;Deploy+on+Railway+%7C+Render;Supports+Multi-Device+Login;Made+by+Tervux+Team+%F0%9F%9A%80" alt="Typing Animation" />
+    <img src="https://readme-typing-svg.herokuapp.com?font=Orbitron&weight=700&size=32&pause=1000&color=25D366&center=true&vCenter=true&width=500&lines=𝕋𝔼ℝ𝕍𝕌𝕏+𝕎ℍ𝔸𝕋𝕊𝔸ℙℙ+𝔹𝕆𝕋;𝕊𝕚𝕞𝕡𝕝𝕖.+𝕊𝕞𝕒𝕣𝕥.+𝕊𝕖𝕔𝕦𝕣𝕖.;𝔻𝕖𝕡𝕝𝕠𝕩+𝕚𝕟+𝕊𝕖𝕔𝕠𝕟𝕕𝕤!🚀" alt="Typing Animation" />
   </a>
+</p>
 
-  <p align="center">
-    <a href="https://github.com/JonniTech/Tervux-WhatsApp-Bot/stargazers"><img src="https://img.shields.io/github/stars/JonniTech/Tervux-WhatsApp-Bot?color=yellow&label=Stars&logo=github&style=for-the-badge" alt="Stars"/></a>
-    <a href="https://github.com/JonniTech/Tervux-WhatsApp-Bot/forks"><img src="https://img.shields.io/github/forks/JonniTech/Tervux-WhatsApp-Bot?color=blue&label=Forks&logo=github&style=for-the-badge" alt="Forks"/></a>
-    <a href="https://github.com/JonniTech/Tervux-WhatsApp-Bot/issues"><img src="https://img.shields.io/github/issues/JonniTech/Tervux-WhatsApp-Bot?color=red&label=Issues&logo=github&style=for-the-badge" alt="Issues"/></a>
-    <br>
-    <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="JavaScript"/>
-    <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" alt="Node.js"/>
-    <img src="https://img.shields.io/badge/Baileys-Library-blue?style=for-the-badge" alt="Baileys"/>
-  </p>
+<!-- STATS SHIELDS -->
+<p align="center">
+  <img src="https://img.shields.io/github/stars/JonniTech/Tervux-WhatsApp-Bot?style=for-the-badge&logo=github&color=FFD700&labelColor=1a1a1b" alt="Stars" />
+  <img src="https://img.shields.io/github/forks/JonniTech/Tervux-WhatsApp-Bot?style=for-the-badge&logo=github&color=00BFFF&labelColor=1a1a1b" alt="Forks" />
+  <img src="https://img.shields.io/github/issues/JonniTech/Tervux-WhatsApp-Bot?style=for-the-badge&logo=github&color=FF4500&labelColor=1a1a1b" alt="Issues" />
+</p>
 
-  <hr>
+<p align="center">
+  <img src="https://img.shields.io/badge/Node.js-18+-green?style=for-the-badge&logo=node.js&logoColor=white&labelColor=333" alt="Node" />
+  <img src="https://img.shields.io/badge/Baileys-Latest-blue?style=for-the-badge&logo=whatsapp&logoColor=white&labelColor=333" alt="Baileys" />
+  <img src="https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge&labelColor=333" alt="License" />
+</p>
 
-  <h2>🌍 Select Language / Chagua Lugha 🌍</h2>
+<hr style="border: 1px solid #25D366; width: 80%;">
 
-  <a href="#-english-instructions-">
-    <img src="https://img.shields.io/badge/English-Instructions-blue?style=for-the-badge&logo=google-translate&logoColor=white" alt="English"/>
+<!-- LANGUAGE SELECTOR -->
+<table align="center">
+  <tr>
+    <td align="center">
+      <a href="#-english-section">
+        <img src="https://img.shields.io/badge/ENGLISH-CLICK_HERE-blue?style=for-the-badge&logo=google-translate&logoColor=white" width="180">
+      </a>
+    </td>
+    <td align="center">
+      <a href="#-sehemu-ya-kiswahili">
+        <img src="https://img.shields.io/badge/KISWAHILI-BOFYA_HAPA-green?style=for-the-badge&logo=google-translate&logoColor=white" width="180">
+      </a>
+    </td>
+  </tr>
+</table>
+
+</div>
+
+<br>
+
+---
+
+<h1 id="-english-section" align="center">✨ Welcome to Tervux Bot ✨</h1>
+
+<p align="center">
+  <b>Tervux Bot</b> is a cutting-edge WhatsApp assistant designed for speed, reliability, and fun. 
+  Transform your WhatsApp experience with powerful automation and cool tools.
+</p>
+
+<!-- FEATURE CARDS -->
+<div align="center">
+  <table border="0">
+    <tr>
+      <td width="300" valign="top">
+        <div align="center">
+          <h3>📥 DOWNLOADER</h3>
+          <p>YouTube, TikTok (No Watermark), Instagram, and more!</p>
+          <img src="https://img.shields.io/badge/SPEED-ULTRA_FAST-orange?style=flat-square" />
+        </div>
+      </td>
+      <td width="300" valign="top">
+        <div align="center">
+          <h3>🎮 FUN ZONE</h3>
+          <p>Games, Jokes, Facts, and specialized fancy font modules.</p>
+          <img src="https://img.shields.io/badge/VIBE-LIT-purple?style=flat-square" />
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td width="300" valign="top">
+        <div align="center">
+          <h3>🛡️ SECURITY</h3>
+          <p>Anti-Delete, Anti-Call, and powerful Admin tools.</p>
+          <img src="https://img.shields.io/badge/STATUS-SHIELDED-green?style=flat-square" />
+        </div>
+      </td>
+      <td width="300" valign="top">
+        <div align="center">
+          <h3>🛠️ TOOLS</h3>
+          <p>Calculator, Weather, Translation, and QR Generation.</p>
+          <img src="https://img.shields.io/badge/POWER-LEVEL_9000-red?style=flat-square" />
+        </div>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<br>
+
+<div align="center">
+  <img src="./public/welcome-message.jpeg" width="600" style="border-radius: 15px; border: 2px solid #25D366; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+  <p><i>The Premium Welcome Experience</i></p>
+</div>
+
+<br>
+
+---
+
+<h2 align="center">🚀 Deployment Guide</h2>
+
+<div align="center">
+  <p>Setting up Tervux is as easy as 1-2-3!</p>
+</div>
+
+### 1. Railway 🚂
+Railway provides a rock-solid environment with high uptime.
+
+<div align="center">
+  <a href="https://railway.app/template/deploy?template=https://github.com/JonniTech/Tervux-WhatsApp-Bot">
+    <img src="https://railway.app/button.svg" alt="Deploy on Railway" width="250">
   </a>
-  &nbsp;&nbsp;&nbsp;&nbsp;
-  <a href="#-maelekezo-ya-kiswahili-">
-    <img src="https://img.shields.io/badge/Kiswahili-Maelekezo-green?style=for-the-badge&logo=google-translate&logoColor=white" alt="Swahili"/>
-  </a>
+</div>
 
+1. **Fork** the repository.
+2. Link your **GitHub** to Railway.
+3. Add the optional `PHONE` variable for Pairing Code.
+4. **Scan/Pair** from the logs.
+
+### 2. Render ☁️
+Great free tier and reliable performance.
+
+<div align="center">
+  <a href="https://render.com/deploy?repo=https://github.com/JonniTech/Tervux-WhatsApp-Bot">
+    <img src="https://render.com/images/deploy-to-render-button.svg" alt="Deploy to Render" width="250">
+  </a>
+</div>
+
+1. Connect your **GitHub**.
+2. Build Command: `npm install`
+3. Start Command: `npm start`
+4. View **Logs** to find your QR code.
+
+### 3. Local / Termux 💻
+Full control on your own machine.
+
+```bash
+git clone https://github.com/JonniTech/Tervux-WhatsApp-Bot.git
+cd Tervux-WhatsApp-Bot
+npm install
+npm start
+```
+
+<br>
+
+<div align="center">
+  <h3>📸 Menu Preview</h3>
+  <table border="0">
+    <tr>
+      <td><img src="./public/help-menu-start.jpeg" width="300" style="border-radius: 10px;"></td>
+      <td><img src="./public/help-menu-end.jpeg" width="300" style="border-radius: 10px;"></td>
+    </tr>
+  </table>
 </div>
 
 <br><br>
 
-<!-- ENGLISH SECTION -->
-<h1 id="-english-instructions-">🇺🇸 English Instructions 🇺🇸</h1>
+---
 
-## ✨ Introduction
+<h1 id="-sehemu-ya-kiswahili" align="center">🇹🇿 Karibu Kwenye Tervux Bot 🇹🇿</h1>
 
-**Tervux WhatsApp Bot** is a feature-rich, easy-to-deploy WhatsApp bot designed for everyone. Whether you want to manage groups, play games, download media, or use utility tools, Tervux Bot handles it all with style!
+<p align="center">
+  <b>Tervux Bot</b> ni msaidizi wa kisasa wa WhatsApp aliyetengenezwa kwa ajili ya kasi, usalama, na burudani. 
+  Badili muonekano wako wa WhatsApp kwa kutumia automation na zana zenye nguvu.
+</p>
 
-It is built on **Node.js** using the powerful **Baileys** library, ensuring stability and speed. Best of all, it's completely free to self-host!
-
-<br>
+<!-- FEATURE CARDS KISWAHILI -->
 <div align="center">
-  <img src="./public/welcome-message.jpeg" alt="Welcome Message" width="80%" style="border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
-  <p><i>The bot's friendly welcome message!</i></p>
-</div>
-<br>
-
-## 🚀 Features
-
-| Feature | Description | Icon |
-| :--- | :--- | :---: |
-| **Media Downloader** | Download YouTube Music & Videos, Instagram, TikTok without watermark. | 🎬 |
-| **Fun Games** | Truth or Dare, Ship, Fancy Text generator, Jokes, Facts. | 🎮 |
-| **Group Management** | Admin tools like Anti-Delete, Anti-Call, Auto-Read. | 🛡️ |
-| **Utility Tools** | Calculator, QR Code Generator, Translator, Weather. | 🛠️ |
-| **Always Online** | Keeps your presence online 24/7 (configurable). | 🟢 |
-| **Fancy Fonts** | All responses use premium Unicode fonts for a unique look. | 🎨 |
-
-<br>
-<div align="center">
-  <h3>📸 Screenshots</h3>
-  <table>
+  <table border="0">
     <tr>
-      <td align="center">
-        <img src="./public/help-menu-start.jpeg" alt="Help Menu Start" width="300" style="border-radius: 10px;">
-        <br><b>Help Menu Header</b>
+      <td width="300" valign="top">
+        <div align="center">
+          <h3>📥 PAKUA MEDIA</h3>
+          <p>YouTube, TikTok (Bila Alama), Instagram, na nyingine nyingi!</p>
+          <img src="https://img.shields.io/badge/KASI-YA_AJABU-orange?style=flat-square" />
+        </div>
       </td>
-      <td align="center">
-        <img src="./public/help-menu-end.jpeg" alt="Help Menu End" width="300" style="border-radius: 10px;">
-        <br><b>Help Menu Footer</b>
+      <td width="300" valign="top">
+        <div align="center">
+          <h3>🎮 BURUDANI</h3>
+          <p>Michezo, Vichekesho, Ukweli, na mwandiko wa mapambo (Fancy Fonts).</p>
+          <img src="https://img.shields.io/badge/HALI-YA_JUU-purple?style=flat-square" />
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td width="300" valign="top">
+        <div align="center">
+          <h3>🛡️ USALAMA</h3>
+          <p>Anti-Delete, Anti-Call, na zana za Uongozi wa Group.</p>
+          <img src="https://img.shields.io/badge/HALI-IMELINDWA-green?style=flat-square" />
+        </div>
+      </td>
+      <td width="300" valign="top">
+        <div align="center">
+          <h3>🛠️ ZANA</h3>
+          <p>Calculator, Hali ya Hewa, Tafsiri, na QR Code.</p>
+          <img src="https://img.shields.io/badge/NGUVU-KIWANGO_ZAIDI-red?style=flat-square" />
+        </div>
       </td>
     </tr>
   </table>
 </div>
+
+<br>
+
+<div align="center">
+  <img src="./public/welcome-message.jpeg" width="600" style="border-radius: 15px; border: 2px solid #25D366; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+  <p><i>Muonekano wa Karibu Wenye Mvuto</i></p>
+</div>
+
 <br>
 
 ---
 
-## 🛠️ Requirements
+<h2 align="center">🚀 Maelekezo ya Kuwasha (Deploy)</h2>
 
-Before you start, make sure you have:
-1.  **A GitHub Account** (to fork the repo).
-2.  **WhatsApp App** on your phone (linked to the number you want to use as a bot).
-3.  **Accounts** on Render or Railway (if deploying to cloud).
+<div align="center">
+  <p>Kuwasha Tervux ni rahisi kama hesabu ya 1-2-3!</p>
+</div>
 
----
+### 1. Railway 🚂
+Railway inatoa mazingira imara na bot haizimi kirahisi.
 
-## 📲 Deployment Guide
+<div align="center">
+  <a href="https://railway.app/template/deploy?template=https://github.com/JonniTech/Tervux-WhatsApp-Bot">
+    <img src="https://railway.app/button.svg" alt="Deploy kwenye Railway" width="250">
+  </a>
+</div>
 
-Follow these simple steps to get your bot running in minutes!
+1. **Fork** repository hii.
+2. Unganisha **GitHub** yako na Railway.
+3. Ongeza variable ya `PHONE` (si lazima) kwa ajili ya Pairing Code.
+4. **Scan/Pair** ukitumia logs.
 
-### Step 1: Fork the Repository 🍴
-Click the **Fork** button at the top right of this page to create your own copy of the code.
+### 2. Render ☁️
+Inafanya kazi vizuri na ni rahisi kutumia.
 
-<br>
+<div align="center">
+  <a href="https://render.com/deploy?repo=https://github.com/JonniTech/Tervux-WhatsApp-Bot">
+    <img src="https://render.com/images/deploy-to-render-button.svg" alt="Deploy kwenye Render" width="250">
+  </a>
+</div>
 
-### Step 2: Choose Your Platform ☁️
+1. Unganisha **GitHub** yako.
+2. Build Command: `npm install`
+3. Start Command: `npm start`
+4. Angalia **Logs** kupata QR code yako.
 
-#### Option A: Deploy on Railway 🚂
-Railway offers great uptime and speed.
-
-<a href="https://railway.app/new">
-<img src="https://railway.app/button.svg" alt="Deploy on Railway">
-</a>
-
-1.  Create an account on [Railway.app](https://railway.app/).
-2.  Click **New Project** > **Deploy from GitHub repo**.
-3.  Select your forked repo `Tervux-WhatsApp-Bot`.
-4.  Go to **Settings** > **Variables** and add `PHONE` (optional).
-5.  Wait for deployment. Go to the **Deployments** tab and view logs to scan the QR code.
-
-#### Option B: Deploy on Render ☁️
-Render is a solid alternative for hosting.
-
-<a href="https://render.com/deploy">
-<img src="https://render.com/images/deploy-to-render-button.svg" alt="Deploy to Render">
-</a>
-
-1.  Create an account on [Render.com](https://render.com/).
-2.  Click **New +** > **Web Service**.
-3.  Connect your GitHub and select the repo.
-4.  **Important:**
-    *   **Build Command:** `npm install`
-    *   **Start Command:** `npm start`
-5.  Click **Create Web Service**.
-6.  Once live, check the **Logs** tab to scan the QR code.
-
-#### Option C: Local Installation 💻
-Run the bot on your own computer (PC/Termux).
+### 3. Kompyuta / Termux 💻
+Kuendesha bot kwenye kifaa chako mwenyewe.
 
 ```bash
-# 1. Clone the repository
 git clone https://github.com/JonniTech/Tervux-WhatsApp-Bot.git
-
-# 2. Enter the directory
 cd Tervux-WhatsApp-Bot
-
-# 3. Install dependencies
 npm install
-
-# 4. Start the bot
 npm start
 ```
 
----
-
-## ❓ FAQ
-
-**Q: Where do I find the QR Code?**
-A: Check the **Logs** (or Terminal) of your deployment platform immediately after starting the bot.
-
-**Q: The session file expired?**
-A: If the `auth_info` folder is deleted or corrupted, restart the bot to generate a new QR code.
-
-**Q: How do I become the owner?**
-A: The bot automatically recognizes the number that scans the QR code as the owner. Additional owners can be configured in `config.json`.
-
----
-
-<br><br><br>
-
-<!-- SWAHILI SECTION -->
-<h1 id="-maelekezo-ya-kiswahili-">🇹🇿 Maelekezo ya Kiswahili 🇹🇿</h1>
-
-## ✨ Utangulizi
-
-**Tervux WhatsApp Bot** ni bot ya WhatsApp yenye nguvu na rahisi kutumia, iliyotengenezwa kwa ajili ya kila mtu. Iwe unataka kusimamia magroup, kucheza games, kupakua nyimbo na video, au kutumia zana mbalimbali, Tervux Bot inafanya yote haya kwa urahisi na mvuto!
-
-Imetengenezwa kwa kutumia **Node.js** na library ya **Baileys**, ikihakikisha ufanisi na kasi. Na kizuri zaidi, ni **bure kabisa** kutumia!
-
 <br>
+
 <div align="center">
-  <img src="./public/welcome-message.jpeg" alt="Ujumbe wa Karibu" width="80%" style="border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
-  <p><i>Ujumbe wa kukaribisha wa bot!</i></p>
-</div>
-<br>
-
-## 🚀 Vipengele
-
-| Kipengele | Maelezo | Ikoni |
-| :--- | :--- | :---: |
-| **Media Downloader** | Pakua miziki na video kutoka YouTube, Instagram, TikTok bila watermark. | 🎬 |
-| **Games za Kuburudisha** | Truth or Dare, Ship (Upendo), Fancy Text, Vichekesho, Ukweli. | 🎮 |
-| **Usimamizi wa Group** | Zana za Admin kama Anti-Delete, Anti-Call, Auto-Read. | 🛡️ |
-| **Zana Mbalimbali** | Calculator, Kutengeneza QR Code, Translator (Mkalimani), Hali ya Hewa. | 🛠️ |
-| **Always Online** | Inaweka status yako kuwa 'Online' muda wote (inawezekana kuzima). | 🟢 |
-| **Mwandiko wa Mapambo** | Majibu yote yanatumia fonti nzuri za Unicode kupendezesha chat. | 🎨 |
-
-<br>
-<div align="center">
-  <h3>📸 Picha za Skrini</h3>
-  <table>
+  <h3>📸 Angalia Menyu</h3>
+  <table border="0">
     <tr>
-      <td align="center">
-        <img src="./public/help-menu-start.jpeg" alt="Menyu ya Msaada Mwanzo" width="300" style="border-radius: 10px;">
-        <br><b>Kichwa cha Menyu</b>
-      </td>
-      <td align="center">
-        <img src="./public/help-menu-end.jpeg" alt="Menyu ya Msaada Mwisho" width="300" style="border-radius: 10px;">
-        <br><b>Mwisho wa Menyu</b>
-      </td>
+      <td><img src="./public/help-menu-start.jpeg" width="300" style="border-radius: 10px;"></td>
+      <td><img src="./public/help-menu-end.jpeg" width="300" style="border-radius: 10px;"></td>
     </tr>
   </table>
 </div>
-<br>
-
----
-
-## 🛠️ Mahitaji
-
-Kabla ya kuanza, hakikisha una vitu hivi:
-1.  **Akaunti ya GitHub** (ili kufanya 'Fork' project hii).
-2.  **WhatsApp** kwenye simu yako (namba ambayo unataka iwe bot).
-3.  **Akaunti** kwenye Render au Railway (kama unataka kuweka mtandaoni).
-
----
-
-## 📲 Jinsi ya Ku-Deploy (Kuweka Hewani)
-
-Fuata hatua hizi rahisi ili kuwasha bot yako ndani ya dakika chache!
-
-### Hatua ya 1: Fork Repository 🍴
-Bonyeza kitufe cha **Fork** juu kulia mwa ukurasa huu ili kutengeneza nakala yako ya code hizi.
 
 <br>
 
-### Hatua ya 2: Chagua Platform Yako ☁️
-
-#### Chaguo A: Deploy kwenye Railway 🚂
-Railway ni chaguo zuri kwa sababu inakaa hewani muda mrefu bila kuzima.
-
-<a href="https://railway.app/new">
-<img src="https://railway.app/button.svg" alt="Deploy on Railway">
-</a>
-
-1.  Tengeneza akaunti [Railway.app](https://railway.app/).
-2.  Bonyeza **New Project** > **Deploy from GitHub repo**.
-3.  Chagua repo uliyofanya fork `Tervux-WhatsApp-Bot`.
-4.  Nenda kwenye **Settings** > **Variables** na ongeza `PHONE` (kama unataka).
-5.  Subiri imalize. Nenda kwenye tab ya **Deployments** na angalia logs ili ku-scan QR.
-
-#### Chaguo B: Deploy kwenye Render ☁️
-Render ni mbadala mzuri wa Heroku.
-
-<a href="https://render.com/deploy">
-<img src="https://render.com/images/deploy-to-render-button.svg" alt="Deploy to Render">
-</a>
-
-1.  Tengeneza akaunti [Render.com](https://render.com/).
-2.  Bonyeza **New +** > **Web Service**.
-3.  Unganisha GitHub yako na chagua repo hii.
-4.  **Muhimu:**
-    *   **Build Command:** `npm install`
-    *   **Start Command:** `npm start`
-5.  Bonyeza **Create Web Service**.
-6.  Ikikamilika, angalia tab ya **Logs** ili kuona QR code na ku-scan.
-
-#### Chaguo C: Kuweka kwenye PC/Termux 💻
-Unaweza kuwasha bot kwenye kompyuta yako au kutumia Termux.
-
-```bash
-# 1. Clone repository hii
-git clone https://github.com/JonniTech/Tervux-WhatsApp-Bot.git
-
-# 2. Ingia ndani ya folda
-cd Tervux-WhatsApp-Bot
-
-# 3. Install dependencies (mahitaji)
-npm install
-
-# 4. Washa bot
-npm start
-```
-
----
-
-## ❓ Maswali Yanayoulizwa Sana (FAQ)
-
-**Swali: QR Code nitaipata wapi?**
-Jibu: Angalia sehemu ya **Logs** (au Terminal) kwenye platform uliyotumia mara tu baada ya kuwasha bot.
-
-**Swali: Session ime-expire?**
-Jibu: Futa folda ya `auth_info` kama ipo, kisha washa bot upya (Restart) ili kupata QR code mpya.
-
-**Swali: Je, nani anakuwa mmiliki (Owner)?**
-Jibu: Namba inayotumika ku-scan QR code inatambulika kiotomatiki kama Owner. Unaweza kuongeza namba zingine kwenye `config.json`.
-
----
+<hr style="border: 1px solid #25D366; width: 80%;">
 
 <div align="center">
-  <p>Made with ❤️ by <b>Tervux Team</b></p>
+  <p>Made with 💚 by <b>Tervux Team</b></p>
   <img src="https://media.giphy.com/media/L1R1TVThF8Ul39Z7X6/giphy.gif" width="100" height="auto">
+  <br>
+  <a href="https://github.com/JonniTech/Tervux-WhatsApp-Bot">
+    <img src="https://img.shields.io/badge/VISIT-GITHUB-black?style=for-the-badge&logo=github" />
+  </a>
 </div>
