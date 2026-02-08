@@ -93,9 +93,10 @@
 |:---:|:---|:---|
 | <img src="https://img.shields.io/badge/-Media-FF4500?style=flat-square" height="20"> | **Downloader** | YouTube, TikTok, Instagram media downloads |
 | <img src="https://img.shields.io/badge/-Fun-A020F0?style=flat-square" height="20"> | **Games** | Truth/Dare, Ship Calculator, Fancy Text |
-| <img src="https://img.shields.io/badge/-Security-25D366?style=flat-square" height="20"> | **Protection** | Anti-Delete, Anti-Call, Auto-Read |
+| <img src="https://img.shields.io/badge/-Security-25D366?style=flat-square" height="20"> | **Protection** | Anti-Delete, Anti-Call, Anti-Link, Auto-Read |
 | <img src="https://img.shields.io/badge/-Tools-00BFFF?style=flat-square" height="20"> | **Utilities** | Weather, QR Generator, Translator, Calculator |
 | <img src="https://img.shields.io/badge/-Status-FFD700?style=flat-square" height="20"> | **Presence** | Always Online, Auto-View Status, Auto-Like |
+| <img src="https://img.shields.io/badge/-Group-FF69B4?style=flat-square" height="20"> | **Management** | Welcome/Goodbye, Polls, Warn System, Hidetag |
 
 <br>
 

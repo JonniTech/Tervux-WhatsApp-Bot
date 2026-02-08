@@ -45,6 +45,34 @@ import {
     alwaysrecording
 } from "./settings/toggles.js";
 
+// Group Commands
+import {
+    hidetag,
+    tagall,
+    kick,
+    add,
+    promote,
+    demote,
+    mute,
+    unmute,
+    groupinfo,
+    grouplink,
+    revoke,
+    leave,
+    admins,
+    setgroupname,
+    setdesc,
+    welcome,
+    setwelcome,
+    goodbye,
+    setgoodbye,
+    antilink,
+    poll,
+    warn,
+    resetwarn,
+    rejoin
+} from "./group/group.js";
+
 export const commands = {
     // Fun Commands
     ship,
@@ -89,5 +117,31 @@ export const commands = {
     anticall,
     autoread,
     alwaystyping,
-    alwaysrecording
+    alwaysrecording,
+
+    // Group Commands
+    hidetag,
+    tagall,
+    kick,
+    add,
+    promote,
+    demote,
+    mute,
+    unmute,
+    groupinfo,
+    grouplink,
+    revoke,
+    leave,
+    admins,
+    setgroupname,
+    setdesc,
+    welcome,
+    setwelcome,
+    goodbye,
+    setgoodbye,
+    antilink,
+    poll,
+    warn,
+    resetwarn,
+    rejoin
 };
