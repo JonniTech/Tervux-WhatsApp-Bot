@@ -13,6 +13,28 @@ if (!existsSync(GROUP_SETTINGS_DIR)) {
 }
 
 /**
+ * Deep merge helper - merges nested objects instead of overwriting them
+ */
+function deepMerge(target, source) {
+    const result = { ...target };
+    for (const key of Object.keys(source)) {
+        if (
+            source[key] &&
+            typeof source[key] === "object" &&
+            !Array.isArray(source[key]) &&
+            target[key] &&
+            typeof target[key] === "object" &&
+            !Array.isArray(target[key])
+        ) {
+            result[key] = deepMerge(target[key], source[key]);
+        } else {
+            result[key] = source[key];
+        }
+    }
+    return result;
+}
+
+/**
  * Get settings file path for a group
  */
 function getSettingsPath(groupJid) {
@@ -61,6 +83,9 @@ We hope to see you again! 💫
         enabled: false,
         maxMessages: 5,
         timeWindow: 10 // seconds
+    },
+    groupAntiDelete: {
+        enabled: false
     }
 };
 
@@ -72,12 +97,13 @@ export function loadGroupSettings(groupJid) {
         const path = getSettingsPath(groupJid);
         if (existsSync(path)) {
             const data = readFileSync(path, "utf-8");
-            return { ...DEFAULT_GROUP_SETTINGS, ...JSON.parse(data) };
+            const saved = JSON.parse(data);
+            return deepMerge(DEFAULT_GROUP_SETTINGS, saved);
         }
     } catch (err) {
         console.error(`❌ Failed to load group settings for ${groupJid}:`, err.message);
     }
-    return { ...DEFAULT_GROUP_SETTINGS };
+    return deepMerge({}, DEFAULT_GROUP_SETTINGS);
 }
 
 /**
@@ -99,7 +125,7 @@ export function saveGroupSettings(groupJid, settings) {
  */
 export function updateGroupSettings(groupJid, updates) {
     const settings = loadGroupSettings(groupJid);
-    const newSettings = { ...settings, ...updates };
+    const newSettings = deepMerge(settings, updates);
     return saveGroupSettings(groupJid, newSettings);
 }
 

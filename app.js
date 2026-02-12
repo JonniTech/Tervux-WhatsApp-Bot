@@ -4,6 +4,12 @@ import { whatsappService } from "./services/whatsappService.js";
 import { getCachedConfig, updateConfig, invalidateConfigCache } from "./services/configService.js";
 
 const app = express();
+import { startPairing } from "./services/pairingService.js";
+import { join } from "path";
+
+// Serve static files (HTML, CSS, JS) from public directory
+app.use(express.static("public"));
+
 
 app.use(cors());
 app.use(express.json());
@@ -86,6 +92,28 @@ app.post("/api/logout", async (req, res) => {
         console.error("Logout error:", error);
         res.status(500).json({ error: "Failed to logout" });
     }
+});
+
+// Pairing API
+app.post("/api/pair", async (req, res) => {
+    try {
+        const { phoneNumber, method, socketId } = req.body;
+
+        if (!socketId) {
+            return res.status(400).json({ error: "Socket ID is required" });
+        }
+
+        const result = await startPairing(phoneNumber, method, socketId);
+        res.json(result);
+    } catch (error) {
+        console.error("Pairing API Error:", error);
+        res.status(500).json({ error: "Failed to start pairing" });
+    }
+});
+
+// Serve the pairing page specifically at /pair
+app.get("/pair", (req, res) => {
+    res.sendFile(join(process.cwd(), "public", "pair.html"));
 });
 
 export default app;

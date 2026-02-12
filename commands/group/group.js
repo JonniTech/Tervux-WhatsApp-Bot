@@ -4,30 +4,7 @@
  *           groupinfo, grouplink, revoke, antilink, setwelcome, setgoodbye
  */
 
-/**
- * Helper: Check if sender is group admin
- */
-async function isAdmin(sock, groupJid, userJid) {
-    try {
-        const metadata = await sock.groupMetadata(groupJid);
-        const admins = metadata.participants.filter(p => p.admin).map(p => p.id);
-        return admins.includes(userJid);
-    } catch {
-        return false;
-    }
-}
-
-/**
- * Helper: Check if bot is group admin
- */
-async function isBotAdmin(sock, groupJid) {
-    try {
-        const botJid = sock.user.id.split(":")[0] + "@s.whatsapp.net";
-        return await isAdmin(sock, groupJid, botJid);
-    } catch {
-        return false;
-    }
-}
+import { isAdmin, isBotAdmin } from "../../utils/groupUtils.js";
 
 /**
  * !hidetag <message> - Tag all members without showing mentions (stealth tag)
@@ -979,4 +956,59 @@ You must add the bot manually.`;
         
 *Error Details:* ${err.message}`;
     }
+}
+
+/**
+ * !groupantidelete on/off - Toggle anti-delete for this group
+ */
+export async function groupantidelete(sock, m, args) {
+    const remoteJid = m.key.remoteJid;
+
+    if (!remoteJid.endsWith("@g.us")) {
+        return `╔══════════════════════════════════╗
+║  ⚠️ *𝔾ℝ𝕆𝕌ℙ 𝕆ℕ𝕃𝕐* ⚠️  ║
+╚══════════════════════════════════╝
+
+This command only works in groups.
+Use *!antidelete* for personal chats.`;
+    }
+
+    const settings = loadGroupSettings(remoteJid);
+    const action = args[0]?.toLowerCase();
+
+    if (action === "on") {
+        settings.groupAntiDelete = { enabled: true };
+        saveGroupSettings(remoteJid, settings);
+        return `╔══════════════════════════════════╗
+║  ✅ *𝔾ℝ𝕆𝕌ℙ 𝔸ℕ𝕋𝕀-𝔻𝔼𝕃𝔼𝕋𝔼 𝔼ℕ𝔸𝔹𝕃𝔼𝔻* ✅  ║
+╚══════════════════════════════════╝
+
+Deleted messages in this group will now be restored!
+
+⚠️ *Note:* Bot owner's own deleted messages are always excluded.`;
+    }
+
+    if (action === "off") {
+        settings.groupAntiDelete = { enabled: false };
+        saveGroupSettings(remoteJid, settings);
+        return `╔══════════════════════════════════╗
+║  ❌ *𝔾ℝ𝕆𝕌ℙ 𝔸ℕ𝕋𝕀-𝔻𝔼𝕃𝔼𝕋𝔼 𝔻𝕀𝕊𝔸𝔹𝕃𝔼𝔻* ❌  ║
+╚══════════════════════════════════╝
+
+Deleted messages in this group will no longer be restored.`;
+    }
+
+    return `╔══════════════════════════════════╗
+║  🛡️ *𝔾ℝ𝕆𝕌ℙ 𝔸ℕ𝕋𝕀-𝔻𝔼𝕃𝔼𝕋𝔼* 🛡️  ║
+╚══════════════════════════════════╝
+
+*Status:* ${settings.groupAntiDelete?.enabled ? "✅ Enabled" : "❌ Disabled"}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+*Commands:*
+• !groupantidelete on - Enable
+• !groupantidelete off - Disable
+
+💡 Use *!antidelete* for personal chats.
+🛡️ Restores deleted messages from other members!`;
 }

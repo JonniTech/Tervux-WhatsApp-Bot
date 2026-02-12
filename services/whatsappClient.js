@@ -1,7 +1,7 @@
 import { default as makeWASocket, DisconnectReason, Browsers, useMultiFileAuthState } from "@whiskeysockets/baileys";
 import pino from "pino";
 import qrcode from "qrcode-terminal";
-import { existsSync, mkdirSync, rmSync, readFileSync } from "fs";
+import { existsSync, mkdirSync, rmSync, readFileSync, writeFileSync } from "fs";
 import { join } from "path";
 import { commands } from "../commands/index.js";
 import { getCachedConfig, updateConfig, invalidateConfigCache, AUTH_INFO_PATH } from "./configService.js";
@@ -38,6 +38,24 @@ const MAX_RECONNECT_ATTEMPTS = 10;
 
 export async function createWhatsAppClient() {
     const config = getCachedConfig();
+
+    // Session Restoration Logic for Heroku (Env Var)
+    if (process.env.SESSION_ID && !existsSync(AUTH_INFO_PATH)) {
+        const sessionId = process.env.SESSION_ID;
+        if (sessionId.startsWith("Tervux-")) {
+            try {
+                console.log("🔄 Restoring session from environment variable...");
+                mkdirSync(AUTH_INFO_PATH, { recursive: true });
+                const code = sessionId.replace("Tervux-", "");
+                const creds = Buffer.from(code, "base64");
+                writeFileSync(join(AUTH_INFO_PATH, "creds.json"), creds);
+                console.log("✅ Session restored successfully!");
+            } catch (e) {
+                console.error("❌ Failed to restore session:", e.message);
+            }
+        }
+    }
+
     // Use Baileys built-in file-based auth
     const { state, saveCreds } = await useMultiFileAuthState(AUTH_INFO_PATH);
 
@@ -166,6 +184,8 @@ export async function createWhatsAppClient() {
 │ 🔄 *Updated:* ${stats.updatedAt}
 ╰──────────────────────────────╯` : "";
 
+                const p = config.prefix || "!";
+
                 const welcomeMsg = `╔══════════════════════════════════╗
 ║  🤖 *𝕋𝔼ℝ𝕍𝕌𝕏 𝔹𝕆𝕋 ℂ𝕆ℕℕ𝔼ℂ𝕋𝔼𝔻* 🤖  ║
 ╚══════════════════════════════════╝
@@ -177,59 +197,99 @@ ${githubSection}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🎮 *𝔽𝕌ℕ ℤ𝕆ℕ𝔼*
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-• *!ship* - Love calculator 💕
-• *!fancy* - Fancy fonts generator ✨
-• *!joke* - Random jokes 😂
-• *!fact* - Fun facts 🧠
-• *!truth* / *!dare* - Game time 🔥
+• *${p}ship* - Love calculator 💕
+• *${p}fancy* - Fancy fonts generator ✨
+• *${p}joke* - Random jokes 😂
+• *${p}fact* - Fun facts 🧠
+• *${p}truth* / *${p}dare* - Game time 🔥
+• *${p}8ball* - Magic 8-ball 🎱
+• *${p}pickup* - Pickup lines 💘
+• *${p}compliment* / *${p}roast* - Fun vibes 🌟🔥
+• *${p}riddle* - Brain teasers 🧩
+• *${p}hack* - Prank hack 💻
+• *${p}virus* / *${p}crash* - Prank attacks ☣️
+• *${p}matrix* - Matrix mode 🟢
+• *${p}detective* - Investigate someone 🕵️
+• *${p}spam* - Emoji bomb 💣
+• *${p}rps* - Rock Paper Scissors ✊
+• *${p}coinflip* - Flip a coin 🪙
+• *${p}dice* - Roll dice 🎲
+• *${p}trivia* - Quiz time 🧠
+• *${p}confess* - Anonymous confession 🤫
+• *${p}rate* - Rate someone ⭐
+• *${p}flirt* - DM opener assistant 💘
+• *${p}lovemsg* - Love messages 💌
+• *${p}loveletter* - Love letter maker 💌
+• *${p}crush* - How to approach her 🎯
+• *${p}goodmorning* / *${p}goodnight* - Sweet msgs 🌅🌙
+• *${p}compatibility* - Love score 💞
+• *${p}dateidea* - Date ideas 💑
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 👥 *𝔾ℝ𝕆𝕌ℙ 𝕄𝔸ℕ𝔸𝔾𝔼𝕄𝔼ℕ𝕋*
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-• *!kick* / *!add* - Manage members 👥
-• *!promote* / *!demote* - Manage admins 👑
-• *!hidetag* / *!tagall* - Tag members 📢
-• *!welcome* / *!goodbye* - Auto-messages 👋
-• *!antilink* - Link protection 🛡️
-• *!poll* / *!warn* - Moderation tools 📊
+• *${p}kick* / *${p}add* - Manage members 👥
+• *${p}promote* / *${p}demote* - Manage admins 👑
+• *${p}hidetag* / *${p}tagall* - Tag members 📢
+• *${p}welcome* / *${p}goodbye* - Auto-messages 👋
+• *${p}antilink* - Link protection 🛡️
+• *${p}groupantidelete* - Group anti-delete 🛡️
+• *${p}poll* / *${p}warn* - Moderation tools 📊
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ⚙️ *𝔾𝔼ℕ𝔼ℝ𝔸𝕃*
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-• *!help* - Show all commands 📚
-• *!ping* - Check latency ⚡
-• *!botstats* - System stats 📊
-• *!owner* - Owner info 👤
-• *!block* / *!unblock* - User management 🚫
+• *${p}help* - Show all commands 📚
+• *${p}ping* - Check latency ⚡
+• *${p}botstats* - System stats 📊
+• *${p}owner* - Owner info 👤
+• *${p}block* / *${p}unblock* - User management 🚫
+• *${p}creator* - Bot creator info 💎
+• *${p}quote* - Motivational quotes 💫
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🎬 *𝕄𝔼𝔻𝕀𝔸*
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-• *!movie* - Movie search 🎥
-• *!sport* - Team info ⚽
-• *!news* - World news 📰
-• *!play* - Play music 🎵
-• *!video* - Download video 📹
+• *${p}movie* - Movie search 🎥
+• *${p}sport* - Team info ⚽
+• *${p}news* - World news 📰
+• *${p}play* - Play music 🎵
+• *${p}video* - Download video 📹
+• *${p}meme* - Random memes 😂
+• *${p}lyrics* - Song lyrics 🎤
+• *${p}zodiac* - Horoscope 🔮
+• *${p}wallpaper* - HD wallpapers 🖼️
+• *${p}waifu* - Anime images 🌸
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🛠️ *𝕋𝕆𝕆𝕃𝕊*
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-• *!calc* - Calculator 🧮
-• *!qr* - QR generator 📱
-• *!weather* - Weather forecast 🌤️
-• *!translate* - Translator 🌍
+• *${p}calc* - Calculator 🧮
+• *${p}qr* - QR generator 📱
+• *${p}weather* - Weather forecast 🌤️
+• *${p}translate* - Translator 🌍
+• *${p}define* - Dictionary 📖
+• *${p}aesthetic* - Text styling ✨
+• *${p}sticker* - Image to sticker 🖼️
+• *${p}github* - GitHub profile 🐙
+• *${p}password* - Password maker 🔐
+• *${p}wiki* - Wikipedia search 📚
+• *${p}base64* - Encode/decode 🔣
+• *${p}ip* - IP/domain lookup 🌐
+• *${p}ai* - AI assistant 🤖
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ⚙️ *𝕊𝔼𝕋𝕋𝕀ℕ𝔾𝕊*
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-• *!settings* - View configuration 🔧
-• *!alwaysonline* - 24/7 Online 🌐
-• *!antidelete* - Anti-delete info 🛡️
-• *!anticall* - Anti-call info 📵
-• *!autoread* - Auto-read info ✔️
+• *${p}settings* - View configuration 🔧
+• *${p}prefix* - Change bot prefix ✏️
+• *${p}alwaysonline* - 24/7 Online 🌐
+• *${p}antidelete* - Anti-delete (DMs) 🛡️
+• *${p}anticall* - Anti-call info 📵
+• *${p}autoread* - Auto-read info ✔️
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-💡 *Quick Start:* Type *!help* for more details
+💡 *Quick Start:* Type *${p}help* for more details
 
 ╔══════════════════════════════════╗
 ║    💠 *ℙ𝕠𝕨𝕖𝕣𝕖𝕕 𝕓𝕪 𝕋𝔼ℝ𝕍𝕌𝕏* 💠    ║
@@ -355,7 +415,21 @@ ${githubSection}
     // Helper function to restore deleted messages
     async function restoreDeletedMessage(sock, originalMsg, deletedId) {
         try {
+            // Skip owner's own messages - only restore other people's deleted messages
+            if (originalMsg.key.fromMe) {
+                console.log(`ℹ️ [AntiDelete] Skipping own message deletion: ${deletedId}`);
+                return;
+            }
+
+            // Also check JID match for groups where fromMe might not be set
             const sender = originalMsg.key.participant || originalMsg.key.remoteJid;
+            const botNumber = (sock.user?.id?.split("@")[0]?.split(":")[0]);
+            const senderNumber = sender.split(":")[0].split("@")[0];
+            if (botNumber && senderNumber === botNumber) {
+                console.log(`ℹ️ [AntiDelete] Skipping own message deletion (JID match): ${deletedId}`);
+                return;
+            }
+
             const senderName = sender.split("@")[0];
             const timestamp = new Date().toLocaleString("en-US", {
                 hour: "2-digit",
@@ -444,7 +518,6 @@ ${text}
     // Anti-Delete Restoration
     sock.ev.on("messages.update", async (updates) => {
         const config = getCachedConfig();
-        if (!config.antiDelete) return;
 
         for (const update of updates) {
             // Method 1: Detect deletion via messageStubType: 1 (Baileys v7 pattern)
@@ -456,13 +529,30 @@ ${text}
                     update.update?.messageStubParameters?.[0]
                 ].filter(Boolean);
 
-                console.log(`🔍 [AntiDelete] Possible deleted IDs:`, possibleIds);
-                console.log(`📦 [AntiDelete] Cache contains:`, [...messageCache.keys()].slice(-5)); // Last 5 cached
-
                 let found = false;
                 for (const deletedId of possibleIds) {
                     const originalMsg = messageCache.get(deletedId);
                     if (originalMsg) {
+                        const chatJid = originalMsg.key.remoteJid;
+                        const isGroup = chatJid?.endsWith("@g.us");
+
+                        // DMs: check global antiDelete setting
+                        // Groups: check per-group groupAntiDelete setting
+                        if (isGroup) {
+                            const { loadGroupSettings } = await import("./groupSettingsService.js");
+                            const groupSettings = loadGroupSettings(chatJid);
+                            if (!groupSettings.groupAntiDelete?.enabled) {
+                                console.log(`ℹ️ [AntiDelete] Group anti-delete disabled for ${chatJid}, skipping`);
+                                found = true;
+                                break;
+                            }
+                        } else {
+                            if (!config.antiDelete) {
+                                found = true;
+                                break;
+                            }
+                        }
+
                         await restoreDeletedMessage(sock, originalMsg, deletedId);
                         found = true;
                         break;
@@ -482,10 +572,25 @@ ${text}
 
             if (protocolMsg && (protocolMsg.type === 0 || protocolMsg.type === 5 || protocolMsg.type === "REVOKE")) {
                 const deletedId = protocolMsg.key?.id;
-                console.log(`🔍 [AntiDelete] Detected deletion via protocolMessage, ID: ${deletedId}`);
 
                 const originalMsg = messageCache.get(deletedId);
                 if (originalMsg) {
+                    const chatJid = originalMsg.key.remoteJid;
+                    const isGroup = chatJid?.endsWith("@g.us");
+
+                    // DMs: check global antiDelete setting
+                    // Groups: check per-group groupAntiDelete setting
+                    if (isGroup) {
+                        const { loadGroupSettings } = await import("./groupSettingsService.js");
+                        const groupSettings = loadGroupSettings(chatJid);
+                        if (!groupSettings.groupAntiDelete?.enabled) {
+                            console.log(`ℹ️ [AntiDelete] Group anti-delete disabled for ${chatJid}, skipping`);
+                            continue;
+                        }
+                    } else {
+                        if (!config.antiDelete) continue;
+                    }
+
                     await restoreDeletedMessage(sock, originalMsg, deletedId);
                 } else {
                     console.log(`⚠️ [AntiDelete] Message not in cache: ${deletedId}`);

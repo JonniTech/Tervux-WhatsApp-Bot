@@ -127,7 +127,7 @@
 |:---|:---|
 | <img src="https://img.shields.io/badge/-GitHub-181717?style=flat-square&logo=github" height="20"> | A GitHub account to fork the repository |
 | <img src="https://img.shields.io/badge/-WhatsApp-25D366?style=flat-square&logo=whatsapp&logoColor=white" height="20"> | A phone number with WhatsApp installed |
-| <img src="https://img.shields.io/badge/-Platform-3399FF?style=flat-square" height="20"> | Railway, Render, or a local PC/VPS for hosting |
+| <img src="https://img.shields.io/badge/-Platform-3399FF?style=flat-square" height="20"> | Railway, Render, Heroku, or a local PC/VPS for hosting |
 
 <br>
 
@@ -188,7 +188,28 @@ Click the **Fork** button at the top-right of this page to create your own copy 
 
 <br>
 
-### <img src="https://img.shields.io/badge/-Local-FF4500?style=flat-square&logo=gnubash&logoColor=white" height="22"> Option C: Local / Termux Installation
+### <img src="https://img.shields.io/badge/-Heroku-430098?style=flat-square&logo=heroku&logoColor=white" height="22"> Option C: Deploy on Heroku
+
+**Prerequisite:** You need a **Session ID** (`Tervux-...`).
+To get one, you must have a running instance of this bot (e.g. on Render/Replit/Local) or use a friend's instance.
+1. Open the bot's URL path `/pair` (e.g., `https://your-bot.onrender.com/pair`)
+2. Link your WhatsApp using QR or Pairing Code
+3. Copy the **Session ID**
+
+<a href="https://dashboard.heroku.com/new?template=https://github.com/JonniTech/Tervux-WhatsApp-Bot">
+  <img src="https://img.shields.io/badge/DEPLOY%20ON%20HEROKU-430098?style=for-the-badge&logo=heroku&logoColor=white" alt="Deploy to Heroku" height="40">
+</a>
+
+1. Click **Deploy to Heroku** above
+2. App Name: Any unique name
+3. **SESSION_ID**: Paste your `Tervux-...` ID here
+4. `PHONE`: Your number (required if using Pairing Code)
+5. Click **Deploy App**
+6. **Important:** Go to **Resources** → Disable `web` → Enable `worker`
+
+<br>
+
+### <img src="https://img.shields.io/badge/-Local-FF4500?style=flat-square&logo=gnubash&logoColor=white" height="22"> Option D: Local / Termux Installation
 
 ```bash
 # Clone the repository
@@ -305,7 +326,7 @@ If you **do not** set the `PHONE` variable, a QR code will be displayed in the l
 |:---|:---|
 | <img src="https://img.shields.io/badge/-GitHub-181717?style=flat-square&logo=github" height="20"> | Akaunti ya GitHub kwa Fork |
 | <img src="https://img.shields.io/badge/-WhatsApp-25D366?style=flat-square&logo=whatsapp&logoColor=white" height="20"> | Namba ya simu yenye WhatsApp |
-| <img src="https://img.shields.io/badge/-Platform-3399FF?style=flat-square" height="20"> | Railway, Render, au kompyuta yako |
+| <img src="https://img.shields.io/badge/-Platform-3399FF?style=flat-square" height="20"> | Railway, Render, Heroku, au kompyuta yako |
 
 <br>
 
@@ -346,6 +367,29 @@ Bonyeza kitufe cha **Fork** juu kulia ili kutengeneza copy ya hii repo iwe yako.
 3. Unganisha GitHub na uchague repo yako
 4. Weka: Build = `npm install`, Start = `npm start`
 5. Weka environment variables na Deploy
+<br>
+
+### <img src="https://img.shields.io/badge/-Heroku-430098?style=flat-square&logo=heroku&logoColor=white" height="20"> Heroku
+
+**Mahitaji:** Unahitaji **Session ID** (`Tervux-...`).
+Ili kuipata, lazima uwe na bot inayofanya kazi (mfano Render/Replit/Local) au tumia ya rafiki.
+1. Fungua link ya bot `/pair` (mfano: `https://your-bot.onrender.com/pair`)
+2. Unganisha WhatsApp yako (QR au Pairing Code)
+3. Copy hiyo **Session ID**
+
+<a href="https://dashboard.heroku.com/new?template=https://github.com/JonniTech/Tervux-WhatsApp-Bot">
+  <img src="https://img.shields.io/badge/DEPLOY%20ON%20HEROKU-430098?style=for-the-badge&logo=heroku&logoColor=white" alt="Deploy to Heroku" height="40">
+</a>
+
+1. Bonyeza **Deploy to Heroku** hapo juu
+2. App Name: Jina lolote
+3. **SESSION_ID**: Weka `Tervux-...` ID yako hapa
+4. `PHONE`: Namba yako (inahitajika kama unatumia Pairing Code)
+5. Bonyeza **Deploy App**
+6. **Muhimu:** Nenda **Resources** → Zima `web` → Washa `worker`
+
+
+<br>
 
 ### <img src="https://img.shields.io/badge/-Termux-FF4500?style=flat-square&logo=gnubash&logoColor=white" height="20"> Termux / PC
 

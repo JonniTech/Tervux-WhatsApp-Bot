@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tervux Bot | Uplink V2.0</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Dependencies -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tsparticles/confetti@3.0.3/tsparticles.confetti.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tsparticles/engine@3.0.3/tsparticles.engine.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tsparticles/slim@3.0.3/tsparticles.slim.min.js"></script>
+
+    <!-- Tailwind Config -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Outfit', 'sans-serif'] },
+                    colors: {
+                        background: '#0a0a0a',
+                        foreground: '#ffffff',
+                        card: '#0A0A0A',
+                        primary: '#d946ef',
+                        secondary: '#5E429C',
+                        border: '#262626',
+                        muted: '#1E293B'
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'spin-slow': 'spin 8s linear infinite',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #000;
+            color: #fff;
+        }
+
+        .glass {
+            background: rgba(10, 10, 10, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #d946ef 0%, #5E429C 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Particle container */
+        #tsparticles {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+
+        /* Smooth transitions */
+        .page-transition {
+            transition: all 0.5s ease-in-out;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen relative overflow-x-hidden selection:bg-primary/30">
+
+    <!-- Particles Background -->
+    <div id="tsparticles"></div>
+
+    <!-- Main Content -->
+    <div
+        class="relative z-10 container mx-auto px-4 pt-16 pb-12 lg:pt-24 min-h-screen flex flex-col justify-center items-center">
+
+        <!-- Header -->
+        <div class="text-center space-y-6 max-w-2xl mx-auto mb-12 animate-fade-in">
+            <div
+                class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/5 border border-primary/10 backdrop-blur-md">
+                <div class="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
+                <span class="text-[10px] font-semibold tracking-[0.2em] uppercase text-primary">System Online</span>
+            </div>
+            <h1 class="text-4xl lg:text-6xl font-bold tracking-tight leading-tight">
+                UPLINK <span class="gradient-text italic">V2.0</span>
+            </h1>
+            <p class="text-gray-400 max-w-lg mx-auto leading-relaxed">
+                Establish a high-bandwidth neural connection to your WhatsApp instance. Encrypted. Autonomous.
+            </p>
+        </div>
+
+        <!-- Pairing Console -->
+        <div class="w-full max-w-md glass rounded-2xl p-6 lg:p-8 space-y-8 relative overflow-hidden transition-all duration-300"
+            id="pairing-card">
+
+            <!-- Method Tabs -->
+            <div class="grid grid-cols-2 gap-2 p-1 bg-white/5 rounded-xl mb-6">
+                <button onclick="setMethod('qr')" id="tab-qr"
+                    class="py-2.5 text-sm font-medium rounded-lg transition-all text-white bg-primary shadow-lg shadow-primary/25">QR
+                    Code</button>
+                <button onclick="setMethod('code')" id="tab-code"
+                    class="py-2.5 text-sm font-medium rounded-lg transition-all text-gray-400 hover:text-white hover:bg-white/5">Pairing
+                    Code</button>
+            </div>
+
+            <!-- Steps Progress (Hidden initially) -->
+            <div id="progress-steps" class="space-y-4 hidden">
+                <div class="flex items-center gap-3 text-sm text-gray-400" id="step-1">
+                    <i data-lucide="loader-2" class="w-4 h-4 animate-spin text-primary"></i> Initializing secure
+                    connection...
+                </div>
+                <div class="flex items-center gap-3 text-sm text-gray-400" id="step-2">
+                    <i data-lucide="circle" class="w-4 h-4 text-gray-600"></i> Linking to WhatsApp Network...
+                </div>
+                <div class="flex items-center gap-3 text-sm text-gray-400" id="step-3">
+                    <i data-lucide="circle" class="w-4 h-4 text-gray-600"></i> Generating Credentials...
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div id="content-area" class="min-h-[250px] flex flex-col justify-center items-center text-center">
+
+                <!-- Idle State: Inputs -->
+                <div id="input-section" class="w-full space-y-4">
+                    <div id="phone-input-group" class="hidden space-y-2">
+                        <label class="text-xs font-semibold uppercase tracking-wider text-gray-500 ml-1">Phone
+                            Number</label>
+                        <div class="relative">
+                            <i data-lucide="phone"
+                                class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500"></i>
+                            <input type="text" id="phone-input" placeholder="e.g. 255712345678"
+                                class="w-full bg-black/40 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-sm text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder:text-gray-600">
+                        </div>
+                        <p class="text-[10px] text-gray-500 pl-1">Enter number with country code, no + or spaces.</p>
+                    </div>
+
+                    <button onclick="startPairing()" id="start-btn"
+                        class="w-full group relative flex items-center justify-center gap-2 bg-gradient-to-r from-primary to-secondary hover:brightness-110 text-white font-medium py-3 rounded-xl transition-all shadow-lg shadow-primary/20">
+                        <span>Initialize Link</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                    </button>
+                </div>
+
+                <!-- Active State: QR Display -->
+                <div id="qr-display"
+                    class="hidden flex flex-col items-center gap-4 w-full animate-in fade-in zoom-in duration-300">
+                    <div class="p-3 bg-white rounded-xl shadow-2xl relative group">
+                        <div id="qrcode" class="w-[200px] h-[200px]"></div>
+                        <div class="absolute inset-0 flex items-center justify-center bg-black/80 text-white rounded-xl hidden"
+                            id="qr-loader">
+                            <i data-lucide="loader-2" class="w-8 h-8 animate-spin text-primary"></i>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-400 font-mono">Scan with WhatsApp > Linked Devices</p>
+                    <div id="qr-timer" class="text-xs font-bold text-primary">Expires in 60s</div>
+                </div>
+
+                <!-- Active State: Code Display -->
+                <div id="code-display"
+                    class="hidden w-full flex flex-col items-center gap-6 animate-in fade-in slide-in-from-bottom-4">
+                    <div class="space-y-1 text-center">
+                        <p class="text-sm text-gray-400">Enter this code on your device:</p>
+                        <div class="flex items-center gap-2 justify-center">
+                            <div id="pairing-code-text"
+                                class="text-4xl font-mono font-bold tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-primary to-white drop-shadow-[0_0_15px_rgba(217,70,239,0.5)]">
+                                Wait...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Success State -->
+                <div id="success-display"
+                    class="hidden w-full flex flex-col items-center gap-6 animate-in fade-in zoom-in duration-500">
+                    <div
+                        class="w-16 h-16 rounded-full bg-green-500/10 flex items-center justify-center border border-green-500/20 mb-2">
+                        <i data-lucide="check" class="w-8 h-8 text-green-500"></i>
+                    </div>
+                    <h3 class="text-xl font-bold">Uplink Established</h3>
+                    <p class="text-sm text-gray-400 text-center max-w-xs">
+                        Pairing Successful! <br>
+                        <span class="text-primary font-bold">Check your WhatsApp DM</span> for your Session ID.
+                    </p>
+                    <p class="text-xs text-gray-500">You can now proceed to deploy on Heroku.</p>
+                </div>
+
+                <!-- Error Message -->
+                <div id="error-msg"
+                    class="hidden mt-4 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-xs flex items-center gap-2">
+                    <i data-lucide="alert-circle" class="w-4 h-4 shrink-0"></i>
+                    <span id="error-text"></span>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="mt-8 text-center text-[10px] text-gray-600 font-mono">
+            SECURE CONNECTION • E2E ENCRYPTED • TERVUX INC
+        </div>
+
+    </div>
+
+    <script type="module">
+        import { tsParticles } from "https://cdn.jsdelivr.net/npm/@tsparticles/engine@3.0.3/+esm";
+        import { loadSlim } from "https://cdn.jsdelivr.net/npm/@tsparticles/slim@3.0.3/+esm";
+
+        // Initialize Icons
+        lucide.createIcons();
+
+        // Socket config
+        const socket = io();
+        let currentMethod = 'qr';
+        let countdownInterval;
+
+        // UI State Management
+        window.setMethod = (method) => {
+            currentMethod = method;
+            document.getElementById('tab-qr').className = method === 'qr'
+                ? 'py-2.5 text-sm font-medium rounded-lg transition-all text-white bg-primary shadow-lg shadow-primary/25'
+                : 'py-2.5 text-sm font-medium rounded-lg transition-all text-gray-400 hover:text-white hover:bg-white/5';
+
+            document.getElementById('tab-code').className = method === 'code'
+                ? 'py-2.5 text-sm font-medium rounded-lg transition-all text-white bg-primary shadow-lg shadow-primary/25'
+                : 'py-2.5 text-sm font-medium rounded-lg transition-all text-gray-400 hover:text-white hover:bg-white/5';
+
+            document.getElementById('phone-input-group').className = method === 'code' ? 'space-y-2 animate-in fade-in' : 'hidden';
+
+            // Clear errors
+            document.getElementById('error-msg').classList.add('hidden');
+        };
+
+        window.startPairing = async () => {
+            const phone = document.getElementById('phone-input').value.trim();
+            const btn = document.getElementById('start-btn');
+
+            if (currentMethod === 'code' && (!phone || phone.length < 10)) {
+                showError("Please enter a valid phone number with country code.");
+                return;
+            }
+
+            // UI Loading State
+            document.getElementById('input-section').classList.add('hidden');
+            document.getElementById('progress-steps').classList.remove('hidden');
+            document.getElementById('content-area').classList.add('py-12');
+
+            try {
+                const res = await fetch('/api/pair', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        phoneNumber: phone,
+                        method: currentMethod,
+                        socketId: socket.id
+                    })
+                });
+
+                if (!res.ok) throw new Error('Failed to start pairing');
+
+            } catch (e) {
+                showError(e.message);
+                resetUI();
+            }
+        };
+
+        window.copySession = () => {
+            const box = document.getElementById('session-id-box');
+            box.select();
+            document.execCommand('copy');
+            // Visual feedback could be added here
+            const btn = document.querySelector('button[title="Copy"] i');
+            btn.setAttribute('data-lucide', 'check');
+            lucide.createIcons();
+            setTimeout(() => {
+                btn.setAttribute('data-lucide', 'copy');
+                lucide.createIcons();
+            }, 2000);
+        };
+
+        function showError(msg) {
+            const el = document.getElementById('error-msg');
+            document.getElementById('error-text').innerText = msg;
+            el.classList.remove('hidden');
+        }
+
+        function resetUI() {
+            document.getElementById('input-section').classList.remove('hidden');
+            document.getElementById('progress-steps').classList.add('hidden');
+            document.getElementById('qr-display').classList.add('hidden');
+            document.getElementById('code-display').classList.add('hidden');
+            document.getElementById('content-area').classList.remove('py-12');
+            clearInterval(countdownInterval);
+        }
+
+        // Socket Listeners
+        socket.on('qr_update', ({ qr }) => {
+            document.getElementById('progress-steps').classList.add('hidden');
+            document.getElementById('qr-display').classList.remove('hidden');
+
+            document.getElementById('qrcode').innerHTML = '';
+            new QRCode(document.getElementById('qrcode'), {
+                text: qr,
+                width: 200,
+                height: 200,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+            startTimer(60, 'qr-timer');
+        });
+
+        socket.on('pairing_code', ({ code }) => {
+            document.getElementById('progress-steps').classList.add('hidden');
+            document.getElementById('code-display').classList.remove('hidden');
+
+            // Format code with spaces usually (XXX-XXXX) or just create spaces
+            const formatted = code.split('').join(' ');
+            document.getElementById('pairing-code-text').innerText = formatted;
+        });
+
+        socket.on('pairing_success', ({ sessionId }) => {
+            document.getElementById('qr-display').classList.add('hidden');
+            document.getElementById('code-display').classList.add('hidden');
+            document.getElementById('progress-steps').classList.add('hidden');
+
+            document.getElementById('success-display').classList.remove('hidden');
+
+            confetti({
+                particleCount: 150,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#d946ef', '#5E429C', '#ffffff']
+            });
+        });
+
+        socket.on('pairing_error', ({ error }) => {
+            showError(error);
+            setTimeout(resetUI, 3000);
+        });
+
+        function startTimer(duration, elemId) {
+            clearInterval(countdownInterval);
+            let timer = duration;
+            const display = document.getElementById(elemId);
+
+            countdownInterval = setInterval(() => {
+                display.textContent = `Expires in ${timer}s`;
+                if (--timer < 0) {
+                    clearInterval(countdownInterval);
+                    showError("QR Code Expired. Please try again.");
+                    setTimeout(resetUI, 2000);
+                }
+            }, 1000);
+        }
+
+        // Particles Init
+        (async () => {
+            await loadSlim(tsParticles);
+
+            await tsParticles.load("tsparticles", {
+                fpsLimit: 120,
+                particles: {
+                    color: { value: "#d946ef" },
+                    links: { enable: true, color: "#5E429C", distance: 150, opacity: 0.4, width: 1 },
+                    move: { enable: true, speed: 1 },
+                    number: { density: { enable: true, area: 800 }, value: 80 },
+                    opacity: { value: 0.5 },
+                    shape: { type: "circle" },
+                    size: { value: { min: 1, max: 3 } },
+                },
+                background: { color: "#000000" }
+            });
+        })();
+
+    </script>
+</body>
+
+</html>

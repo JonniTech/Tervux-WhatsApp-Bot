@@ -1,0 +1,47 @@
+{
+    "name": "Tervux-WhatsApp-Bot",
+    "description": "🤖 Feature-rich WhatsApp Bot — Media downloads, AI chat, group management, games, and more. Deploy in minutes!",
+    "keywords": [
+        "whatsapp",
+        "bot",
+        "node",
+        "baileys",
+        "automation"
+    ],
+    "logo": "https://raw.githubusercontent.com/JonniTech/Tervux-WhatsApp-Bot/main/public/tervus-logo.png",
+    "repository": "https://github.com/JonniTech/Tervux-WhatsApp-Bot",
+    "success_url": "/",
+    "stack": "heroku-24",
+    "env": {
+        "SESSION_ID": {
+            "description": "Unique Session ID from the pairing page (starts with Tervux-...)",
+            "required": true
+        },
+        "PHONE": {
+            "description": "Your WhatsApp phone number with country code (e.g., 255712345678). Used for Pairing Code authentication.",
+            "value": "",
+            "required": true
+        },
+        "PREFIX": {
+            "description": "Command prefix for the bot (default: !). Must be a single symbol character.",
+            "value": "!",
+            "required": false
+        },
+        "OWNER_NUMBER": {
+            "description": "Additional owner number for command access (with country code, e.g., 255712345678).",
+            "value": "",
+            "required": false
+        }
+    },
+    "formation": {
+        "worker": {
+            "quantity": 1,
+            "size": "basic"
+        }
+    },
+    "buildpacks": [
+        {
+            "url": "heroku/nodejs"
+        }
+    ]
+}

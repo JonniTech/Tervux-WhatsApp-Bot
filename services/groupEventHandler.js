@@ -10,9 +10,18 @@ export async function handleGroupParticipantsUpdate(sock, update) {
     // Only handle add/remove
     if (action !== "add" && action !== "remove") return;
 
+    console.log(`👥 [GroupEvent] Participants update: action=${action}, group=${id}, participants=${participants.join(", ")}`);
+
     try {
         const settings = loadGroupSettings(id);
+        console.log(`📋 [GroupEvent] Settings loaded: welcome.enabled=${settings.welcome?.enabled}, goodbye.enabled=${settings.goodbye?.enabled}`);
+
         const metadata = await getGroupMetadata(sock, id);
+        if (!metadata) {
+            console.error(`❌ [GroupEvent] Failed to get group metadata for ${id}`);
+            return;
+        }
+
         const groupName = metadata?.subject || "Group";
         const desc = metadata?.desc?.toString() || "";
 
@@ -20,11 +29,15 @@ export async function handleGroupParticipantsUpdate(sock, update) {
             let messageText = "";
             let isWelcome = false;
 
-            if (action === "add" && settings.welcome.enabled) {
-                messageText = settings.welcome.message;
+            if (action === "add" && settings.welcome?.enabled) {
+                messageText = settings.welcome.message || "";
                 isWelcome = true;
-            } else if (action === "remove" && settings.goodbye.enabled) {
-                messageText = settings.goodbye.message;
+                console.log(`✅ [GroupEvent] Welcome is enabled, preparing message for ${participant}`);
+            } else if (action === "remove" && settings.goodbye?.enabled) {
+                messageText = settings.goodbye.message || "";
+                console.log(`✅ [GroupEvent] Goodbye is enabled, preparing message for ${participant}`);
+            } else {
+                console.log(`ℹ️ [GroupEvent] ${action === "add" ? "Welcome" : "Goodbye"} is disabled for group ${id}`);
             }
 
             if (messageText) {
@@ -55,10 +68,16 @@ export async function handleGroupParticipantsUpdate(sock, update) {
  * Handle Group Messages (Antilink, Antispam)
  */
 export async function handleGroupMessage(sock, m) {
-    if (!m.message || m.key.fromMe) return;
+    if (!m.message) return false;
 
     const remoteJid = m.key.remoteJid;
-    if (!remoteJid.endsWith("@g.us")) return;
+    if (!remoteJid.endsWith("@g.us")) return false;
+
+    // Skip bot's own messages - check both fromMe flag and JID comparison
+    if (m.key.fromMe) return false;
+    const sender = m.key.participant || m.key.remoteJid;
+    const botJid = (sock.user?.id?.split("@")[0]?.split(":")[0]) + "@s.whatsapp.net";
+    if (sender.split(":")[0].split("@")[0] === botJid.split("@")[0]) return false;
 
     const settings = loadGroupSettings(remoteJid);
 
@@ -71,28 +90,31 @@ export async function handleGroupMessage(sock, m) {
         // Check for WhatsApp links
         if (msgText.includes("chat.whatsapp.com")) {
             // Check if sender is admin (exempt)
-            const sender = m.key.participant;
             const senderIsAdmin = await isAdmin(sock, remoteJid, sender);
 
             if (!senderIsAdmin) {
                 console.log(`🛡️ Antilink triggered for ${sender} in ${remoteJid}`);
+
+                // Check if bot is admin before trying to delete/kick
+                const botIsAdmin = await isBotAdmin(sock, remoteJid);
+
+                if (!botIsAdmin) {
+                    await sock.sendMessage(remoteJid, {
+                        text: `🚫 *Link Detected!* I need admin privileges to manage antilink.`
+                    });
+                    return true;
+                }
 
                 // Delete message
                 await sock.sendMessage(remoteJid, { delete: m.key });
 
                 // Check action
                 if (settings.antilink.action === "kick") {
-                    if (await isBotAdmin(sock, remoteJid)) {
-                        await sock.groupParticipantsUpdate(remoteJid, [sender], "remove");
-                        await sock.sendMessage(remoteJid, {
-                            text: `🚫 *Link Detected!* @${sender.split("@")[0]} has been kicked.`,
-                            mentions: [sender]
-                        });
-                    } else {
-                        await sock.sendMessage(remoteJid, {
-                            text: `🚫 *Link Detected!* I need admin privileges to kick users.`
-                        });
-                    }
+                    await sock.groupParticipantsUpdate(remoteJid, [sender], "remove");
+                    await sock.sendMessage(remoteJid, {
+                        text: `🚫 *Link Detected!* @${sender.split("@")[0]} has been kicked.`,
+                        mentions: [sender]
+                    });
                 } else {
                     // Just warn
                     await sock.sendMessage(remoteJid, {
@@ -110,3 +132,4 @@ export async function handleGroupMessage(sock, m) {
 
     return false; // Continue processing
 }
+
