@@ -294,7 +294,7 @@ The modern way to deploy Tervux Bot is using a **Session ID**. This avoids compl
 <br>
 
 <div align="center">
-  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=600&size=28&pause=1000&color=25D366&center=true&vCenter=true&width=500&height=50&lines=MAELEKEZO YA KISWAHILI" alt="Swahili Section" id="-swahili-maelekezo">
+  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=600&size=28&pause=1000&color=25D366&center=true&vCenter=true&width=500&height=50&lines=MAELEKEZO+YA+KISWAHILI" alt="Swahili Section" id="-swahili-maelekezo">
 </div>
 
 <br>
