@@ -159,7 +159,7 @@ Click the **Fork** button at the top-right of this page to create your own copy 
 ### <img src="https://img.shields.io/badge/-Heroku-430098?style=flat-square&logo=heroku&logoColor=white" height="22"> Option A: Deploy on Heroku
 
 <p align="center">
-  <a href="https://tervux-pair-page.onrender.com/pair">
+  <a href="https://tervux-whatsapp-bot-production-29a9.up.railway.app/pair">
     <img src="https://img.shields.io/badge/GET%20SESSION%20ID-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" alt="Get Session ID" height="40">
   </a>
   &nbsp;&nbsp;
@@ -179,7 +179,7 @@ Click the **Fork** button at the top-right of this page to create your own copy 
 ### <img src="https://img.shields.io/badge/-Render-46E3B7?style=flat-square&logo=render&logoColor=white" height="22"> Option B: Deploy on Render
 
 <p align="center">
-  <a href="https://tervux-pair-page.onrender.com/pair">
+  <a href="https://tervux-whatsapp-bot-production-29a9.up.railway.app/pair">
     <img src="https://img.shields.io/badge/GET%20SESSION%20ID-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" alt="Get Session ID" height="40">
   </a>
   &nbsp;&nbsp;
@@ -200,7 +200,7 @@ Click the **Fork** button at the top-right of this page to create your own copy 
 ### <img src="https://img.shields.io/badge/-Railway-0B0D0E?style=flat-square&logo=railway&logoColor=white" height="22"> Option C: Deploy on Railway
 
 <p align="center">
-  <a href="https://tervux-pair-page.onrender.com/pair">
+  <a href="https://tervux-whatsapp-bot-production-29a9.up.railway.app/pair">
     <img src="https://img.shields.io/badge/GET%20SESSION%20ID-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" alt="Get Session ID" height="40">
   </a>
   &nbsp;&nbsp;
@@ -330,7 +330,7 @@ Bonyeza kitufe cha **Fork** juu kulia ili kutengeneza copy ya hii repo iwe yako.
 ### <img src="https://img.shields.io/badge/-Heroku-430098?style=flat-square&logo=heroku&logoColor=white" height="20"> Option A: Heroku
 
 <p align="center">
-  <a href="https://tervux-pair-page.onrender.com/pair">
+  <a href="https://tervux-whatsapp-bot-production-29a9.up.railway.app/pair">
     <img src="https://img.shields.io/badge/PATA%20SESSION%20ID-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" alt="Pata Session ID" height="40">
   </a>
   &nbsp;&nbsp;
@@ -350,7 +350,7 @@ Bonyeza kitufe cha **Fork** juu kulia ili kutengeneza copy ya hii repo iwe yako.
 ### <img src="https://img.shields.io/badge/-Render-46E3B7?style=flat-square&logo=render&logoColor=white" height="20"> Option B: Render
 
 <p align="center">
-  <a href="https://tervux-pair-page.onrender.com/pair">
+  <a href="https://tervux-whatsapp-bot-production-29a9.up.railway.app/pair">
     <img src="https://img.shields.io/badge/PATA%20SESSION%20ID-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" alt="Pata Session ID" height="40">
   </a>
   &nbsp;&nbsp;
@@ -371,7 +371,7 @@ Bonyeza kitufe cha **Fork** juu kulia ili kutengeneza copy ya hii repo iwe yako.
 ### <img src="https://img.shields.io/badge/-Railway-0B0D0E?style=flat-square&logo=railway&logoColor=white" height="20"> Option C: Railway
 
 <p align="center">
-  <a href="https://tervux-pair-page.onrender.com/pair">
+  <a href="https://tervux-whatsapp-bot-production-29a9.up.railway.app/pair">
     <img src="https://img.shields.io/badge/PATA%20SESSION%20ID-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" alt="Pata Session ID" height="40">
   </a>
   &nbsp;&nbsp;
