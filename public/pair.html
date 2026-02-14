@@ -105,6 +105,21 @@
             opacity: 0.5;
             cursor: not-allowed;
         }
+
+        #qrcode-box img,
+        #qrcode-box canvas {
+            max-width: 100% !important;
+            height: auto !important;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 400px) {
+            #code-grid div {
+                width: 2rem !important;
+                height: 2.75rem !important;
+                font-size: 0.875rem !important;
+            }
+        }
     </style>
 </head>
 
@@ -151,15 +166,16 @@
                             </div>
 
                             <div
-                                class="relative p-6 lg:p-8 rounded-3xl border border-border bg-card/50 backdrop-blur-2xl shadow-xl overflow-hidden">
+                                class="relative p-4 sm:p-6 lg:p-8 rounded-3xl border border-border bg-card/50 backdrop-blur-2xl shadow-xl overflow-hidden">
                                 <div class="flex items-center justify-between mb-8">
                                     <div class="space-y-1">
                                         <h2
-                                            class="text-lg lg:text-xl font-semibold tracking-tight text-white flex items-center gap-3">
+                                            class="text-base sm:text-lg lg:text-xl font-semibold tracking-tight text-white flex items-center gap-3">
                                             <i data-lucide="terminal" class="h-5 w-5 text-primary"></i>
                                             UPLINK_TERMINAL
                                         </h2>
-                                        <p class="text-[10px] font-semibold text-gray-500 uppercase tracking-widest">
+                                        <p
+                                            class="text-[9px] sm:text-[10px] font-semibold text-gray-500 uppercase tracking-widest">
                                             Secure Handshake Protocol</p>
                                     </div>
                                     <div class="flex gap-1.5 opacity-30">
@@ -196,7 +212,7 @@
                                                     <i data-lucide="sparkles" class="h-5 w-5 animate-pulse"></i>
                                                 </h3>
                                                 <p id="success-text"
-                                                    class="text-xs text-gray-400 max-w-sm mx-auto leading-relaxed p-4 rounded-2xl bg-primary/5 border border-primary/10">
+                                                    class="text-[11px] sm:text-xs text-gray-400 w-full max-w-[280px] sm:max-w-sm mx-auto leading-relaxed p-4 rounded-2xl bg-primary/5 border border-primary/10">
                                                     Generating digital signature...
                                                 </p>
                                             </div>

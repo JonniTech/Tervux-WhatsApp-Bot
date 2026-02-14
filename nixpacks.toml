@@ -1,0 +1,11 @@
+# Nixpacks configuration for Tervux Bot
+# This ensures python3 (for yt-dlp) and ffmpeg are installed
+
+[phases.setup]
+nixPkgs = ["python3", "ffmpeg", "nodejs_20"]
+
+[phases.build]
+cmds = ["npm install"]
+
+[start]
+cmd = "npm start"
