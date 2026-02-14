@@ -42,9 +42,10 @@ const MAX_RECONNECT_ATTEMPTS = 10;
 export async function createWhatsAppClient() {
     const config = getCachedConfig();
 
-    // Session Restoration Logic for Heroku (Env Var)
-    if (process.env.SESSION_ID && !existsSync(AUTH_INFO_PATH)) {
-        const sessionId = process.env.SESSION_ID;
+    // Session Restoration Logic for Cloud Platforms (Heroku/Railway/Render)
+    const credsPath = join(AUTH_INFO_PATH, "creds.json");
+    if (process.env.SESSION_ID && !existsSync(credsPath)) {
+        const sessionId = process.env.SESSION_ID.trim();
         if (sessionId.startsWith("Tervux-")) {
             try {
                 console.log("🔄 Restoring session from environment variable...");
