@@ -1,89 +1,109 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tervux Bot | Uplink V2.0</title>
-
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-    <!-- Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-
-    <!-- Dependencies -->
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tsparticles/confetti@3.0.3/tsparticles.confetti.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tsparticles/engine@3.0.3/tsparticles.engine.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tsparticles/slim@3.0.3/tsparticles.slim.min.js"></script>
-
-    <!-- Tailwind Config -->
+    <title>UPLINK V2.0 | TERVUX BOT</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+    <!-- Particles.js -->
+    <script src="https://cdn.jsdelivr.net/npm/tsparticles@3.1.0/tsparticles.bundle.min.js"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Outfit', 'sans-serif'] },
                     colors: {
+                        primary: '#25D366', // WhatsApp Green
+                        secondary: '#d946ef', // Pink
                         background: '#0a0a0a',
-                        foreground: '#ffffff',
-                        card: '#0A0A0A',
-                        primary: '#d946ef',
-                        secondary: '#5E429C',
-                        border: '#262626',
-                        muted: '#1E293B'
+                        card: '#121212',
+                        border: 'rgba(255,255,255,0.08)',
+                        muted: 'rgba(255,255,255,0.03)'
                     },
                     animation: {
-                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
                         'spin-slow': 'spin 8s linear infinite',
                     }
                 }
             }
         }
     </script>
-
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap');
+
         body {
+            font-family: 'Outfit', sans-serif;
             background-color: #000;
             color: #fff;
         }
 
         .glass {
-            background: rgba(10, 10, 10, 0.6);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(18, 18, 18, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
-        .gradient-text {
-            background: linear-gradient(135deg, #d946ef 0%, #5E429C 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .hide-scrollbar::-webkit-scrollbar {
+        .no-scrollbar::-webkit-scrollbar {
             display: none;
         }
 
-        /* Particle container */
-        #tsparticles {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            z-index: -1;
+
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        /* Smooth transitions */
-        .page-transition {
-            transition: all 0.5s ease-in-out;
+        @keyframes slide-in-left {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slide-in-right {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fade-in 0.8s ease-out forwards;
+        }
+
+        .animate-slide-left {
+            animation: slide-in-left 0.8s ease-out forwards;
+        }
+
+        .animate-slide-right {
+            animation: slide-in-right 0.8s ease-out forwards;
+        }
+
+        input:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
     </style>
 </head>
@@ -94,233 +114,698 @@
     <div id="tsparticles"></div>
 
     <!-- Main Content -->
-    <div
-        class="relative z-10 container mx-auto px-4 pt-16 pb-12 lg:pt-24 min-h-screen flex flex-col justify-center items-center">
-
-        <!-- Header -->
-        <div class="text-center space-y-6 max-w-2xl mx-auto mb-12 animate-fade-in">
-            <div
-                class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/5 border border-primary/10 backdrop-blur-md">
-                <div class="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
-                <span class="text-[10px] font-semibold tracking-[0.2em] uppercase text-primary">System Online</span>
+    <div class="relative z-10">
+        <!-- Header Section -->
+        <div class="container mx-auto px-4 pt-16 pb-12 lg:pt-28 lg:pb-24">
+            <div class="text-center space-y-6 max-w-4xl mx-auto animate-fade-in">
+                <div
+                    class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/5 border border-primary/10 backdrop-blur-md">
+                    <div class="relative flex h-2 w-2">
+                        <span
+                            class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                    </div>
+                    <span class="text-[10px] font-semibold tracking-[0.2em] uppercase text-primary">System Online</span>
+                </div>
+                <h1 class="text-3xl sm:text-4xl lg:text-6xl font-semibold tracking-tight leading-tight text-white">
+                    UPLINK <span class="text-primary italic">V2.0</span>
+                </h1>
+                <p class="text-xs sm:text-base text-gray-400 font-medium max-w-2xl mx-auto leading-relaxed px-4">
+                    Establish a high-bandwidth neural connection to your WhatsApp instance.<br>
+                    Encrypted. Autonomous. Irrelevant of physical proximity.
+                </p>
             </div>
-            <h1 class="text-4xl lg:text-6xl font-bold tracking-tight leading-tight">
-                UPLINK <span class="gradient-text italic">V2.0</span>
-            </h1>
-            <p class="text-gray-400 max-w-lg mx-auto leading-relaxed">
-                Establish a high-bandwidth neural connection to your WhatsApp instance. Encrypted. Autonomous.
-            </p>
         </div>
 
-        <!-- Pairing Console -->
-        <div class="w-full max-w-md glass rounded-2xl p-6 lg:p-8 space-y-8 relative overflow-hidden transition-all duration-300"
-            id="pairing-card">
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="max-w-7xl mx-auto">
+                <!-- Main Content Grid -->
+                <div class="grid lg:grid-cols-12 gap-6 lg:gap-8 mb-12 lg:mb-32">
 
-            <!-- Method Tabs -->
-            <div class="grid grid-cols-2 gap-2 p-1 bg-white/5 rounded-xl mb-6">
-                <button onclick="setMethod('qr')" id="tab-qr"
-                    class="py-2.5 text-sm font-medium rounded-lg transition-all text-white bg-primary shadow-lg shadow-primary/25">QR
-                    Code</button>
-                <button onclick="setMethod('code')" id="tab-code"
-                    class="py-2.5 text-sm font-medium rounded-lg transition-all text-gray-400 hover:text-white hover:bg-white/5">Pairing
-                    Code</button>
-            </div>
+                    <!-- Left: Pairing Console -->
+                    <div class="lg:col-span-7 space-y-6 lg:space-y-8 animate-slide-left">
+                        <div class="group relative">
+                            <!-- Glowing Border Effect -->
+                            <div
+                                class="absolute -inset-0.5 bg-gradient-to-r from-primary/30 to-primary/0 rounded-3xl blur opacity-20 transition duration-1000">
+                            </div>
 
-            <!-- Steps Progress (Hidden initially) -->
-            <div id="progress-steps" class="space-y-4 hidden">
-                <div class="flex items-center gap-3 text-sm text-gray-400" id="step-1">
-                    <i data-lucide="loader-2" class="w-4 h-4 animate-spin text-primary"></i> Initializing secure
-                    connection...
-                </div>
-                <div class="flex items-center gap-3 text-sm text-gray-400" id="step-2">
-                    <i data-lucide="circle" class="w-4 h-4 text-gray-600"></i> Linking to WhatsApp Network...
-                </div>
-                <div class="flex items-center gap-3 text-sm text-gray-400" id="step-3">
-                    <i data-lucide="circle" class="w-4 h-4 text-gray-600"></i> Generating Credentials...
-                </div>
-            </div>
+                            <div
+                                class="relative p-6 lg:p-8 rounded-3xl border border-border bg-card/50 backdrop-blur-2xl shadow-xl overflow-hidden">
+                                <div class="flex items-center justify-between mb-8">
+                                    <div class="space-y-1">
+                                        <h2
+                                            class="text-lg lg:text-xl font-semibold tracking-tight text-white flex items-center gap-3">
+                                            <i data-lucide="terminal" class="h-5 w-5 text-primary"></i>
+                                            UPLINK_TERMINAL
+                                        </h2>
+                                        <p class="text-[10px] font-semibold text-gray-500 uppercase tracking-widest">
+                                            Secure Handshake Protocol</p>
+                                    </div>
+                                    <div class="flex gap-1.5 opacity-30">
+                                        <div class="w-2.5 h-2.5 rounded-full bg-white/20"></div>
+                                        <div class="w-2.5 h-2.5 rounded-full bg-white/20"></div>
+                                        <div class="w-2.5 h-2.5 rounded-full bg-white/20"></div>
+                                    </div>
+                                </div>
 
-            <!-- Content Area -->
-            <div id="content-area" class="min-h-[250px] flex flex-col justify-center items-center text-center">
+                                <!-- Action Toggle -->
+                                <div class="inline-flex p-1 bg-white/5 rounded-xl mb-8 border border-white/10">
+                                    <button onclick="setMethod('qr')" id="tab-qr"
+                                        class="px-6 py-2 text-[10px] font-bold uppercase tracking-widest rounded-lg transition-all duration-300 bg-primary text-black shadow-lg">Optical
+                                        Scan</button>
+                                    <button onclick="setMethod('code')" id="tab-code"
+                                        class="px-6 py-2 text-[10px] font-bold uppercase tracking-widest rounded-lg transition-all duration-300 text-gray-400 hover:text-white">Neural
+                                        Code</button>
+                                </div>
 
-                <!-- Idle State: Inputs -->
-                <div id="input-section" class="w-full space-y-4">
-                    <div id="phone-input-group" class="hidden space-y-2">
-                        <label class="text-xs font-semibold uppercase tracking-wider text-gray-500 ml-1">Phone
-                            Number</label>
-                        <div class="relative">
-                            <i data-lucide="phone"
-                                class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500"></i>
-                            <input type="text" id="phone-input" placeholder="e.g. 255712345678"
-                                class="w-full bg-black/40 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-sm text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder:text-gray-600">
+                                <!-- Content States -->
+                                <div id="content-area">
+                                    <!-- Success State (Wait) -->
+                                    <div id="success-display" class="hidden space-y-8 py-4 animate-fade-in">
+                                        <div class="flex flex-col items-center text-center space-y-4">
+                                            <div
+                                                class="w-16 h-16 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center">
+                                                <i data-lucide="check" class="h-8 w-8 text-primary"></i>
+                                            </div>
+                                            <div class="space-y-2">
+                                                <h3
+                                                    class="text-xl font-bold tracking-tight text-primary flex items-center justify-center gap-2">
+                                                    <i data-lucide="sparkles" class="h-5 w-5 animate-pulse"></i>
+                                                    <span id="success-header">AUTHORIZATION_PENDING</span>
+                                                    <i data-lucide="sparkles" class="h-5 w-5 animate-pulse"></i>
+                                                </h3>
+                                                <p id="success-text"
+                                                    class="text-xs text-gray-400 max-w-sm mx-auto leading-relaxed p-4 rounded-2xl bg-primary/5 border border-primary/10">
+                                                    Generating digital signature...
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div id="result-display" class="flex justify-center min-h-[200px] items-center">
+                                            <!-- QR or Code will go here -->
+                                        </div>
+                                        <div id="expiry-timer" class="hidden flex flex-wrap justify-center gap-4">
+                                            <div
+                                                class="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-primary/20 bg-primary/5 text-[10px] font-black uppercase tracking-[0.2em] text-primary">
+                                                <i data-lucide="clock" class="h-3 w-3"></i>
+                                                Uplink Expiry: <span id="time-left">60</span>S
+                                            </div>
+                                            <div id="action-buttons" class="flex gap-2">
+                                                <button id="copy-btn" onclick="copyPairingCode()"
+                                                    class="hidden h-8 px-4 rounded-full border border-primary/20 bg-primary/5 hover:bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest flex items-center gap-2 transition-all">
+                                                    <i data-lucide="copy" class="h-3 w-3"></i>
+                                                    Copy
+                                                </button>
+                                                <button id="share-btn" onclick="shareUplink()"
+                                                    class="h-8 px-4 rounded-full border border-primary/20 bg-primary/5 hover:bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest flex items-center gap-2 transition-all">
+                                                    <i data-lucide="share-2" class="h-3 w-3"></i>
+                                                    Share
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="flex flex-col sm:flex-row gap-4 pt-4">
+                                            <button onclick="resetTerminal()"
+                                                class="flex-1 h-12 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-white font-bold text-xs tracking-widest uppercase transition-all">
+                                                Reset Uplink
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Idle State (Input) -->
+                                    <div id="idle-display" class="space-y-6">
+                                        <div class="space-y-4">
+                                            <div
+                                                class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 px-1">
+                                                <label
+                                                    class="text-[10px] font-bold uppercase tracking-widest text-gray-500 flex items-center gap-2">
+                                                    <i data-lucide="globe" class="h-3 w-3"></i>
+                                                    International_Uplink_Node
+                                                </label>
+                                                <span class="text-[10px] font-bold text-primary/70 uppercase">Input:
+                                                    Phone_Num</span>
+                                            </div>
+                                            <div class="relative group/input">
+                                                <div
+                                                    class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500 group-focus-within/input:text-primary transition-colors">
+                                                    <i data-lucide="plus" class="h-4 w-4"></i>
+                                                </div>
+                                                <input type="tel" id="phone-input"
+                                                    placeholder="Phone Module ID (e.g. 255...)"
+                                                    class="w-full h-14 pl-11 bg-white/5 border border-white/10 group-hover/input:border-white/20 focus:border-primary/50 text-base font-semibold tracking-tight text-white placeholder:text-gray-700 transition-all rounded-xl outline-none">
+                                            </div>
+                                            <p
+                                                class="text-[9px] text-gray-600 font-medium uppercase tracking-wider ml-1">
+                                                * Omit leading zero. Include country prefix for global signal lock.
+                                            </p>
+                                        </div>
+
+                                        <button onclick="startPairing()" id="pair-btn"
+                                            class="w-full h-14 rounded-xl bg-primary hover:bg-primary/90 text-black font-bold uppercase tracking-widest text-[11px] shadow-lg shadow-primary/20 transition-all active:scale-[0.98] flex items-center justify-center gap-2 group/btn">
+                                            <span id="btn-text">GENERATE_OPTICAL_KEY</span>
+                                            <i data-lucide="zap"
+                                                class="h-3.5 w-3.5 group-hover/btn:translate-x-1 transition-transform"></i>
+                                        </button>
+                                    </div>
+
+                                    <!-- Error Display -->
+                                    <div id="error-display"
+                                        class="hidden mt-6 p-4 rounded-xl bg-red-500/5 border border-red-500/20 flex items-center gap-3 text-red-500">
+                                        <i data-lucide="alert-circle" class="h-4 w-4 shrink-0"></i>
+                                        <span id="error-text"
+                                            class="text-[10px] font-bold uppercase tracking-wider"></span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <p class="text-[10px] text-gray-500 pl-1">Enter number with country code, no + or spaces.</p>
+
+                        <!-- Signal Stats Display -->
+                        <div class="grid grid-cols-3 gap-4">
+                            <div
+                                class="p-4 rounded-xl border border-white/10 bg-white/5 flex flex-col items-center text-center space-y-1 hover:bg-white/10 transition-colors cursor-default">
+                                <i data-lucide="activity" class="h-3.5 w-3.5 text-gray-500"></i>
+                                <p class="text-[8px] font-bold uppercase tracking-widest text-gray-600">Latency</p>
+                                <p class="text-[10px] font-semibold text-white tracking-widest">14ms</p>
+                            </div>
+                            <div
+                                class="p-4 rounded-xl border border-white/10 bg-white/5 flex flex-col items-center text-center space-y-1 hover:bg-white/10 transition-colors cursor-default">
+                                <i data-lucide="shield-check" class="h-3.5 w-3.5 text-gray-500"></i>
+                                <p class="text-[8px] font-bold uppercase tracking-widest text-gray-600">Encryption</p>
+                                <p class="text-[10px] font-semibold text-white tracking-widest">AES-256</p>
+                            </div>
+                            <div
+                                class="p-4 rounded-xl border border-white/10 bg-white/5 flex flex-col items-center text-center space-y-1 hover:bg-white/10 transition-colors cursor-default">
+                                <i data-lucide="refresh-ccw" class="h-3.5 w-3.5 text-gray-500"></i>
+                                <p class="text-[8px] font-bold uppercase tracking-widest text-gray-600">Uptime</p>
+                                <p class="text-[10px] font-semibold text-white tracking-widest">99.9%</p>
+                            </div>
+                        </div>
                     </div>
 
-                    <button onclick="startPairing()" id="start-btn"
-                        class="w-full group relative flex items-center justify-center gap-2 bg-gradient-to-r from-primary to-secondary hover:brightness-110 text-white font-medium py-3 rounded-xl transition-all shadow-lg shadow-primary/20">
-                        <span>Initialize Link</span>
-                        <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
-                    </button>
-                </div>
+                    <!-- Right: Core Features -->
+                    <div class="lg:col-span-5 space-y-6 animate-slide-right">
+                        <div class="p-6 lg:p-8 rounded-3xl border border-border bg-card/50 backdrop-blur-md h-full">
+                            <div class="space-y-1 mb-8">
+                                <h2 class="text-base lg:text-lg font-semibold text-white tracking-tight uppercase">
+                                    Core_Modules</h2>
+                                <p class="text-[10px] font-semibold text-gray-500 tracking-widest uppercase">Advanced
+                                    Automation Suite</p>
+                            </div>
 
-                <!-- Active State: QR Display -->
-                <div id="qr-display"
-                    class="hidden flex flex-col items-center gap-4 w-full animate-in fade-in zoom-in duration-300">
-                    <div class="p-3 bg-white rounded-xl shadow-2xl relative group">
-                        <div id="qrcode" class="w-[200px] h-[200px]"></div>
-                        <div class="absolute inset-0 flex items-center justify-center bg-black/80 text-white rounded-xl hidden"
-                            id="qr-loader">
-                            <i data-lucide="loader-2" class="w-8 h-8 animate-spin text-primary"></i>
-                        </div>
-                    </div>
-                    <p class="text-xs text-gray-400 font-mono">Scan with WhatsApp > Linked Devices</p>
-                    <div id="qr-timer" class="text-xs font-bold text-primary">Expires in 60s</div>
-                </div>
+                            <div class="grid gap-3 lg:gap-4">
+                                <!-- Feature Items -->
+                                <div
+                                    class="group flex gap-4 p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-primary/20 transition-all duration-300">
+                                    <div
+                                        class="flex-shrink-0 w-10 h-10 rounded-lg bg-black border border-white/10 flex items-center justify-center text-gray-500 group-hover:text-primary transition-colors">
+                                        <i data-lucide="bot" class="h-5 w-5"></i>
+                                    </div>
+                                    <div class="space-y-0.5">
+                                        <h3
+                                            class="text-xs font-bold text-white tracking-tight uppercase group-hover:text-primary transition-colors">
+                                            AI-Powered Commands</h3>
+                                        <p class="text-[11px] text-gray-500 leading-relaxed font-medium">90+ intelligent
+                                            commands for automation and productivity</p>
+                                    </div>
+                                </div>
+                                <div
+                                    class="group flex gap-4 p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-primary/20 transition-all duration-300">
+                                    <div
+                                        class="flex-shrink-0 w-10 h-10 rounded-lg bg-black border border-white/10 flex items-center justify-center text-gray-500 group-hover:text-primary transition-colors">
+                                        <i data-lucide="zap" class="h-5 w-5"></i>
+                                    </div>
+                                    <div class="space-y-0.5">
+                                        <h3
+                                            class="text-xs font-bold text-white tracking-tight uppercase group-hover:text-primary transition-colors">
+                                            Auto Replies</h3>
+                                        <p class="text-[11px] text-gray-500 leading-relaxed font-medium">Set custom
+                                            auto-replies for keywords and phrases</p>
+                                    </div>
+                                </div>
+                                <div
+                                    class="group flex gap-4 p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-primary/20 transition-all duration-300">
+                                    <div
+                                        class="flex-shrink-0 w-10 h-10 rounded-lg bg-black border border-white/10 flex items-center justify-center text-gray-500 group-hover:text-primary transition-colors">
+                                        <i data-lucide="shield" class="h-5 w-5"></i>
+                                    </div>
+                                    <div class="space-y-0.5">
+                                        <h3
+                                            class="text-xs font-bold text-white tracking-tight uppercase group-hover:text-primary transition-colors">
+                                            Privacy First</h3>
+                                        <p class="text-[11px] text-gray-500 leading-relaxed font-medium">Your data is
+                                            secured with end-to-end encryption</p>
+                                    </div>
+                                </div>
+                                <div
+                                    class="group flex gap-4 p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-primary/20 transition-all duration-300">
+                                    <div
+                                        class="flex-shrink-0 w-10 h-10 rounded-lg bg-black border border-white/10 flex items-center justify-center text-gray-500 group-hover:text-primary transition-colors">
+                                        <i data-lucide="clock" class="h-5 w-5"></i>
+                                    </div>
+                                    <div class="space-y-0.5">
+                                        <h3
+                                            class="text-xs font-bold text-white tracking-tight uppercase group-hover:text-primary transition-colors">
+                                            24/7 Active</h3>
+                                        <p class="text-[11px] text-gray-500 leading-relaxed font-medium">Bot remains
+                                            active for 3 days per pairing session</p>
+                                    </div>
+                                </div>
+                            </div>
 
-                <!-- Active State: Code Display -->
-                <div id="code-display"
-                    class="hidden w-full flex flex-col items-center gap-6 animate-in fade-in slide-in-from-bottom-4">
-                    <div class="space-y-1 text-center">
-                        <p class="text-sm text-gray-400">Enter this code on your device:</p>
-                        <div class="flex items-center gap-2 justify-center">
-                            <div id="pairing-code-text"
-                                class="text-4xl font-mono font-bold tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-primary to-white drop-shadow-[0_0_15px_rgba(217,70,239,0.5)]">
-                                Wait...
+                            <div class="mt-8 p-6 rounded-xl bg-primary/5 border border-primary/10 space-y-4">
+                                <div class="flex items-center gap-3 text-primary">
+                                    <i data-lucide="sparkles" class="h-4 w-4 animate-spin-slow"></i>
+                                    <span
+                                        class="text-[10px] font-bold uppercase tracking-widest">Premium_Protocol</span>
+                                </div>
+                                <p class="text-[11px] text-gray-400 font-medium leading-relaxed italic">
+                                    "Every node is optimized for maximum performance and stealth, ensuring 100%
+                                    detection avoidance."
+                                </p>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Success State -->
-                <div id="success-display"
-                    class="hidden w-full flex flex-col items-center gap-6 animate-in fade-in zoom-in duration-500">
+                <!-- Disclaimer Section -->
+                <div class="mb-12 lg:mb-32 animate-fade-in">
                     <div
-                        class="w-16 h-16 rounded-full bg-green-500/10 flex items-center justify-center border border-green-500/20 mb-2">
-                        <i data-lucide="check" class="w-8 h-8 text-green-500"></i>
+                        class="relative group p-1 rounded-3xl bg-gradient-to-br from-amber-500/20 via-transparent to-amber-500/5 overflow-hidden">
+                        <div class="absolute inset-0 bg-black/60 backdrop-blur-3xl rounded-3xl"></div>
+                        <div class="relative p-6 lg:p-12 flex flex-col lg:flex-row items-center gap-10">
+                            <div class="flex-shrink-0 relative">
+                                <div
+                                    class="w-20 h-20 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-500 shadow-lg shadow-amber-500/5">
+                                    <i data-lucide="shield-alert" class="w-8 h-8 animate-pulse"></i>
+                                </div>
+                            </div>
+
+                            <div class="flex-1 space-y-6 text-center lg:text-left">
+                                <div class="space-y-1">
+                                    <h2 class="text-2xl font-semibold tracking-tight text-white uppercase">
+                                        SECURITY_DISCLAIMER <span class="text-amber-500 font-normal">v1.2</span>
+                                    </h2>
+                                    <p class="text-[10px] font-bold text-amber-500/70 uppercase tracking-widest">
+                                        Official Safety Protocol</p>
+                                </div>
+
+                                <div class="grid md:grid-cols-2 gap-6 pt-4">
+                                    <div class="space-y-3 p-6 rounded-2xl bg-white/5 border border-white/10">
+                                        <div class="flex items-center gap-2 text-amber-500">
+                                            <i data-lucide="zap" class="w-3.5 h-3.5"></i>
+                                            <span
+                                                class="text-[10px] font-bold uppercase tracking-widest">Zero_Cost_Neural_Link</span>
+                                        </div>
+                                        <p class="text-xs text-gray-400 leading-relaxed font-medium">
+                                            Tervux WhatsApp modules are <span class="text-white font-bold">100%
+                                                FREE</span>.
+                                            If any entity requests currency for this uplink, terminate the connection
+                                            immediately.
+                                        </p>
+                                    </div>
+                                    <div class="space-y-3 p-6 rounded-2xl bg-white/5 border border-white/10">
+                                        <div class="flex items-center gap-2 text-gray-500">
+                                            <i data-lucide="cpu" class="w-3.5 h-3.5"></i>
+                                            <span
+                                                class="text-[10px] font-bold uppercase tracking-widest">BETA_OS_CAUTION</span>
+                                        </div>
+                                        <p class="text-xs text-gray-400 leading-relaxed font-medium">
+                                            This system is in autonomous beta. Algorithmic errors may occur.
+                                            Do not rely on this node for mission-critical data.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <h3 class="text-xl font-bold">Uplink Established</h3>
-                    <p class="text-sm text-gray-400 text-center max-w-xs">
-                        Pairing Successful! <br>
-                        <span class="text-primary font-bold">Check your WhatsApp DM</span> for your Session ID.
-                    </p>
-                    <p class="text-xs text-gray-500">You can now proceed to deploy on Heroku.</p>
                 </div>
 
-                <!-- Error Message -->
-                <div id="error-msg"
-                    class="hidden mt-4 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-xs flex items-center gap-2">
-                    <i data-lucide="alert-circle" class="w-4 h-4 shrink-0"></i>
-                    <span id="error-text"></span>
-                </div>
+                <!-- Command Core Header -->
+                <div class="mb-20 lg:mb-32 animate-fade-in text-center space-y-3">
+                    <h2 class="text-3xl lg:text-5xl font-semibold tracking-tight text-white uppercase">COMMAND_CORE</h2>
+                    <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Centralized Control
+                        Interface</p>
 
+                    <!-- Command Grid -->
+                    <div class="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-left px-4">
+                        <!-- Fun Category -->
+                        <div
+                            class="p-6 glass rounded-2xl border border-white/5 hover:border-primary/20 transition-all duration-500 group">
+                            <div class="flex items-center gap-4 mb-4">
+                                <div
+                                    class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                                    <i data-lucide="gamepad-2" class="w-5 h-5"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-xs font-bold text-white uppercase tracking-wider">FUN_MODULES</h3>
+                                    <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest">30+ Commands
+                                    </p>
+                                </div>
+                            </div>
+                            <p class="text-[10px] text-gray-400 leading-relaxed font-medium">
+                                ship, fancy, joke, hack, matrix, trivia, dare, truth, roast, riddle, pickup, rps, dice,
+                                coinflip...
+                            </p>
+                        </div>
+
+                        <!-- Media Category -->
+                        <div
+                            class="p-6 glass rounded-2xl border border-white/5 hover:border-primary/20 transition-all duration-500 group">
+                            <div class="flex items-center gap-4 mb-4">
+                                <div
+                                    class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                                    <i data-lucide="play" class="w-5 h-5"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-xs font-bold text-white uppercase tracking-wider">MEDIA_NODES</h3>
+                                    <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest">10+ Commands
+                                    </p>
+                                </div>
+                            </div>
+                            <p class="text-[10px] text-gray-400 leading-relaxed font-medium">
+                                movie, news, lyrics, play, video, meme, wallpaper, waifu, zodiac, sport...
+                            </p>
+                        </div>
+
+                        <!-- Tool Category -->
+                        <div
+                            class="p-6 glass rounded-2xl border border-white/5 hover:border-primary/20 transition-all duration-500 group">
+                            <div class="flex items-center gap-4 mb-4">
+                                <div
+                                    class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                                    <i data-lucide="wrench" class="w-5 h-5"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-xs font-bold text-white uppercase tracking-wider">TOOL_ARRAY</h3>
+                                    <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest">13+ Commands
+                                    </p>
+                                </div>
+                            </div>
+                            <p class="text-[10px] text-gray-400 leading-relaxed font-medium">
+                                ai, calc, weather, translate, wiki, qr, ip, aesthetic, sticker, github, password...
+                            </p>
+                        </div>
+
+                        <!-- Group Category -->
+                        <div
+                            class="p-6 glass rounded-2xl border border-white/5 hover:border-primary/20 transition-all duration-500 group">
+                            <div class="flex items-center gap-4 mb-4">
+                                <div
+                                    class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                                    <i data-lucide="users" class="w-5 h-5"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-xs font-bold text-white uppercase tracking-wider">GROUP_CENTRAL</h3>
+                                    <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest">25+ Commands
+                                    </p>
+                                </div>
+                            </div>
+                            <p class="text-[10px] text-gray-400 leading-relaxed font-medium">
+                                kick, add, promote, tagall, hidetag, mute, antilink, welcome, goodbye, poll, warn...
+                            </p>
+                        </div>
+
+                        <!-- Settings Category -->
+                        <div
+                            class="p-6 glass rounded-2xl border border-white/5 hover:border-primary/20 transition-all duration-500 group">
+                            <div class="flex items-center gap-4 mb-4">
+                                <div
+                                    class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                                    <i data-lucide="settings" class="w-5 h-5"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-xs font-bold text-white uppercase tracking-wider">SYSTEM_TOGGLES
+                                    </h3>
+                                    <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest">10+ Commands
+                                    </p>
+                                </div>
+                            </div>
+                            <p class="text-[10px] text-gray-400 leading-relaxed font-medium">
+                                prefix, antidelete, anticall, alwaysonline, alwaystyping, autoviewstatus, autoread...
+                            </p>
+                        </div>
+
+                        <!-- General Category -->
+                        <div
+                            class="p-6 glass rounded-2xl border border-white/5 hover:border-primary/20 transition-all duration-500 group">
+                            <div class="flex items-center gap-4 mb-4">
+                                <div
+                                    class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                                    <i data-lucide="terminal" class="w-5 h-5"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-xs font-bold text-white uppercase tracking-wider">BASE_LOGIC</h3>
+                                    <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest">8+ Commands
+                                    </p>
+                                </div>
+                            </div>
+                            <p class="text-[10px] text-gray-400 leading-relaxed font-medium">
+                                help, ping, botstats, owner, creator, block, unblock, quote...
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="mt-16 flex justify-center">
+                        <div
+                            class="inline-flex items-center gap-3 px-6 py-3 rounded-full border border-primary/20 bg-primary/5 text-[10px] font-black uppercase tracking-[0.4em] text-primary">
+                            <i data-lucide="sparkles" class="h-4 w-4 animate-pulse"></i>
+                            Total Deployment: 100+ Active Nodes
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="mt-8 text-center text-[10px] text-gray-600 font-mono">
-            SECURE CONNECTION • E2E ENCRYPTED • TERVUX INC
+        <div class="pb-24 text-center text-[10px] text-gray-600 font-mono tracking-[0.4em] uppercase">
+            [ Sector_A_Terminal_Tervux_Inc_2026 ]
         </div>
-
     </div>
 
-    <script type="module">
-        import { tsParticles } from "https://cdn.jsdelivr.net/npm/@tsparticles/engine@3.0.3/+esm";
-        import { loadSlim } from "https://cdn.jsdelivr.net/npm/@tsparticles/slim@3.0.3/+esm";
+    <!-- Scripts -->
+    <script>
 
-        // Initialize Icons
+        // Global Variables
+        const socket = io();
+        console.log('📡 Socket initialized');
+
+        socket.on('connect', () => {
+            console.log('📡 Socket connected, ID:', socket.id);
+        });
+
+        socket.onAny((event, data) => {
+            console.log(`📡 RAW_SOCKET_EVENT: ${event}`, data);
+        });
+        let currentMethod = 'qr';
+        let currentSessionId = null;
+        let countdownInterval;
+        let loadingTimeout;
+        let isLinked = false;
+
+        // Initialize Lucid Icons
         lucide.createIcons();
 
-        // Socket config
-        const socket = io();
-        let currentMethod = 'qr';
-        let countdownInterval;
+        // Particles Initialization
+        async function initParticles() {
+            try {
+                await tsParticles.load({
+                    id: "tsparticles",
+                    options: {
+                        fullScreen: {
+                            enable: true,
+                            zIndex: 0
+                        },
+                        background: { color: { value: "transparent" } },
+                        fpsLimit: 120,
+                        interactivity: {
+                            detectsOn: "window",
+                            events: {
+                                onClick: { enable: true, mode: "push" },
+                                onHover: { enable: true, mode: "repulse" },
+                                resize: true,
+                            },
+                            modes: {
+                                push: { quantity: 4 },
+                                repulse: { distance: 100, duration: 0.4 },
+                            },
+                        },
+                        particles: {
+                            color: { value: "#25D366" }, // WhatsApp Green
+                            links: {
+                                color: "#25D366",
+                                distance: 150,
+                                enable: true,
+                                opacity: 0.2, // Exact match to page.js dark mode
+                                width: 1,
+                            },
+                            move: {
+                                direction: "none",
+                                enable: true,
+                                outModes: { default: "bounce" },
+                                random: false,
+                                speed: 1,
+                                straight: false,
+                            },
+                            number: { density: { enable: true, area: 600 }, value: 250 },
+                            opacity: { value: 0.5 }, // Exact match
+                            shape: { type: "circle" },
+                            size: { value: { min: 1, max: 3 } }, // Exact match
+                        },
+                        detectRetina: true,
+                    }
+                });
 
-        // UI State Management
+                // Safety: Force Canvas Styling
+                const canvas = document.querySelector('#tsparticles canvas');
+                if (canvas) {
+                    canvas.style.position = 'fixed';
+                    canvas.style.top = '0';
+                    canvas.style.left = '0';
+                    canvas.style.width = '100%';
+                    canvas.style.height = '100%';
+                    canvas.style.zIndex = '1';
+                    canvas.style.pointerEvents = 'none';
+                }
+                console.log("Neural Uplink Particles Synchronized");
+            } catch (err) {
+                console.error("Neural Uplink Particles Failed:", err);
+            }
+        }
+
+        // Run Init on Load
+        if (document.readyState === 'complete') {
+            initParticles();
+        } else {
+            window.addEventListener('load', initParticles);
+        }
+
+        // Terminal Logic
         window.setMethod = (method) => {
             currentMethod = method;
             document.getElementById('tab-qr').className = method === 'qr'
-                ? 'py-2.5 text-sm font-medium rounded-lg transition-all text-white bg-primary shadow-lg shadow-primary/25'
-                : 'py-2.5 text-sm font-medium rounded-lg transition-all text-gray-400 hover:text-white hover:bg-white/5';
+                ? 'px-6 py-2 text-[10px] font-bold uppercase tracking-widest rounded-lg transition-all duration-300 bg-primary text-black shadow-lg'
+                : 'px-6 py-2 text-[10px] font-bold uppercase tracking-widest rounded-lg transition-all duration-300 text-gray-400 hover:text-white';
 
             document.getElementById('tab-code').className = method === 'code'
-                ? 'py-2.5 text-sm font-medium rounded-lg transition-all text-white bg-primary shadow-lg shadow-primary/25'
-                : 'py-2.5 text-sm font-medium rounded-lg transition-all text-gray-400 hover:text-white hover:bg-white/5';
+                ? 'px-6 py-2 text-[10px] font-bold uppercase tracking-widest rounded-lg transition-all duration-300 bg-primary text-black shadow-lg'
+                : 'px-6 py-2 text-[10px] font-bold uppercase tracking-widest rounded-lg transition-all duration-300 text-gray-400 hover:text-white';
 
-            document.getElementById('phone-input-group').className = method === 'code' ? 'space-y-2 animate-in fade-in' : 'hidden';
-
-            // Clear errors
-            document.getElementById('error-msg').classList.add('hidden');
+            document.getElementById('btn-text').innerText = method === 'qr' ? 'GENERATE_OPTICAL_KEY' : 'GENERATE_NEURAL_KEY';
+            document.getElementById('error-display').classList.add('hidden');
         };
 
         window.startPairing = async () => {
-            const phone = document.getElementById('phone-input').value.trim();
-            const btn = document.getElementById('start-btn');
+            const rawPhone = document.getElementById('phone-input').value.trim();
+            const btn = document.getElementById('pair-btn');
 
-            if (currentMethod === 'code' && (!phone || phone.length < 10)) {
-                showError("Please enter a valid phone number with country code.");
+            if (rawPhone.startsWith('+')) {
+                showError("DO NOT START WITH '+'. ENTER ONLY DIGITS (e.g. 255...)");
                 return;
             }
 
-            // UI Loading State
-            document.getElementById('input-section').classList.add('hidden');
-            document.getElementById('progress-steps').classList.remove('hidden');
-            document.getElementById('content-area').classList.add('py-12');
+            const cleaned = rawPhone.replace(/\D/g, ''); // Normalize: remove spaces etc
+
+            if (!cleaned || cleaned.length < 11) {
+                showError("INCOMPLETE NUMBER. ENTER FULL MODULE ID (e.g. 255712345678)");
+                return;
+            }
+
+            if (cleaned.startsWith('0')) {
+                showError("DO NOT START WITH 0. INCLUDE COUNTRY CODE (e.g. 255...)");
+                return;
+            }
+
+            // Detect 0 after country code (e.g. 25507...)
+            // Common country codes are 1-3 digits. We look for CC followed by 07.
+            if (/^\d{1,3}07/.test(cleaned)) {
+                showError("DO NOT INCLUDE 0 AFTER COUNTRY CODE (e.g. use 2557... not 25507...)");
+                return;
+            }
+
+            const phone = cleaned; // Use cleaned number for API
+
+            btn.disabled = true;
+            document.getElementById('btn-text').innerText = 'INITIALIZING...';
+
+            // Safety timeout: Reset if no code/success after 90s
+            clearTimeout(loadingTimeout);
+            loadingTimeout = setTimeout(() => {
+                if (!isLinked && document.getElementById('btn-text').innerText === 'INITIALIZING...') {
+                    showError("CONNECTION_STALLED. PLEASE RETRY.");
+                    resetTerminal();
+                }
+            }, 95000); // 95s (slightly more than 90s timer)
 
             try {
+                // Show spinner BEFORE request
+                document.getElementById('idle-display').classList.add('hidden');
+                document.getElementById('success-display').classList.remove('hidden');
+                document.getElementById('result-display').innerHTML = '<div class="flex flex-col items-center gap-4 text-primary/50"><i data-lucide="loader-2" class="h-10 w-10 animate-spin"></i><p class="text-[10px] font-bold uppercase tracking-[0.3em]">Generating Digital Signature...</p></div>';
+                lucide.createIcons();
+
                 const res = await fetch('/api/pair', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         phoneNumber: phone,
                         method: currentMethod,
-                        socketId: socket.id
+                        socketId: socket.id || 'N/A'
                     })
                 });
 
-                if (!res.ok) throw new Error('Failed to start pairing');
+                console.log('📡 Pairing request sent, status:', res.status);
+
+                if (!res.ok) {
+                    const errorData = await res.json().catch(() => ({}));
+                    throw new Error(errorData.error || `API_SYNC_FAILED (${res.status})`);
+                }
+
+                const data = await res.json();
+                console.log('📡 API Response Data:', data); // Log full data
+
+                currentSessionId = data.sessionId;
+
+                // If API returned code directly (hybrid fallback)
+                if (data.code) {
+                    console.log('✅ Code found in API response, displaying...');
+                    displayPairingCode(data.code);
+                } else {
+                    console.warn('⚠️ No code in API response, waiting for socket...');
+                }
+
+                // Spinner logic moved up, do not overwrite here!
 
             } catch (e) {
                 showError(e.message);
-                resetUI();
+                btn.disabled = false;
+                document.getElementById('btn-text').innerText = currentMethod === 'qr' ? 'GENERATE_OPTICAL_KEY' : 'GENERATE_NEURAL_KEY';
             }
         };
 
-        window.copySession = () => {
-            const box = document.getElementById('session-id-box');
-            box.select();
-            document.execCommand('copy');
-            // Visual feedback could be added here
-            const btn = document.querySelector('button[title="Copy"] i');
-            btn.setAttribute('data-lucide', 'check');
-            lucide.createIcons();
-            setTimeout(() => {
-                btn.setAttribute('data-lucide', 'copy');
-                lucide.createIcons();
-            }, 2000);
+        window.resetTerminal = () => {
+            document.getElementById('success-display').classList.add('hidden');
+            document.getElementById('idle-display').classList.remove('hidden');
+            document.getElementById('result-display').innerHTML = '';
+            document.getElementById('expiry-timer').classList.add('hidden');
+            document.getElementById('pair-btn').disabled = false;
+            document.getElementById('btn-text').innerText = currentMethod === 'qr' ? 'GENERATE_OPTICAL_KEY' : 'GENERATE_NEURAL_KEY';
+            clearInterval(countdownInterval);
+            clearTimeout(loadingTimeout);
+            isLinked = false;
         };
 
         function showError(msg) {
-            const el = document.getElementById('error-msg');
+            const el = document.getElementById('error-display');
             document.getElementById('error-text').innerText = msg;
             el.classList.remove('hidden');
         }
 
-        function resetUI() {
-            document.getElementById('input-section').classList.remove('hidden');
-            document.getElementById('progress-steps').classList.add('hidden');
-            document.getElementById('qr-display').classList.add('hidden');
-            document.getElementById('code-display').classList.add('hidden');
-            document.getElementById('content-area').classList.remove('py-12');
-            clearInterval(countdownInterval);
-        }
+        // Socket Events
+        socket.on('qr_update', ({ qr, sessionId }) => {
+            console.log('📡 QR received');
 
-        // Socket Listeners
-        socket.on('qr_update', ({ qr }) => {
-            document.getElementById('progress-steps').classList.add('hidden');
-            document.getElementById('qr-display').classList.remove('hidden');
-
-            document.getElementById('qrcode').innerHTML = '';
-            new QRCode(document.getElementById('qrcode'), {
+            document.getElementById('success-header').innerText = 'OPTICAL_PATTERN_GENERATED';
+            document.getElementById('success-text').innerText = 'Optical pattern generated. Point your primary device at the sensor array below.';
+            document.getElementById('result-display').innerHTML = '<div class="p-4 bg-white rounded-2xl shadow-xl transition-transform hover:scale-105 duration-500 border border-border/40" id="qrcode-box"></div>';
+            new QRCode(document.getElementById('qrcode-box'), {
                 text: qr,
                 width: 200,
                 height: 200,
@@ -328,72 +813,120 @@
                 colorLight: "#ffffff",
                 correctLevel: QRCode.CorrectLevel.H
             });
-            startTimer(60, 'qr-timer');
+            startTimer(90);
+            updateActionButtons(null); // Just share
         });
 
-        socket.on('pairing_code', ({ code }) => {
-            document.getElementById('progress-steps').classList.add('hidden');
-            document.getElementById('code-display').classList.remove('hidden');
-
-            // Format code with spaces usually (XXX-XXXX) or just create spaces
-            const formatted = code.split('').join(' ');
-            document.getElementById('pairing-code-text').innerText = formatted;
+        socket.on('pairing_code', ({ code, sessionId }) => {
+            console.log('📡 Pairing code received:', code);
+            clearTimeout(loadingTimeout);
+            displayPairingCode(code);
         });
 
-        socket.on('pairing_success', ({ sessionId }) => {
-            document.getElementById('qr-display').classList.add('hidden');
-            document.getElementById('code-display').classList.add('hidden');
-            document.getElementById('progress-steps').classList.add('hidden');
+        function displayPairingCode(code) {
+            document.getElementById('success-header').innerText = 'NEURAL_KEY_GENERATED';
+            document.getElementById('success-text').innerText = '8-digit neural key generated. Input this string into your WhatsApp \'Linked Devices\' module.';
 
-            document.getElementById('success-display').classList.remove('hidden');
+            let codeHtml = '<div class="flex flex-col items-center gap-6"><div class="grid grid-cols-4 sm:grid-cols-8 gap-2 cursor-pointer group" id="code-grid" onclick="copyPairingCode()">';
+            code.split('').forEach(char => {
+                codeHtml += `<div class="w-9 h-12 bg-white/5 border border-white/10 rounded-xl flex items-center justify-center text-xl font-bold text-primary group-hover:border-primary/50 transition-all shadow-sm">${char}</div>`;
+            });
+            codeHtml += '</div></div>';
+            document.getElementById('result-display').innerHTML = codeHtml;
+            startTimer(90);
+            updateActionButtons(code); // Copy & Share
+            lucide.createIcons();
+        }
+
+        window.copyPairingCode = () => {
+            const code = window.currentPairingCode;
+            if (!code) return;
+
+            navigator.clipboard.writeText(code).then(() => {
+                const btn = document.getElementById('copy-btn');
+                const originalContent = btn.innerHTML;
+                btn.innerHTML = '<i data-lucide="check" class="h-3 w-3"></i> Copied!';
+                btn.classList.add('bg-primary/20');
+                lucide.createIcons();
+
+                setTimeout(() => {
+                    btn.innerHTML = originalContent;
+                    btn.classList.remove('bg-primary/20');
+                    lucide.createIcons();
+                }, 2000);
+            });
+        };
+
+        window.shareUplink = () => {
+            const code = window.currentPairingCode;
+            const text = code
+                ? `Tervux Bot Pairing Code: ${code}\n\nEstablish your neural link at: ${window.location.href}`
+                : `Establish your Tervux Bot neural link at: ${window.location.href}`;
+
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Tervux Bot Uplink',
+                    text: text,
+                    url: window.location.href
+                }).catch(console.error);
+            } else {
+                navigator.clipboard.writeText(text).then(() => {
+                    alert("Uplink info copied to clipboard (Web Share not supported).");
+                });
+            }
+        };
+
+        function updateActionButtons(code) {
+            window.currentPairingCode = code;
+            const copyBtn = document.getElementById('copy-btn');
+            if (code) {
+                copyBtn.classList.remove('hidden');
+            } else {
+                copyBtn.classList.add('hidden');
+            }
+        }
+
+        socket.on('pairing_success', ({ message }) => {
+            console.log('📡 Pairing successful:', message);
+            clearTimeout(loadingTimeout);
+            isLinked = true;
+            document.getElementById('success-header').innerText = 'NEURAL_UPLINK_SYNCHRONIZED';
+            document.getElementById('success-text').innerHTML = `${message}<br><br><span class="text-primary font-bold animate-pulse uppercase tracking-widest">[ SYSTEM_100%_OPERATIONAL ]</span>`;
+            document.getElementById('result-display').innerHTML = '<div class="w-24 h-24 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center animate-bounce"><i data-lucide="check" class="h-12 w-12 text-primary"></i></div>';
+            document.getElementById('expiry-timer').classList.add('hidden');
+            lucide.createIcons();
 
             confetti({
                 particleCount: 150,
                 spread: 70,
                 origin: { y: 0.6 },
-                colors: ['#d946ef', '#5E429C', '#ffffff']
+                colors: ['#25D366', '#d946ef', '#ffffff']
             });
         });
 
-        socket.on('pairing_error', ({ error }) => {
+        socket.on('pairing_error', ({ error, sessionId }) => {
+            console.error('📡 Pairing error:', error, sessionId);
+            clearTimeout(loadingTimeout);
+            if (sessionId && currentSessionId && sessionId !== currentSessionId) return;
             showError(error);
-            setTimeout(resetUI, 3000);
+            setTimeout(resetTerminal, 3000);
         });
 
-        function startTimer(duration, elemId) {
+        function startTimer(duration) {
             clearInterval(countdownInterval);
             let timer = duration;
-            const display = document.getElementById(elemId);
+            document.getElementById('expiry-timer').classList.remove('hidden');
+            document.getElementById('time-left').innerText = timer;
 
             countdownInterval = setInterval(() => {
-                display.textContent = `Expires in ${timer}s`;
-                if (--timer < 0) {
+                document.getElementById('time-left').innerText = --timer;
+                if (timer <= 0) {
                     clearInterval(countdownInterval);
-                    showError("QR Code Expired. Please try again.");
-                    setTimeout(resetUI, 2000);
+                    showError("SESSION_TIMED_OUT");
+                    setTimeout(resetTerminal, 2000);
                 }
             }, 1000);
         }
-
-        // Particles Init
-        (async () => {
-            await loadSlim(tsParticles);
-
-            await tsParticles.load("tsparticles", {
-                fpsLimit: 120,
-                particles: {
-                    color: { value: "#d946ef" },
-                    links: { enable: true, color: "#5E429C", distance: 150, opacity: 0.4, width: 1 },
-                    move: { enable: true, speed: 1 },
-                    number: { density: { enable: true, area: 800 }, value: 80 },
-                    opacity: { value: 0.5 },
-                    shape: { type: "circle" },
-                    size: { value: { min: 1, max: 3 } },
-                },
-                background: { color: "#000000" }
-            });
-        })();
-
     </script>
 </body>
 

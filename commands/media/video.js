@@ -1,15 +1,18 @@
 import yts from "yt-search";
 import axios from "axios";
+import { getCachedConfig } from "../../services/configService.js";
 
 export const video = async (sock, m, args) => {
+    const config = getCachedConfig();
+    const p = config.prefix || "!";
     const query = args.join(" ");
     if (!query) {
         return `╔══════════════════════════════════╗
-║    📹 *𝕋𝔼ℝ𝕍𝕌𝕏 𝕍𝕀𝔻𝔼𝕆* 📹          ║
+║   📹 *𝕋𝔼ℝ𝕍𝕌X 𝕍𝕀𝔻𝔼𝕆* 📹           ║
 ╚══════════════════════════════════╝
 
-📝 *𝕌𝕤𝕒𝕘𝕖:* !video [video name]
-📌 *𝔼𝕩𝕒𝕞𝕡𝕝𝕖:* !video funny cats
+📝 *𝕌𝕤𝕒𝕘𝕖:* ${p}video [video name]
+📌 *𝔼𝕩𝕒𝕞𝕡𝕝𝕖:* ${p}video funny cats
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Download videos instantly! 🎬`;
@@ -21,7 +24,7 @@ Download videos instantly! 🎬`;
 
         if (!vid) {
             return `╔══════════════════════════════════╗
-║       ❌ *ℕ𝕆𝕋 𝔽𝕆𝕌ℕ𝔻* ❌          ║
+|       ❌ * ℕ𝕆𝕋 𝔽𝕆𝕌ℕ𝔻 * ❌          |
 ╚══════════════════════════════════╝
 
 Video not found.
@@ -38,7 +41,7 @@ Try a different search term.`;
 
 📌 *𝕋𝕚𝕥𝕝𝕖:* ${vid.title}
 ⏱️ *𝔻𝕦𝕣𝕒𝕥𝕚𝕠𝕟:* ${vid.timestamp}
-👀 *𝕍𝕚𝕖𝕨𝕤:* ${vid.views}
+👀 *𝕍𝕚𝕖��𝕤:* ${vid.views}
 🔗 *𝕃𝕚𝕟𝕜:* ${vid.url}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -53,54 +56,38 @@ _Downloading video... please wait._ ⏳`;
             console.warn("Video thumbnail download failed.");
         }
 
-        const sentMsg = await sock.sendMessage(m.key.remoteJid, {
+        const sentMsg = await sock.sendMessage(m.remoteJid || m.key.remoteJid, {
             ...(thumbBuffer ? { image: thumbBuffer } : { text: message }),
             ...(thumbBuffer ? { caption: message } : {}),
             linkPreview: null
         }, { quoted: m });
 
-        const impressiveEmojis = ["🦁", "🐯", "🐼", "🦊", "🦄", "🦅", "🦉", "🦋", "🐞", "🌲", "🌵", "🌸", "🌺", "🍁", "🍄", "🌴", "🍓", "🥑", "🍕", "🌮", "🍣", "🍩", "🧊", "🪐", "🚀", "🌠", "🌙", "⚡", "🔥", "🌈", "💎", "🔮"];
-        const randomEmoji = impressiveEmojis[Math.floor(Math.random() * impressiveEmojis.length)];
-        if (sentMsg?.key) {
-            await sock.sendMessage(m.key.remoteJid, { react: { text: randomEmoji, key: sentMsg.key } });
-        }
 
-        // Try download
+        // Try download with local yt-dlp
         try {
-            const apiUrl = `https://widipe.com/download/yts?url=${encodeURIComponent(vid.url)}`;
-            const response = await axios.get(apiUrl, { timeout: 60000 });
+            const { downloadYT } = await import("../../utils/ytdl.js");
+            const videoBuffer = await downloadYT(vid.url, 'video');
 
-            let dlUrl = response.data?.result?.mp4;
-
-            if (!dlUrl) {
-                const fUrl = `https://api.vreden.my.id/api/ytmp4?url=${encodeURIComponent(vid.url)}`;
-                const fRes = await axios.get(fUrl, { timeout: 60000 });
-                dlUrl = fRes.data?.result?.download;
+            if (!videoBuffer || videoBuffer.length < 5000) {
+                throw new Error("Downloaded video file is invalid or empty.");
             }
 
-            if (!dlUrl) throw new Error("No download URL found");
-
-            const videoBuffer = await axios.get(dlUrl, {
-                responseType: 'arraybuffer',
-                timeout: 120000,
-                maxContentLength: 50 * 1024 * 1024
-            });
-
-            await sock.sendMessage(m.key.remoteJid, {
-                video: Buffer.from(videoBuffer.data),
+            await sock.sendMessage(m.remoteJid || m.key.remoteJid, {
+                video: videoBuffer,
                 caption: vid.title,
                 mimetype: 'video/mp4'
             }, { quoted: m });
 
         } catch (downloadErr) {
             console.error("Video download failed:", downloadErr.message);
-            await sock.sendMessage(m.key.remoteJid, {
+            await sock.sendMessage(m.remoteJid || m.key.remoteJid, {
                 text: `╔══════════════════════════════════╗
 ║        ❌ *𝔼ℝℝ𝕆ℝ* ❌             ║
 ╚══════════════════════════════════╝
 
 ⚠️ *Download failed:*
-The video is too large or server busy.
+    ${downloadErr.message}
+
 👇 Please watch using the link above.`
             }, { quoted: m });
         }

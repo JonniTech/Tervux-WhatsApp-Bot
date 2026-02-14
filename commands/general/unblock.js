@@ -1,5 +1,10 @@
+import { getCachedConfig } from "../../services/configService.js";
+
 export const unblock = async (sock, m, args) => {
     let target = args[0] ? args[0].replace(/[^0-9]/g, "") + "@s.whatsapp.net" : null;
+
+    const config = getCachedConfig();
+    const p = config.prefix || "!";
 
     if (!target) {
         return `╔══════════════════════════════════╗
@@ -9,7 +14,7 @@ export const unblock = async (sock, m, args) => {
 📝 *𝕌𝕤𝕒𝕘𝕖:*
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-*!unblock 1234567890*
+*${p}unblock 1234567890*
 
 Please provide a phone number!`;
     }

@@ -3,7 +3,7 @@ import pino from "pino";
 import { join } from "path";
 import { rmSync, mkdirSync, existsSync, readFileSync } from "fs";
 import { randomBytes } from "crypto";
-import { emitUpdate } from "./socketService.js";
+import { emitUpdate, getIO } from "./socketService.js";
 
 // Temp storage for active pairing sessions
 const activePairingSessions = new Map();
@@ -22,138 +22,193 @@ const generateSessionId = () => {
  * @param {string} socketId - Socket.IO client ID for targeted updates
  */
 export const startPairing = async (phoneNumber, method = "qr", socketId) => {
-    // Generate unique session ID and path
-    const sessionId = generateSessionId();
-    const sessionDir = join(process.cwd(), "sessions", sessionId);
+    console.log(`🔌 Requesting pairing for ${phoneNumber} (${method}) via socketId: ${socketId}`);
 
-    // Ensure clean state
-    if (existsSync(sessionDir)) {
-        rmSync(sessionDir, { recursive: true, force: true });
-    }
-    mkdirSync(sessionDir, { recursive: true });
+    try {
+        const sessionId = generateSessionId();
+        const sessionDir = join(process.cwd(), "sessions", sessionId);
 
-    const { state, saveCreds } = await useMultiFileAuthState(sessionDir);
-
-    console.log(`🔌 Starting pairing session: ${sessionId} (${method})`);
-
-    const sock = makeWASocket({
-        logger: pino({ level: "silent" }),
-        auth: state,
-        browser: Browsers.ubuntu("Chrome"),
-        printQRInTerminal: false, // We send to UI
-        markOnlineOnConnect: false,
-        generateHighQualityLinkPreview: false,
-    });
-
-    // Store session ref
-    activePairingSessions.set(sessionId, { sock, socketId, phone: phoneNumber });
-
-    // Handle Pairing Code
-    if (method === "code" && phoneNumber) {
-        try {
-            await delay(2000); // Wait for socket to be ready
-            if (!sock.authState.creds.me && !sock.authState.creds.registered) {
-                const code = await sock.requestPairingCode(phoneNumber.replace(/\D/g, ""));
-                console.log(`[${sessionId}] Pairing Code: ${code}`);
-                emitUpdateToSocket(socketId, "pairing_code", { code, sessionId });
-            }
-        } catch (error) {
-            console.error(`[${sessionId}] Failed to request pairing code:`, error);
-            emitUpdateToSocket(socketId, "pairing_error", { error: "Failed to generate pairing code" });
+        if (existsSync(sessionDir)) {
+            rmSync(sessionDir, { recursive: true, force: true });
         }
-    }
+        mkdirSync(sessionDir, { recursive: true });
 
-    sock.ev.on("creds.update", saveCreds);
+        const { state, saveCreds } = await useMultiFileAuthState(sessionDir);
+        let pairRetries = 0;
+        const maxPairRetries = 2;
 
-    sock.ev.on("connection.update", async (update) => {
-        const { connection, lastDisconnect, qr } = update;
+        const initializeSocket = async () => {
+            console.log(`🔌 [${sessionId}] Initializing socket... (Attempt ${pairRetries + 1})`);
 
-        if (qr && method === "qr") {
-            console.log(`[${sessionId}] QR Generated`);
-            emitUpdateToSocket(socketId, "qr_update", { qr, sessionId });
-        }
-
-        if (connection === "open") {
-            console.log(`✅ [${sessionId}] Connected Successfully!`);
-
-            // Wait a bit for creds to fully save
-            await delay(2000);
-
-            let sessionData = "";
-            try {
-                const credsPath = join(sessionDir, "creds.json");
-                const creds = readFileSync(credsPath);
-                sessionData = "Tervux-" + creds.toString("base64");
-            } catch (e) {
-                console.error(`[${sessionId}] Failed to read creds:`, e);
-            }
-
-            // SEND SESSION ID TO USER'S DM
-            try {
-                const userJid = sock.user.id.split(":")[0] + "@s.whatsapp.net";
-                const messageText = `RESULTS OF PAIRING...\n╔══════════════════════════════╗\n║  🤖 *𝕋𝔼ℝ𝕍𝕌𝕏 𝕊𝔼𝕊𝕊𝕀𝕆ℕ* 🤖        ║\n╚══════════════════════════════╝\n\n*Below is your Session ID. Do not share it!*\n\n${sessionData}\n\n*Use this ID to deploy on Heroku.*`;
-
-                await sock.sendMessage(userJid, { text: messageText });
-                console.log(`[${sessionId}] Session ID sent to user DM: ${userJid}`);
-            } catch (msgErr) {
-                console.error(`[${sessionId}] Failed to send DM:`, msgErr);
-            }
-
-            emitUpdateToSocket(socketId, "pairing_success", {
-                // sessionId removed for security
-                message: "Pairing Successful! Check your WhatsApp DM for the Session ID."
+            const sock = makeWASocket({
+                logger: pino({ level: "silent" }),
+                auth: state,
+                browser: Browsers.ubuntu("Chrome"),
+                printQRInTerminal: false,
+                markOnlineOnConnect: false,
+                generateHighQualityLinkPreview: false,
+                syncFullHistory: false,
+                connectTimeoutMs: 60000,
+                defaultQueryTimeoutMs: 0,
+                keepAliveIntervalMs: 10000
             });
 
-            // Close socket after success (we just needed to generate the session files)
-            await delay(5000);
-            sock.end();
-            activePairingSessions.delete(sessionId);
-        }
+            // Store session ref
+            activePairingSessions.set(sessionId, { sock, socketId, phone: phoneNumber });
 
-        if (connection === "close") {
-            const code = lastDisconnect?.error?.output?.statusCode;
-            const shouldReconnect = code !== DisconnectReason.loggedOut;
+            // Handle Pairing Code
+            if (method === "code" && phoneNumber) {
+                (async () => {
+                    try {
+                        console.log(`[${sessionId}] Initiating pairing code request chain...`);
+                        let attempts = 0;
+                        const maxAttempts = 5;
+                        let success = false;
 
-            console.log(`[${sessionId}] Connection closed: ${code}`);
+                        while (attempts < maxAttempts && !success) {
+                            attempts++;
+                            try {
+                                const waitTime = attempts === 1 ? 6000 : 3000;
+                                await delay(waitTime);
 
-            if (code === DisconnectReason.loggedOut) {
-                emitUpdateToSocket(socketId, "pairing_error", { error: "Connection timed out or logged out" });
-                activePairingSessions.delete(sessionId);
-                // Cleanup invalid session
-                rmSync(sessionDir, { recursive: true, force: true });
+                                if (!sock.authState.creds.me && !sock.authState.creds.registered) {
+                                    console.log(`[${sessionId}] Requesting pairing code (Attempt ${attempts})...`);
+                                    const code = await sock.requestPairingCode(phoneNumber.replace(/\D/g, ""));
+                                    console.log(`[${sessionId}] ✅ Pairing Code Generated: ${code}`);
+                                    emitUpdateToSocket(socketId, "pairing_code", { code, sessionId });
+                                    success = true;
+                                } else {
+                                    success = true;
+                                }
+                            } catch (e) {
+                                const isTransient = e.message?.includes("Connection Closed") || e.output?.statusCode === 428;
+                                console.warn(`[${sessionId}] Pairing code attempt ${attempts} failed: ${e.message}`);
+                                if (attempts >= maxAttempts || !isTransient) throw e;
+                                await delay(4000);
+                            }
+                        }
+                    } catch (error) {
+                        console.error(`[${sessionId}] ❌ Permanent failure generating pairing code:`, error);
+                        emitUpdateToSocket(socketId, "pairing_error", {
+                            error: "Neural Link Failed: Connection was closed by WhatsApp. Please ensure your number is correct and try again.",
+                            sessionId
+                        });
+                    }
+                })();
             }
-        }
-    });
 
-    // Cleanup timeout (5 mins)
-    setTimeout(() => {
-        if (activePairingSessions.has(sessionId)) {
-            console.log(`[${sessionId}] Session timed out`);
-            const session = activePairingSessions.get(sessionId);
-            session?.sock?.end();
-            activePairingSessions.delete(sessionId);
-            // Don't delete files if it might have succeeded but just closed
-        }
-    }, 5 * 60 * 1000);
+            sock.ev.on("creds.update", saveCreds);
 
-    return { sessionId };
+            sock.ev.on("connection.update", async (update) => {
+                const { connection, lastDisconnect, qr } = update;
+
+                if (qr && method === "qr") {
+                    console.log(`[${sessionId}] QR Generated`);
+                    emitUpdateToSocket(socketId, "qr_update", { qr, sessionId });
+                }
+
+                if (connection === "open") {
+                    console.log(`✅ [${sessionId}] Connected Successfully!`);
+                    await delay(2000);
+
+                    let sessionData = "";
+                    try {
+                        const credsPath = join(sessionDir, "creds.json");
+                        const creds = JSON.parse(readFileSync(credsPath).toString());
+                        const expiresAt = Date.now() + (24 * 60 * 60 * 1000);
+                        sessionData = "Tervux-" + Buffer.from(JSON.stringify({ creds, expiresAt })).toString("base64");
+                    } catch (e) {
+                        console.error(`[${sessionId}] Failed to read creds:`, e);
+                    }
+
+                    try {
+                        const userJid = sock.user.id.split(":")[0] + "@s.whatsapp.net";
+                        const messageText = sessionData;
+                        await sock.sendMessage(userJid, { text: messageText });
+                        console.log(`[${sessionId}] Session ID sent to user DM: ${userJid}`);
+                    } catch (msgErr) {
+                        console.error(`[${sessionId}] Failed to send DM:`, msgErr);
+                    }
+
+                    emitUpdateToSocket(socketId, "pairing_success", {
+                        sessionId,
+                        message: "Pairing Successful! Check your WhatsApp DM for the Session ID."
+                    });
+
+                    await delay(5000);
+                    sock.end();
+                    activePairingSessions.delete(sessionId);
+                    if (existsSync(sessionDir)) {
+                        rmSync(sessionDir, { recursive: true, force: true });
+                    }
+                }
+
+                if (connection === "close") {
+                    const code = lastDisconnect?.error?.output?.statusCode;
+                    const reason = lastDisconnect?.error?.message || "Unknown Error";
+
+                    console.warn(`[${sessionId}] Connection closed: ${code} - ${reason}`);
+
+                    if (code === 515 && pairRetries < maxPairRetries) {
+                        pairRetries++;
+                        console.log(`[${sessionId}] 🔄 Socket Stream Error (515), auto-restarting...`);
+                        await delay(3000);
+                        return initializeSocket();
+                    }
+
+                    let errorMessage = "Connection Closed (Reason: " + code + ")";
+                    if (code === DisconnectReason.loggedOut) errorMessage = "Device logged out/disconnected.";
+                    else if (code === DisconnectReason.connectionClosed) errorMessage = "Connection was closed by server. Try again.";
+                    else if (code === DisconnectReason.connectionLost) errorMessage = "Network link lost. Check your internet.";
+                    else if (code === DisconnectReason.timedOut) errorMessage = "Connection timed out. Please retry.";
+                    else if (code === 401) errorMessage = "Unauthorized. Please scan a fresh code.";
+                    else if (code === 408) errorMessage = "Uplink Request Timed Out (408). Check your signal.";
+                    else if (code === 515) errorMessage = "Stream Error (515). The server detected a conflict. Retrying terminal advised.";
+
+                    emitUpdateToSocket(socketId, "pairing_error", {
+                        error: errorMessage,
+                        sessionId,
+                        statusCode: code
+                    });
+
+                    activePairingSessions.delete(sessionId);
+                    rmSync(sessionDir, { recursive: true, force: true });
+                }
+            });
+
+            return sock;
+        };
+
+        await initializeSocket();
+
+        // Cleanup timeout
+        setTimeout(() => {
+            if (activePairingSessions.has(sessionId)) {
+                console.log(`[${sessionId}] Session timed out (120s cleanup reached)`);
+                const session = activePairingSessions.get(sessionId);
+                session?.sock?.end();
+                activePairingSessions.delete(sessionId);
+                if (existsSync(sessionDir)) {
+                    rmSync(sessionDir, { recursive: true, force: true });
+                }
+            }
+        }, 120 * 1000);
+
+        return { sessionId };
+
+    } catch (error) {
+        console.error("Critical Error in startPairing:", error);
+        throw new Error(`Pairing Initialization Failed: ${error.message}`);
+    }
 };
-
-// Helper: Emit only to specific socket client based on ID
-// Note: Since we are using a broadcast emit in socketService, we'll implement a targeted emit here.
-// But wait, socketService.js only exports `io` and `emitUpdate` (broadcast).
-// We need to access `io.to(socketId).emit(...)`.
-import { getIO } from "./socketService.js";
 
 const emitUpdateToSocket = (socketId, event, data) => {
     try {
         const io = getIO();
+        io.emit(event, data);
+        console.log(`📡 BROADCAST_EMIT: ${event} -> Data:`, JSON.stringify(data));
         if (socketId) {
-            // If we have a socketId (from frontend), send only to that client
-            io.to(socketId).emit(event, data);
-        } else {
-            // Fallback (shouldn't happen with correct implementation)
-            io.emit(event, data);
+            console.log(`📡 (Target was: ${socketId})`);
         }
     } catch (e) {
         console.error("Socket emit error:", e.message);

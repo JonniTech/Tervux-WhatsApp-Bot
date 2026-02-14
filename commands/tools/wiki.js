@@ -1,6 +1,9 @@
 import axios from "axios";
+import { getCachedConfig } from "../../services/configService.js";
 
 export const wiki = async (sock, m, args) => {
+    const config = getCachedConfig();
+    const p = config.prefix || "!";
     const query = args.join(" ");
 
     if (!query) {
@@ -8,12 +11,15 @@ export const wiki = async (sock, m, args) => {
 ║   📚 *𝕎𝕀𝕂𝕀ℙ𝔼𝔻𝕀𝔸* 📚               ║
 ╚══════════════════════════════════╝
 
-*Usage:* !wiki <topic>
-*Example:* !wiki Elon Musk`;
+*Usage:* ${p}wiki <topic>
+*Example:* ${p}wiki Elon Musk`;
     }
 
     try {
         const { data } = await axios.get("https://en.wikipedia.org/api/rest_v1/page/summary/" + encodeURIComponent(query), {
+            headers: {
+                'User-Agent': 'TervuxBot/2.0 (https://github.com/JonniTech/Tervux-WhatsApp-Bot)'
+            },
             timeout: 10000
         });
 
@@ -25,7 +31,7 @@ export const wiki = async (sock, m, args) => {
 ⚠️ Multiple results found for "*${query}*"
 💡 _Try being more specific._
 
-*Example:* !wiki Albert Einstein`;
+*Example:* ${p}wiki Albert Einstein`;
         }
 
         if (!data.extract) {
@@ -57,6 +63,9 @@ ${extract}
         if (data.thumbnail?.source) {
             try {
                 const imgRes = await axios.get(data.thumbnail.source, {
+                    headers: {
+                        'User-Agent': 'TervuxBot/2.0 (https://github.com/JonniTech/Tervux-WhatsApp-Bot)'
+                    },
                     responseType: "arraybuffer",
                     timeout: 10000
                 });

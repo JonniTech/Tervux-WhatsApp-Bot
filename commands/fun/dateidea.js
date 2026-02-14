@@ -22,7 +22,11 @@ const dateIdeas = [
     { idea: "Volunteer together 🤝", cost: "💚 Free", vibe: "Meaningful", desc: "Help at a shelter, clean up a park, or volunteer at an event. Shows character and you bond over doing good." }
 ];
 
+import { getCachedConfig } from "../../services/configService.js";
+
 export const dateidea = async (sock, m, args) => {
+    const config = getCachedConfig();
+    const p = config.prefix || "!";
     const filter = args[0]?.toLowerCase();
 
     let filtered = dateIdeas;
@@ -49,11 +53,11 @@ ${date.desc}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 💡 *Filter by type:*
-• *!dateidea free* → Free dates
-• *!dateidea cheap* → Budget dates
-• *!dateidea romantic* → Romantic dates
-• *!dateidea fun* → Fun dates
-• *!dateidea adventure* → Adventures
+• *${p}dateidea free* → Free dates
+• *${p}dateidea cheap* → Budget dates
+• *${p}dateidea romantic* → Romantic dates
+• *${p}dateidea fun* → Fun dates
+• *${p}dateidea adventure* → Adventures
 
 🔄 _Send again for another idea!_`;
 };

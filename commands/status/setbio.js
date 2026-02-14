@@ -1,12 +1,17 @@
+import { getCachedConfig } from "../../services/configService.js";
+
 export const setbio = async (sock, m, args) => {
     const bio = args.join(" ");
+    const config = getCachedConfig();
+    const p = config.prefix || "!";
+
     if (!bio) {
         return `╔══════════════════════════════════╗
 ║      📝 *𝕊𝔼𝕋 𝔹𝕀𝕆* 📝            ║
 ╚══════════════════════════════════╝
 
-📝 *U𝕤𝕒𝕘𝕖:* !setbio [text]
-📌 *𝔼𝕩𝕒𝕞𝕡𝕝𝕖:* !setbio Hello from Tervux
+📝 *U𝕤𝕒𝕘𝕖:* ${p}setbio [text]
+📌 *𝔼𝕩𝕒𝕞𝕡𝕝𝕖:* ${p}setbio Hello from Tervux
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Update your WhatsApp about/bio!`;

@@ -1,14 +1,17 @@
 import axios from "axios";
+import { getCachedConfig } from "../../services/configService.js";
 
 export const sport = async (sock, m, args) => {
+    const config = getCachedConfig();
+    const p = config.prefix || "!";
     const team = args.join(" ");
     if (!team) {
         return `╔══════════════════════════════════╗
 ║     ⚽ *𝕋𝔼ℝ𝕍𝕌𝕏 𝕊ℙ𝕆ℝ𝕋𝕊* ⚽        ║
 ╚══════════════════════════════════╝
 
-📝 *𝕌𝕤𝕒𝕘𝕖:* !sport [team]
-📌 *𝔼𝕩𝕒𝕞𝕡𝕝𝕖:* !sport Manchester United
+📝 *𝕌𝕤𝕒𝕘𝕖:* ${p}sport [team]
+📌 *𝔼𝕩𝕒𝕞𝕡𝕝𝕖:* ${p}sport Manchester United
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Search any sports team worldwide! 🏆`;

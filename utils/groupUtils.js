@@ -3,9 +3,14 @@
  */
 export async function getGroupMetadata(sock, groupJid) {
     try {
-        return await sock.groupMetadata(groupJid);
+        // console.log(`📡 [GroupMetadata] Fetching for ${groupJid}...`);
+        const metadata = await sock.groupMetadata(groupJid);
+        if (!metadata) {
+            console.error(`❌ [GroupMetadata] Received null/undefined for ${groupJid}`);
+        }
+        return metadata;
     } catch (e) {
-        console.error("❌ Failed to get group metadata:", e.message);
+        console.error(`❌ [GroupMetadata] Error fetching ${groupJid}:`, e.message);
         return null;
     }
 }
@@ -17,30 +22,43 @@ export async function isAdmin(sock, groupJid, userJid) {
     try {
         const metadata = await getGroupMetadata(sock, groupJid);
         if (!metadata) {
-            console.log("❌ isAdmin: No metadata found for group", groupJid);
+            console.error("❌ isAdmin: No metadata found for group", groupJid);
             return false;
         }
 
+        // Get the list of admin IDs from participants
         const admins = metadata.participants
             .filter(p => p.admin === 'admin' || p.admin === 'superadmin')
             .map(p => p.id);
 
-        // Exact match check
-        let isUserAdmin = admins.includes(userJid);
+        // Helper to normalize JIDs for comparison (strips device/version suffixes)
+        const clean = (jid) => jid ? jid.split(":")[0].split("@")[0] : "";
 
-        // Fuzzy match check (handle :12@s.whatsapp.net vs @s.whatsapp.net)
-        if (!isUserAdmin) {
-            const cleanUserJid = userJid.split(":")[0].split("@")[0];
-            const found = admins.find(a => a.startsWith(cleanUserJid));
-            if (found) {
-                console.log(`⚠️ isAdmin: JID mismatch but found fuzzy match. Input: ${userJid}, Found: ${found}`);
-                isUserAdmin = true;
-            } else {
-                // console.log(`ℹ️ isAdmin: User ${userJid} is NOT admin. Admins:`, admins); // Too noisy usually
-            }
+        const targetClean = clean(userJid);
+
+        // 1. Direct check: Is the target JID (phone or LID) in the admin list?
+        if (admins.includes(userJid)) return true;
+
+        // 2. Normalized check: Do the number/ID parts match?
+        if (admins.some(a => clean(a) === targetClean)) return true;
+
+        // 3. Bot-specific check (Bot often has different Phone vs LID JIDs)
+        const botJid = sock.user?.id || "";
+        const botLid = sock.user?.lid || "";
+
+        if (clean(botJid) === targetClean || (botLid && clean(botLid) === targetClean)) {
+            // Target is the bot. Check if bot's phone OR lid is in admin list.
+            const isBotAdmin = admins.some(a => {
+                const aClean = clean(a);
+                return aClean === clean(botJid) || (botLid && aClean === clean(botLid));
+            });
+            if (isBotAdmin) return true;
         }
 
-        return isUserAdmin;
+        // 4. Special LID matching for other users (if we have a way to resolve)
+        // For now, these are the most common cases.
+
+        return false;
     } catch (e) {
         console.error("❌ isAdmin Error:", e);
         return false;
@@ -52,12 +70,8 @@ export async function isAdmin(sock, groupJid, userJid) {
  */
 export async function isBotAdmin(sock, groupJid) {
     try {
-        // Handle different JID formats from sock.user
-        const rawId = sock.user?.id || "";
-        const botNumber = rawId.split(":")[0].split("@")[0];
-        const botJid = `${botNumber}@s.whatsapp.net`;
-
-        console.log(`🔍 Checking isBotAdmin: BotJID=${botJid}, Group=${groupJid}`);
+        const botJid = sock.user?.id || "";
+        if (!botJid) return false;
 
         return await isAdmin(sock, groupJid, botJid);
     } catch (e) {

@@ -1,3 +1,5 @@
+import { getCachedConfig } from "../../services/configService.js";
+
 const choices = ["rock", "paper", "scissors"];
 const emojis = { rock: "🪨", paper: "📄", scissors: "✂️" };
 
@@ -14,16 +16,19 @@ function getResult(player, bot) {
 export const rps = async (sock, m, args) => {
     const input = args[0]?.toLowerCase();
 
+    const config = getCachedConfig();
+    const p = config.prefix || "!";
+
     if (!input || !choices.includes(input)) {
         return `╔══════════════════════════════════╗
 ║   ✊ *ℝ𝕆ℂ𝕂 ℙ𝔸ℙ𝔼ℝ 𝕊ℂ𝕀𝕊𝕊𝕆ℝ𝕊* ✊    ║
 ╚══════════════════════════════════╝
 
-*Usage:* !rps <choice>
+*Usage:* ${p}rps <choice>
 
-🪨 *!rps rock*
-📄 *!rps paper*
-✂️ *!rps scissors*`;
+🪨 *${p}rps rock*
+📄 *${p}rps paper*
+✂️ *${p}rps scissors*`;
     }
 
     const botChoice = choices[Math.floor(Math.random() * choices.length)];

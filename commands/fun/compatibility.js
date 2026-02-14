@@ -1,3 +1,5 @@
+import { getCachedConfig } from "../../services/configService.js";
+
 function hashNames(name1, name2) {
     const combined = (name1 + name2).toLowerCase().replace(/\s/g, "");
     let hash = 0;
@@ -22,17 +24,20 @@ const verdicts = [
 export const compatibility = async (sock, m, args) => {
     const input = args.join(" ");
 
+    const config = getCachedConfig();
+    const p = config.prefix || "!";
+
     if (!input || !input.includes("&") && !input.includes("+") && !input.includes("and")) {
         return `╔══════════════════════════════════╗
 ║   💞 *ℂ𝕆𝕄ℙ𝔸𝕋𝕀𝔹𝕀𝕃𝕀𝕋𝕐* 💞            ║
 ╚══════════════════════════════════╝
 
-*Usage:* !compatibility <name1> & <name2>
+*Usage:* ${p}compatibility <name1> & <name2>
 
 *Examples:*
-• *!compatibility Romeo & Juliet*
-• *!compatibility Me + Her*
-• *!compatibility John and Jane*`;
+• *${p}compatibility Romeo & Juliet*
+• *${p}compatibility Me + Her*
+• *${p}compatibility John and Jane*`;
     }
 
     // Split by & or + or "and"

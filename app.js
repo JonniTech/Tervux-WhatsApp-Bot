@@ -100,14 +100,20 @@ app.post("/api/pair", async (req, res) => {
         const { phoneNumber, method, socketId } = req.body;
 
         if (!socketId) {
-            return res.status(400).json({ error: "Socket ID is required" });
+            // Warn but proceed (we have fallback now)
+            console.warn("Pairing request missing socketId");
         }
 
         const result = await startPairing(phoneNumber, method, socketId);
+
+        if (result.code) {
+            console.log("✅ API returning Pairing Code directly:", result.code);
+        }
+
         res.json(result);
     } catch (error) {
         console.error("Pairing API Error:", error);
-        res.status(500).json({ error: "Failed to start pairing" });
+        res.status(500).json({ error: error.message || "Failed to start pairing" });
     }
 });
 

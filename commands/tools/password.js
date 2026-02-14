@@ -1,3 +1,5 @@
+import { getCachedConfig } from "../../services/configService.js";
+
 export const password = async (sock, m, args) => {
     const length = Math.min(Math.max(parseInt(args[0]) || 16, 8), 64);
     const includeSpecial = args[1] !== "simple";
@@ -25,6 +27,9 @@ export const password = async (sock, m, args) => {
     // Shuffle
     pass = pass.split("").sort(() => Math.random() - 0.5).join("");
 
+    const config = getCachedConfig();
+    const p = config.prefix || "!";
+
     const strength = length >= 20 ? "🟢 *VERY STRONG*" :
         length >= 16 ? "🟢 *STRONG*" :
             length >= 12 ? "🟡 *GOOD*" :
@@ -44,9 +49,9 @@ export const password = async (sock, m, args) => {
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 💡 *Usage:*
-• *!password* → 16 chars (default)
-• *!password 24* → 24 chars
-• *!password 12 simple* → No symbols
+• *${p}password* → 16 chars (default)
+• *${p}password 24* → 24 chars
+• *${p}password 12 simple* → No symbols
 
 ⚠️ _Save this somewhere safe!_`;
 };

@@ -1,6 +1,11 @@
+import { getCachedConfig } from "../../services/configService.js";
+
 export const base64 = async (sock, m, args) => {
     const action = args[0]?.toLowerCase();
     const text = args.slice(1).join(" ");
+
+    const config = getCachedConfig();
+    const p = config.prefix || "!";
 
     if (!action || !text || !["encode", "decode"].includes(action)) {
         return `╔══════════════════════════════════╗
@@ -8,12 +13,12 @@ export const base64 = async (sock, m, args) => {
 ╚══════════════════════════════════╝
 
 *Usage:*
-• *!base64 encode* <text>
-• *!base64 decode* <encoded text>
+• *${p}base64 encode* <text>
+• *${p}base64 decode* <encoded text>
 
 *Example:*
-• *!base64 encode* Hello World
-• *!base64 decode* SGVsbG8gV29ybGQ=`;
+• *${p}base64 encode* Hello World
+• *${p}base64 decode* SGVsbG8gV29ybGQ=`;
     }
 
     try {

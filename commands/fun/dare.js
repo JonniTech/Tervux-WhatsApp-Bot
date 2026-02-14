@@ -1,3 +1,5 @@
+import { getCachedConfig } from "../../services/configService.js";
+
 export const dare = async (sock, m, args) => {
     const dares = [
         "Send a message to your crush right now and show the screenshot.",
@@ -14,6 +16,9 @@ export const dare = async (sock, m, args) => {
 
     const randomDare = dares[Math.floor(Math.random() * dares.length)];
 
+    const config = getCachedConfig();
+    const p = config.prefix || "!";
+
     return `╔══════════════════════════════════╗
 ║    😈 *𝕋ℝ𝕌𝕋ℍ 𝕆ℝ 𝔻𝔸ℝ𝔼* 😈        ║
 ║        ━━ *𝔻𝔸ℝ𝔼* ━━               ║
@@ -25,5 +30,5 @@ export const dare = async (sock, m, args) => {
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 💪 *ℕ𝕆 𝔼𝕏ℂ𝕌𝕊𝔼𝕊!* Complete the dare!
-🐔 Use *!truth* if you're a chicken`;
+🐔 Use *${p}truth* if you're a chicken`;
 };

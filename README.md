@@ -156,56 +156,64 @@ Click the **Fork** button at the top-right of this page to create your own copy 
 
 <br>
 
-### <img src="https://img.shields.io/badge/-Railway-0B0D0E?style=flat-square&logo=railway&logoColor=white" height="22"> Option A: Deploy on Railway
+### <img src="https://img.shields.io/badge/-Heroku-430098?style=flat-square&logo=heroku&logoColor=white" height="22"> Option A: Deploy on Heroku
 
-<a href="https://railway.app/new">
-  <img src="https://img.shields.io/badge/DEPLOY%20ON%20RAILWAY-0B0D0E?style=for-the-badge&logo=railway&logoColor=white" alt="Deploy on Railway" height="40">
-</a>
+<p align="center">
+  <a href="https://tervux-pair-page.onrender.com/pair">
+    <img src="https://img.shields.io/badge/GET%20SESSION%20ID-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" alt="Get Session ID" height="40">
+  </a>
+  &nbsp;&nbsp;
+  <a href="https://dashboard.heroku.com/new?template=https://github.com/JonniTech/Tervux-WhatsApp-Bot">
+    <img src="https://img.shields.io/badge/DEPLOY%20TO%20HEROKU-430098?style=for-the-badge&logo=heroku&logoColor=white" alt="Deploy to Heroku" height="40">
+  </a>
+</p>
 
-1. Create an account at [railway.app](https://railway.app/)
-2. Connect your GitHub account when prompted
-3. Click **New Project** and select **Deploy from GitHub repo**
-4. Choose your forked `Tervux-WhatsApp-Bot` repository
-5. Go to **Settings** and add environment variables (see Authentication section below)
-6. Deploy and check **Logs** for connection instructions
+1. Get your **Session ID** using the **Pair** button above.
+2. Click **Deploy to Heroku**.
+3. Paste your **Session ID** into the `SESSION_ID` field.
+4. Click **Deploy App**.
+5. **Important:** Go to **Resources** → Disable `web` → Enable `worker`.
 
 <br>
 
 ### <img src="https://img.shields.io/badge/-Render-46E3B7?style=flat-square&logo=render&logoColor=white" height="22"> Option B: Deploy on Render
 
-<a href="https://render.com/deploy">
-  <img src="https://img.shields.io/badge/DEPLOY%20ON%20RENDER-46E3B7?style=for-the-badge&logo=render&logoColor=white" alt="Deploy to Render" height="40">
-</a>
+<p align="center">
+  <a href="https://tervux-pair-page.onrender.com/pair">
+    <img src="https://img.shields.io/badge/GET%20SESSION%20ID-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" alt="Get Session ID" height="40">
+  </a>
+  &nbsp;&nbsp;
+  <a href="https://render.com/deploy">
+    <img src="https://img.shields.io/badge/DEPLOY%20TO%20RENDER-46E3B7?style=for-the-badge&logo=render&logoColor=white" alt="Deploy to Render" height="40">
+  </a>
+</p>
 
-1. Create an account at [render.com](https://render.com/)
-2. Click **New +** and select **Web Service**
-3. Connect GitHub and select your forked repository
-4. Configure:
-   - **Build Command:** `npm install`
-   - **Start Command:** `npm start`
-5. Add environment variables in the **Environment** tab
-6. Deploy and check **Logs** for connection instructions
+1. Get your **Session ID** using the **Pair** button above.
+2. Click **Deploy to Render**.
+3. Add `SESSION_ID` in the **Environment** tab.
+4. **Build Command:** `npm install`
+5. **Start Command:** `npm start`
+6. Deploy!
 
 <br>
 
-### <img src="https://img.shields.io/badge/-Heroku-430098?style=flat-square&logo=heroku&logoColor=white" height="22"> Option C: Deploy on Heroku
+### <img src="https://img.shields.io/badge/-Railway-0B0D0E?style=flat-square&logo=railway&logoColor=white" height="22"> Option C: Deploy on Railway
 
-**Prerequisite:** You need a **Session ID** (`Tervux-...`).
-To get one, you must have a running instance of this bot (e.g. on Render/Replit/Local) or use a friend's instance.
-1. Open the bot's URL path `/pair` (e.g., `https://your-bot.onrender.com/pair`)
-2. Link your WhatsApp using QR or Pairing Code
-3. Copy the **Session ID**
+<p align="center">
+  <a href="https://tervux-pair-page.onrender.com/pair">
+    <img src="https://img.shields.io/badge/GET%20SESSION%20ID-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" alt="Get Session ID" height="40">
+  </a>
+  &nbsp;&nbsp;
+  <a href="https://railway.app/new">
+    <img src="https://img.shields.io/badge/DEPLOY%20TO%20RAILWAY-0B0D0E?style=for-the-badge&logo=railway&logoColor=white" alt="Deploy to Railway" height="40">
+  </a>
+</p>
 
-<a href="https://dashboard.heroku.com/new?template=https://github.com/JonniTech/Tervux-WhatsApp-Bot">
-  <img src="https://img.shields.io/badge/DEPLOY%20ON%20HEROKU-430098?style=for-the-badge&logo=heroku&logoColor=white" alt="Deploy to Heroku" height="40">
-</a>
-
-1. Click **Deploy to Heroku** above
-2. App Name: Any unique name
-3. **SESSION_ID**: Paste your `Tervux-...` ID here
-4. `PHONE`: Your number (required if using Pairing Code)
-5. Click **Deploy App**
-6. **Important:** Go to **Resources** → Disable `web` → Enable `worker`
+1. Get your **Session ID** using the **Pair** button above.
+2. Create an account at [railway.app](https://railway.app/).
+3. Connect your GitHub and select your forked repository.
+4. Go to **Variables** and add your `SESSION_ID`.
+5. Deploy!
 
 <br>
 
@@ -227,48 +235,26 @@ npm start
 
 <br>
 
-<!-- Authentication Divider -->
-<img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif" width="100%">
+---
 
 <br>
 
 <div align="center">
-  <img src="https://readme-typing-svg.herokuapp.com?font=Orbitron&weight=700&size=28&pause=1000&color=FFD700&center=true&vCenter=true&width=600&height=50&lines=AUTHENTICATION+METHODS" alt="Auth Section">
+  <img src="https://readme-typing-svg.herokuapp.com?font=Orbitron&weight=700&size=28&pause=1000&color=FFD700&center=true&vCenter=true&width=600&height=50&lines=AUTHENTICATION+GUIDE" alt="Auth Section">
 </div>
 
 <br>
 
-## <img src="https://img.shields.io/badge/-METHOD%20A-25D366?style=flat-square" height="25"> Pairing Code (Recommended)
+## <img src="https://img.shields.io/badge/-GETTING%20LINKED-25D366?style=flat-square" height="25"> Session-Based Authentication
 
-The **Pairing Code** method is cleaner and works better on cloud platforms where QR codes may not render properly.
-
-| Step | Action |
-|:---:|:---|
-| 1 | Set the `PHONE` environment variable with your number (include country code, e.g., `255712345678`) |
-| 2 | Deploy or restart the bot |
-| 3 | Check the **Logs** — you will see a message like: `PAIRING CODE: ABCD-EFGH` |
-| 4 | Open WhatsApp on your phone |
-| 5 | Go to **Linked Devices** and tap **Link a Device** |
-| 6 | Tap **Link with phone number instead** |
-| 7 | Enter the pairing code from the logs |
-| 8 | Done! The bot is now connected |
-
-<br>
-
-## <img src="https://img.shields.io/badge/-METHOD%20B-3399FF?style=flat-square" height="25"> QR Code Scanning
-
-If you **do not** set the `PHONE` variable, a QR code will be displayed in the logs.
+The modern way to deploy Tervux Bot is using a **Session ID**. This avoids complex pairing in the logs and ensures your bot stays connected even after server restarts.
 
 | Step | Action |
 |:---:|:---|
-| 1 | Deploy the bot without setting `PHONE` |
-| 2 | Check the **Logs** — a QR code will be printed |
-| 3 | Open WhatsApp on your phone |
-| 4 | Go to **Linked Devices** and tap **Link a Device** |
-| 5 | Scan the QR code from the logs |
-| 6 | Done! The bot is now connected |
-
-> **Note:** On some platforms, the QR code may appear broken or too large. In that case, use the Pairing Code method instead.
+| 1 | Click the **GET SESSION ID** button in the deployment section above |
+| 2 | Link your WhatsApp via QR or Pairing Code on the web page |
+| 3 | Once connected, you will receive a code starting with `Tervux-` |
+| 4 | Copy that code and paste it into your `SESSION_ID` environment variable |
 
 <br>
 
@@ -280,9 +266,8 @@ If you **do not** set the `PHONE` variable, a QR code will be displayed in the l
 
 | Variable | Required | Description |
 |:---|:---:|:---|
-| `PHONE` | Optional | Your phone number with country code (enables Pairing Code) |
-| `OWNER_NUMBER` | Optional | Additional owner number for command access |
-| `PREFIX` | Optional | Command prefix (default: `!`) |
+| `SESSION_ID` | **Yes** | Your Tervux Session string (Starts with `Tervux-`) |
+| `PREFIX` | No | Command prefix (default: `!`) |
 
 <br>
 
@@ -309,7 +294,7 @@ If you **do not** set the `PHONE` variable, a QR code will be displayed in the l
 <br>
 
 <div align="center">
-  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=600&size=28&pause=1000&color=25D366&center=true&vCenter=true&width=500&height=50&lines=SWAHILI+MAELEKEZO" alt="Swahili Section" id="-swahili-maelekezo">
+  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=600&size=28&pause=1000&color=25D366&center=true&vCenter=true&width=500&height=50&lines=MAELEKEZO YA KISWAHILI" alt="Swahili Section" id="-swahili-maelekezo">
 </div>
 
 <br>
@@ -342,51 +327,64 @@ Bonyeza kitufe cha **Fork** juu kulia ili kutengeneza copy ya hii repo iwe yako.
 
 ## <img src="https://img.shields.io/badge/-HATUA%202-A020F0?style=flat-square" height="25"> Chagua Platform
 
-### <img src="https://img.shields.io/badge/-Railway-0B0D0E?style=flat-square&logo=railway&logoColor=white" height="20"> Railway
+### <img src="https://img.shields.io/badge/-Heroku-430098?style=flat-square&logo=heroku&logoColor=white" height="20"> Option A: Heroku
 
-<a href="https://railway.app/new">
-  <img src="https://img.shields.io/badge/DEPLOY%20ON%20RAILWAY-0B0D0E?style=for-the-badge&logo=railway&logoColor=white" alt="Deploy on Railway" height="40">
-</a>
+<p align="center">
+  <a href="https://tervux-pair-page.onrender.com/pair">
+    <img src="https://img.shields.io/badge/PATA%20SESSION%20ID-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" alt="Pata Session ID" height="40">
+  </a>
+  &nbsp;&nbsp;
+  <a href="https://dashboard.heroku.com/new?template=https://github.com/JonniTech/Tervux-WhatsApp-Bot">
+    <img src="https://img.shields.io/badge/WEKA%20KWENYE%20HEROKU-430098?style=for-the-badge&logo=heroku&logoColor=white" alt="Deploy to Heroku" height="40">
+  </a>
+</p>
 
-1. Tengeneza akaunti kwenye [railway.app](https://railway.app/)
-2. Unganisha akaunti yako ya GitHub ukiulizwa
-3. Bonyeza **New Project** na uchague repo yako
-4. Weka environment variables (angalia sehemu ya Authentication)
-5. Deploy na angalia **Logs**
+1. Pata **Session ID** yako kwa kubonyeza kitufe cha **Pair** hapo juu.
+2. Bonyeza **Weka Kwenye Heroku**.
+3. Weka hiyo **Session ID** kwenye sehemu ya `SESSION_ID`.
+4. Bonyeza **Deploy App**.
+5. **Muhimu:** Nenda **Resources** → Zima `web` → Washa `worker`.
 
 <br>
 
-### <img src="https://img.shields.io/badge/-Render-46E3B7?style=flat-square&logo=render&logoColor=white" height="20"> Render
+### <img src="https://img.shields.io/badge/-Render-46E3B7?style=flat-square&logo=render&logoColor=white" height="20"> Option B: Render
 
-<a href="https://render.com/deploy">
-  <img src="https://img.shields.io/badge/DEPLOY%20ON%20RENDER-46E3B7?style=for-the-badge&logo=render&logoColor=white" alt="Deploy to Render" height="40">
-</a>
+<p align="center">
+  <a href="https://tervux-pair-page.onrender.com/pair">
+    <img src="https://img.shields.io/badge/PATA%20SESSION%20ID-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" alt="Pata Session ID" height="40">
+  </a>
+  &nbsp;&nbsp;
+  <a href="https://render.com/deploy">
+    <img src="https://img.shields.io/badge/WEKA%20KWENYE%20RENDER-46E3B7?style=for-the-badge&logo=render&logoColor=white" alt="Deploy to Render" height="40">
+  </a>
+</p>
 
-1. Tengeneza akaunti kwenye [render.com](https://render.com/)
-2. Bonyeza **New +** na uchague **Web Service**
-3. Unganisha GitHub na uchague repo yako
-4. Weka: Build = `npm install`, Start = `npm start`
-5. Weka environment variables na Deploy
+1. Pata **Session ID** yako kwa kubonyeza kitufe cha **Pair** hapo juu.
+2. Bonyeza **Weka Kwenye Render**.
+3. Weka `SESSION_ID` kwenye sehemu ya **Environment**.
+4. **Build Command:** `npm install`
+5. **Start Command:** `npm start`
+6. Deploy!
+
 <br>
 
-### <img src="https://img.shields.io/badge/-Heroku-430098?style=flat-square&logo=heroku&logoColor=white" height="20"> Heroku
+### <img src="https://img.shields.io/badge/-Railway-0B0D0E?style=flat-square&logo=railway&logoColor=white" height="20"> Option C: Railway
 
-**Mahitaji:** Unahitaji **Session ID** (`Tervux-...`).
-Ili kuipata, lazima uwe na bot inayofanya kazi (mfano Render/Replit/Local) au tumia ya rafiki.
-1. Fungua link ya bot `/pair` (mfano: `https://your-bot.onrender.com/pair`)
-2. Unganisha WhatsApp yako (QR au Pairing Code)
-3. Copy hiyo **Session ID**
+<p align="center">
+  <a href="https://tervux-pair-page.onrender.com/pair">
+    <img src="https://img.shields.io/badge/PATA%20SESSION%20ID-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" alt="Pata Session ID" height="40">
+  </a>
+  &nbsp;&nbsp;
+  <a href="https://railway.app/new">
+    <img src="https://img.shields.io/badge/WEKA%20KWENYE%20RAILWAY-0B0D0E?style=for-the-badge&logo=railway&logoColor=white" alt="Deploy on Railway" height="40">
+  </a>
+</p>
 
-<a href="https://dashboard.heroku.com/new?template=https://github.com/JonniTech/Tervux-WhatsApp-Bot">
-  <img src="https://img.shields.io/badge/DEPLOY%20ON%20HEROKU-430098?style=for-the-badge&logo=heroku&logoColor=white" alt="Deploy to Heroku" height="40">
-</a>
-
-1. Bonyeza **Deploy to Heroku** hapo juu
-2. App Name: Jina lolote
-3. **SESSION_ID**: Weka `Tervux-...` ID yako hapa
-4. `PHONE`: Namba yako (inahitajika kama unatumia Pairing Code)
-5. Bonyeza **Deploy App**
-6. **Muhimu:** Nenda **Resources** → Zima `web` → Washa `worker`
+1. Pata **Session ID** yako kwa kubonyeza kitufe cha **Pair** hapo juu.
+2. Tengeneza akaunti kwenye [railway.app](https://railway.app/).
+3. Unganisha GitHub na uchague repo yako.
+4. Nenda kwenye **Variables** na weka `SESSION_ID` yako.
+5. Deploy!
 
 
 <br>
@@ -406,27 +404,39 @@ npm start
 
 <br>
 
-## <img src="https://img.shields.io/badge/-NJIA%20A-25D366?style=flat-square" height="25"> Pairing Code (Inashauriwa)
-
-| Hatua | Tendo |
-|:---:|:---|
-| 1 | Weka `PHONE` variable na namba yako (pamoja na code ya nchi, mfano: `255712345678`) |
-| 2 | Deploy au restart bot |
-| 3 | Angalia **Logs** — utaona: `PAIRING CODE: ABCD-EFGH` |
-| 4 | Fungua WhatsApp kwenye simu yako |
-| 5 | Nenda **Linked Devices** na bonyeza **Link a Device** |
-| 6 | Bonyeza **Link with phone number instead** |
-| 7 | Ingiza pairing code kutoka logs |
+---
 
 <br>
 
-## <img src="https://img.shields.io/badge/-NJIA%20B-3399FF?style=flat-square" height="25"> QR Code
+<div align="center">
+  <img src="https://readme-typing-svg.herokuapp.com?font=Orbitron&weight=700&size=28&pause=1000&color=FFD700&center=true&vCenter=true&width=600&height=50&lines=MAELEKEZO+YA+KUUNGANISHA" alt="Auth Section">
+</div>
+
+<br>
+
+## <img src="https://img.shields.io/badge/-KUUNGANISHA-25D366?style=flat-square" height="25"> Authentication kwa kutumia Session ID
+
+Njia ya kisasa ya kuweka Tervux Bot ni kutumia **Session ID**. Hii inakuepusha na usumbufu wa kuangalia pairing code kwenye logs na inahakikisha bot yako inabaki hewani hata server ikijizima.
 
 | Hatua | Tendo |
 |:---:|:---|
-| 1 | Deploy bot bila kuweka `PHONE` variable |
-| 2 | Angalia **Logs** — QR code itaonyeshwa |
-| 3 | Fungua WhatsApp na scan QR code |
+| 1 | Bonyeza kitufe cha **PATA SESSION ID** kwenye sehemu ya deployment hapo juu |
+| 2 | Unganisha WhatsApp yako kupitia QR au Pairing Code kwenye hiyo page |
+| 3 | Ukishafanikiwa, utapewa kodi inayoanza na `Tervux-` |
+| 4 | Copy hiyo kodi na uiweke kwenye variable ya `SESSION_ID` |
+
+<br>
+
+---
+
+<br>
+
+## <img src="https://img.shields.io/badge/-ENV%20VARIABLES-FF4500?style=flat-square" height="25"> Mpangilio wa Environment
+
+| Variable | Inahitajika | Maelezo |
+|:---|:---:|:---|
+| `SESSION_ID` | **Ndiyo** | Kodi yako ya Tervux Session (Inaanza na `Tervux-`) |
+| `PREFIX` | Hapana | Alama ya kuanzia commands (default: `!`) |
 
 <br>
 

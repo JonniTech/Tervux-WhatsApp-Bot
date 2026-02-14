@@ -7,15 +7,18 @@ import { commands } from "../commands/index.js";
 import { getCachedConfig, updateConfig, invalidateConfigCache, AUTH_INFO_PATH } from "./configService.js";
 import { getRepoStats as getCachedRepoStats } from "../utils/githubStats.js";
 import { handleGroupParticipantsUpdate, handleGroupMessage } from "./groupEventHandler.js";
+import { addAutoReaction, getRandomEmoji } from "../utils/reactionUtils.js";
 
 export const messageCache = new Map();
 
-// Memoized logo for efficiency
+// Memoized logo & video for efficiency
 let logoBuffer = null;
+let welcomeVideoBuffer = null;
 try {
     logoBuffer = readFileSync(join(process.cwd(), "assets", "tervux-logo.png"));
+    welcomeVideoBuffer = readFileSync(join(process.cwd(), "assets", "tervux-welcome-video.mp4"));
 } catch (e) {
-    console.error("❌ Failed to load logo buffer:", e.message);
+    console.error("❌ Failed to load assets:", e.message);
 }
 
 // Memory monitoring
@@ -47,8 +50,26 @@ export async function createWhatsAppClient() {
                 console.log("🔄 Restoring session from environment variable...");
                 mkdirSync(AUTH_INFO_PATH, { recursive: true });
                 const code = sessionId.replace("Tervux-", "");
-                const creds = Buffer.from(code, "base64");
-                writeFileSync(join(AUTH_INFO_PATH, "creds.json"), creds);
+                const decoded = Buffer.from(code, "base64").toString();
+
+                try {
+                    const sessionObj = JSON.parse(decoded);
+
+                    // 24-hour expiry check DISABLED for deployment persistence
+                    /*
+                    if (sessionObj.expiresAt && Date.now() > sessionObj.expiresAt) {
+                        console.error("\n❌ ERROR: This Tervux Session ID has expired (24-hour validity limit).");
+                        console.error("👉 Please generate a fresh session ID at: /pair\n");
+                        return;
+                    }
+                    */
+
+                    const creds = sessionObj.creds ? JSON.stringify(sessionObj.creds) : decoded;
+                    writeFileSync(join(AUTH_INFO_PATH, "creds.json"), creds);
+                } catch (e) {
+                    // Legacy support: if not JSON, it's the raw creds
+                    writeFileSync(join(AUTH_INFO_PATH, "creds.json"), decoded);
+                }
                 console.log("✅ Session restored successfully!");
             } catch (e) {
                 console.error("❌ Failed to restore session:", e.message);
@@ -77,6 +98,9 @@ export async function createWhatsAppClient() {
             return msg?.message;
         }
     });
+
+    // Apply Global Auto-Reaction
+    addAutoReaction(sock);
 
     sock.ev.on("creds.update", async () => {
         // console.log(`💾 Credentials updated. Saving...`); // Too spammy
@@ -186,119 +210,59 @@ export async function createWhatsAppClient() {
 
                 const p = config.prefix || "!";
 
-                const welcomeMsg = `╔══════════════════════════════════╗
-║  🤖 *𝕋𝔼ℝ𝕍𝕌𝕏 𝔹𝕆𝕋 ℂ𝕆ℕℕ𝔼ℂ𝕋𝔼𝔻* 🤖  ║
-╚══════════════════════════════════╝
+                const welcomeMsg = `╭─━─━━━━━━━━━━━━━━━━━━─━─╮
+   🚀 *𝕋𝔼ℝ𝕍𝕌𝕏 𝕋𝔼ℂℍℕ𝕆𝕃𝕆𝔾𝕀𝔼𝕊* 🚀
+╰─━─━━━━━━━━━━━━━━━━━━─━─╯
 
-✨ *Welcome!* Your personal WhatsApp assistant is now online and ready to serve you! ✨
+✨ *Welcome to the Digital Future!* ✨
+Your high-performance Tervux AI Assistant is now active.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔥 *𝔹𝕆𝕋 ℂ𝔸ℙ𝔸𝔹𝕀𝕃𝕀𝕋𝕀𝔼𝕊*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚡ *Multimedia* - Music, Videos, Memes, & Lyrics
+🤖 *Ai Power* - Intelligent Chat & Image Generation
+🛡️ *Security* - Advanced Anti-Delete & Antilink
+🎮 *Entertainment* - Games, Jokes, & Trivia
+⚙️ *Utilities* - Unit conversion, QR, & Weather
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🏢 *𝔸𝔹𝕆𝕌𝕋 𝕋𝔼ℝ𝕍𝕌𝕏 ℂ𝕆𝕄ℙ𝔸ℕ𝕐*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+*Transforming Business With Elegant Technology.*
+We turn your ideas into powerful digital products.
+
+🌐 *Website:* https://www.tervux.com
+📧 *Contact:* info@tervux.com
+
+🛠️ *𝕆𝕦𝕣 𝔼𝕩𝕡𝕖𝕣𝕥𝕚𝕤𝕖:*
+💻 *Web Apps* - Lightning-fast modern frameworks
+📱 *Mobile* - Native & Hybrid iOS/Android apps
+🎨 *Design* - Premium UI/UX experiences
+☁️ *Cloud* - Robust & scalable infrastructure
+📊 *Data* - AI/ML & Advanced Analytics
+💡 *Consulting* - Strategic Tech Advisory
+
+🏆 *𝕎𝕙𝕪 ℙ𝕒𝕣𝕥𝕟𝕖𝕣 𝕎𝕚𝕥𝕙 𝕌𝕤?*
+✅ *Lightning Fast* performance
+✅ *Secure & Reliable* systems
+✅ *Modular Design* for future growth
+✅ *Global Scale* infrastructure
 
 ${githubSection}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🎮 *𝔽𝕌ℕ ℤ𝕆ℕ𝔼*
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-• *${p}ship* - Love calculator 💕
-• *${p}fancy* - Fancy fonts generator ✨
-• *${p}joke* - Random jokes 😂
-• *${p}fact* - Fun facts 🧠
-• *${p}truth* / *${p}dare* - Game time 🔥
-• *${p}8ball* - Magic 8-ball 🎱
-• *${p}pickup* - Pickup lines 💘
-• *${p}compliment* / *${p}roast* - Fun vibes 🌟🔥
-• *${p}riddle* - Brain teasers 🧩
-• *${p}hack* - Prank hack 💻
-• *${p}virus* / *${p}crash* - Prank attacks ☣️
-• *${p}matrix* - Matrix mode 🟢
-• *${p}detective* - Investigate someone 🕵️
-• *${p}spam* - Emoji bomb 💣
-• *${p}rps* - Rock Paper Scissors ✊
-• *${p}coinflip* - Flip a coin 🪙
-• *${p}dice* - Roll dice 🎲
-• *${p}trivia* - Quiz time 🧠
-• *${p}confess* - Anonymous confession 🤫
-• *${p}rate* - Rate someone ⭐
-• *${p}flirt* - DM opener assistant 💘
-• *${p}lovemsg* - Love messages 💌
-• *${p}loveletter* - Love letter maker 💌
-• *${p}crush* - How to approach her 🎯
-• *${p}goodmorning* / *${p}goodnight* - Sweet msgs 🌅🌙
-• *${p}compatibility* - Love score 💞
-• *${p}dateidea* - Date ideas 💑
+👇 *Type [ ${p}help ] to explore all features!*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`;
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-👥 *𝔾ℝ𝕆𝕌ℙ 𝕄𝔸ℕ𝔸𝔾𝔼𝕄𝔼ℕ𝕋*
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-• *${p}kick* / *${p}add* - Manage members 👥
-• *${p}promote* / *${p}demote* - Manage admins 👑
-• *${p}hidetag* / *${p}tagall* - Tag members 📢
-• *${p}welcome* / *${p}goodbye* - Auto-messages 👋
-• *${p}antilink* - Link protection 🛡️
-• *${p}groupantidelete* - Group anti-delete 🛡️
-• *${p}poll* / *${p}warn* - Moderation tools 📊
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-⚙️ *𝔾𝔼ℕ𝔼ℝ𝔸𝕃*
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-• *${p}help* - Show all commands 📚
-• *${p}ping* - Check latency ⚡
-• *${p}botstats* - System stats 📊
-• *${p}owner* - Owner info 👤
-• *${p}block* / *${p}unblock* - User management 🚫
-• *${p}creator* - Bot creator info 💎
-• *${p}quote* - Motivational quotes 💫
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🎬 *𝕄𝔼𝔻𝕀𝔸*
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-• *${p}movie* - Movie search 🎥
-• *${p}sport* - Team info ⚽
-• *${p}news* - World news 📰
-• *${p}play* - Play music 🎵
-• *${p}video* - Download video 📹
-• *${p}meme* - Random memes 😂
-• *${p}lyrics* - Song lyrics 🎤
-• *${p}zodiac* - Horoscope 🔮
-• *${p}wallpaper* - HD wallpapers 🖼️
-• *${p}waifu* - Anime images 🌸
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🛠️ *𝕋𝕆𝕆𝕃𝕊*
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-• *${p}calc* - Calculator 🧮
-• *${p}qr* - QR generator 📱
-• *${p}weather* - Weather forecast 🌤️
-• *${p}translate* - Translator 🌍
-• *${p}define* - Dictionary 📖
-• *${p}aesthetic* - Text styling ✨
-• *${p}sticker* - Image to sticker 🖼️
-• *${p}github* - GitHub profile 🐙
-• *${p}password* - Password maker 🔐
-• *${p}wiki* - Wikipedia search 📚
-• *${p}base64* - Encode/decode 🔣
-• *${p}ip* - IP/domain lookup 🌐
-• *${p}ai* - AI assistant 🤖
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-⚙️ *𝕊𝔼𝕋𝕋𝕀ℕ𝔾𝕊*
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-• *${p}settings* - View configuration 🔧
-• *${p}prefix* - Change bot prefix ✏️
-• *${p}alwaysonline* - 24/7 Online 🌐
-• *${p}antidelete* - Anti-delete (DMs) 🛡️
-• *${p}anticall* - Anti-call info 📵
-• *${p}autoread* - Auto-read info ✔️
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-💡 *Quick Start:* Type *${p}help* for more details
-
-╔══════════════════════════════════╗
-║    💠 *ℙ𝕠𝕨𝕖𝕣𝕖𝕕 𝕓𝕪 𝕋𝔼ℝ𝕍𝕌𝕏* 💠    ║
-╚══════════════════════════════════╝
-
-🔗 github.com/JonniTech/Tervux-WhatsApp-Bot`;
-
-                // Send with logo if available
-                if (logoBuffer) {
+                // Send with video if available, otherwise logo, otherwise text
+                if (welcomeVideoBuffer) {
+                    await sock.sendMessage(botJid, {
+                        video: welcomeVideoBuffer,
+                        caption: welcomeMsg,
+                        gifPlayback: false // Standard video with audio
+                    });
+                } else if (logoBuffer) {
                     await sock.sendMessage(botJid, {
                         image: logoBuffer,
                         caption: welcomeMsg
@@ -365,8 +329,7 @@ ${githubSection}
                     }
 
                     if (config.autoLikeStatus) {
-                        const emojis = ["🦁", "🐯", "🦒", "🐘", "🦅", "🌲", "🌴", "⭐", "🌈", "🔥"];
-                        const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+                        const randomEmoji = getRandomEmoji();
                         await sock.sendMessage(m.key.remoteJid, {
                             react: { text: randomEmoji, key: m.key }
                         }, { statusJidList: [participant] });
@@ -621,9 +584,15 @@ ${text}
 
             // Only allow bot owner to use commands
             const senderJid = m.key.participant || m.key.remoteJid;
-            const botJid = (sock.user?.id?.split("@")[0]?.split(":")[0]) + "@s.whatsapp.net";
+            const botNumber = (sock.user?.id?.split("@")[0]?.split(":")[0]);
+            const configOwner = config.ownerNumber?.replace(/\D/g, "");
+            const senderNumber = senderJid.split("@")[0].split(":")[0];
 
-            if (!m.key.fromMe && senderJid !== botJid) {
+            const isOwner = m.key.fromMe ||
+                (configOwner && senderNumber === configOwner) ||
+                (senderNumber === botNumber);
+
+            if (!isOwner) {
                 const accessDeniedMsg = `╔══════════════════════════════════╗
 ║  🚫 *𝔸ℂℂ𝔼𝕊𝕊 𝔻𝔼ℕ𝕀𝔼𝔻* 🚫  ║
 ╚══════════════════════════════════╝

@@ -1,6 +1,9 @@
+import { getCachedConfig } from "../../services/configService.js";
 import axios from "axios";
 
 export const define = async (sock, m, args) => {
+    const config = getCachedConfig();
+    const p = config.prefix || "!";
     const word = args[0]?.toLowerCase();
 
     if (!word) {
@@ -8,8 +11,8 @@ export const define = async (sock, m, args) => {
 ║   📖 *𝔻𝕀ℂ𝕋𝕀𝕆ℕ𝔸ℝ𝕐* 📖              ║
 ╚══════════════════════════════════╝
 
-*Usage:* !define <word>
-*Example:* !define serendipity`;
+*Usage:* ${p}define <word>
+*Example:* ${p}define serendipity`;
     }
 
     try {

@@ -1,4 +1,8 @@
+import { getCachedConfig } from "../../services/configService.js";
+
 export const confess = async (sock, m, args) => {
+    const config = getCachedConfig();
+    const p = config.prefix || "!";
     const confession = args.join(" ");
     const chatJid = m.key.remoteJid;
 
@@ -7,13 +11,13 @@ export const confess = async (sock, m, args) => {
 ║   🤫 *𝔸ℕ𝕆ℕ ℂ𝕆ℕ𝔽𝔼𝕊𝕊* 🤫            ║
 ╚══════════════════════════════════╝
 
-*Usage:* !confess <your confession>
+*Usage:* ${p}confess <your confession>
 
 💡 Your confession will be sent
 anonymously — no one will know
 who sent it!
 
-*Example:* !confess I think pizza is overrated`;
+*Example:* ${p}confess I think pizza is overrated`;
     }
 
     // Delete the original command message to keep it anonymous
@@ -37,7 +41,7 @@ who sent it!
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 _Who could have sent this?_ 👀
-_Use !confess to send your own!_`
+_Use ${p}confess to send your own!_`
     });
 
     return null;

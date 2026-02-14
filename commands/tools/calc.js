@@ -1,12 +1,17 @@
+import { getCachedConfig } from "../../services/configService.js";
+
 export const calc = async (sock, m, args) => {
+    const config = getCachedConfig();
+    const p = config.prefix || "!";
+
     const expression = args.join("");
     if (!expression) {
         return `╔══════════════════════════════════╗
 ║   🔢 *𝕋𝔼ℝ𝕍𝕌𝕏 ℂ𝔸𝕃ℂ𝕌𝕃𝔸𝕋𝕆ℝ* 🔢   ║
 ╚══════════════════════════════════╝
 
-📝 *𝕌𝕤𝕒𝕘𝕖:* !calc [expression]
-📌 *𝔼𝕩𝕒𝕞𝕡𝕝𝕖:* !calc 5 * (10 + 2)
+📝 *𝕌𝕤𝕒𝕘𝕖:* ${p}calc [expression]
+📌 *𝔼𝕩𝕒𝕞𝕡𝕝𝕖:* ${p}calc 5 * (10 + 2)
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 *Supported:* + - * / ( )`;

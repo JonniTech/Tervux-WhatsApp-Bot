@@ -113,7 +113,8 @@ import {
     warn,
     resetwarn,
     rejoin,
-    groupantidelete
+    groupantidelete,
+    botToggle
 } from "./group/group.js";
 
 export const commands = {
@@ -229,5 +230,6 @@ export const commands = {
     warn,
     resetwarn,
     rejoin,
-    groupantidelete
+    groupantidelete,
+    bot: botToggle
 };

@@ -901,7 +901,7 @@ export default function WhatsAppBotPage() {
                         >
                             <div className="group relative">
                                 {/* Glowing Border Effect */}
-                                <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 to-primary/0 rounded-3xl blur opacity-20 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
+                                <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 to-primary/0 rounded-3xl blur opacity-20 transition duration-1000"></div>
 
                                 <div className="relative p-6 lg:p-8 rounded-3xl border border-border bg-card/90 dark:bg-card/50 backdrop-blur-2xl shadow-xl overflow-hidden">
                                     <div className="flex items-center justify-between mb-8">

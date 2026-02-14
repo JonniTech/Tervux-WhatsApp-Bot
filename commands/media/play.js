@@ -1,15 +1,19 @@
 import yts from "yt-search";
 import axios from "axios";
+import { getCachedConfig } from "../../services/configService.js";
 
 export const play = async (sock, m, args) => {
+    const config = getCachedConfig();
+    const p = config.prefix || "!";
+
     const query = args.join(" ");
     if (!query) {
         return `╔══════════════════════════════════╗
 ║    🎵 *𝕋𝔼ℝ𝕍𝕌𝕏 𝕄𝕌𝕊𝕀ℂ* 🎵           ║
 ╚══════════════════════════════════╝
 
-📝 *𝕌𝕤𝕒𝕘𝕖:* !play [song name]
-📌 *𝔼𝕩𝕒𝕞𝕡𝕝𝕖:* !play Burna Boy Last Last
+📝 *𝕌𝕤𝕒𝕘𝕖:* ${p}play [song name]
+📌 *𝔼𝕩𝕒𝕞𝕡𝕝𝕖:* ${p}play Burna Boy Last Last
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Download any song instantly! 🎧`;
@@ -59,33 +63,21 @@ _Downloading audio... please wait._ ⏳`;
             linkPreview: null
         }, { quoted: m });
 
-        // Auto-react
-        const impressiveEmojis = ["🦁", "🐯", "🐼", "🦊", "🦄", "🦅", "🦉", "🦋", "🐞", "🌲", "🌵", "🌸", "🌺", "🍁", "🍄", "🌴", "🍓", "🥑", "🍕", "🌮", "🍣", "🍩", "🧊", "🪐", "🚀", "🌠", "🌙", "⚡", "🔥", "🌈", "💎", "🔮"];
-        const randomEmoji = impressiveEmojis[Math.floor(Math.random() * impressiveEmojis.length)];
-        if (sentMsg?.key) {
-            await sock.sendMessage(m.key.remoteJid, { react: { text: randomEmoji, key: sentMsg.key } });
-        }
 
-        // Try to download audio
+        // Try to download audio with local yt-dlp
         try {
-            const apiUrl = `https://widipe.com/download/yts?url=${encodeURIComponent(video.url)}`;
-            const response = await axios.get(apiUrl, { timeout: 40000 });
+            const { downloadYT } = await import("../../utils/ytdl.js");
+            const audioBuffer = await downloadYT(video.url, 'audio');
 
-            let downloadUrl = response.data?.result?.mp3;
-
-            if (!downloadUrl) {
-                const fbUrl = `https://api.vreden.my.id/api/ytmp3?url=${encodeURIComponent(video.url)}`;
-                const fbRes = await axios.get(fbUrl, { timeout: 40000 });
-                downloadUrl = fbRes.data?.result?.download;
+            if (!audioBuffer || audioBuffer.length < 1000) {
+                throw new Error("Downloaded audio file is invalid or empty.");
             }
 
-            if (!downloadUrl) throw new Error("No download URL found");
-
-            const audioBuffer = await axios.get(downloadUrl, { responseType: 'arraybuffer', timeout: 60000 });
-            await sock.sendMessage(m.key.remoteJid, {
-                audio: Buffer.from(audioBuffer.data),
-                mimetype: 'audio/mpeg',
-                fileName: `${video.title}.mp3`
+            await sock.sendMessage(m.remoteJid || m.key.remoteJid, {
+                audio: audioBuffer,
+                mimetype: 'audio/mp4', // WhatsApp sometimes prefers mp4 for audio
+                fileName: `${video.title}.mp3`,
+                ptt: false
             }, { quoted: m });
 
         } catch (downloadErr) {
@@ -96,7 +88,8 @@ _Downloading audio... please wait._ ⏳`;
 ╚══════════════════════════════════╝
 
 ⚠️ *Download failed:*
-The song is too long or server busy.
+${downloadErr.message}
+
 👇 Please use the link above to listen.`
             }, { quoted: m });
         }

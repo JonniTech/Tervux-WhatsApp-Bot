@@ -5,6 +5,14 @@
  */
 
 import { isAdmin, isBotAdmin } from "../../utils/groupUtils.js";
+import { getCachedConfig } from "../../services/configService.js";
+import {
+    loadGroupSettings,
+    saveGroupSettings,
+    saveInviteCode,
+    getInviteCode,
+    updateGroupName
+} from "../../services/groupSettingsService.js";
 
 /**
  * !hidetag <message> - Tag all members without showing mentions (stealth tag)
@@ -97,12 +105,14 @@ export async function kick(sock, m, args) {
     const target = mentioned || quoted;
 
     if (!target) {
+        const config = getCachedConfig();
+        const p = config.prefix || "!";
         return `╔══════════════════════════════════╗
 ║  🦶 *𝕂𝕀ℂ𝕂 𝕄𝔼𝕄𝔹𝔼ℝ* 🦶  ║
 ╚══════════════════════════════════╝
 
-*Usage:* !kick @user
-*Alt:* Reply to a message with !kick`;
+*Usage:* ${p}kick @user
+*Alt:* Reply to a message with ${p}kick`;
     }
 
     try {
@@ -129,11 +139,13 @@ export async function add(sock, m, args) {
     }
 
     if (!args[0]) {
+        const config = getCachedConfig();
+        const p = config.prefix || "!";
         return `╔══════════════════════════════════╗
 ║  ➕ *𝔸𝔻𝔻 𝕄𝔼𝕄𝔹𝔼ℝ* ➕  ║
 ╚══════════════════════════════════╝
 
-*Usage:* !add 255712345678
+*Usage:* ${p}add 255712345678
 Include country code without + or spaces.`;
     }
 
@@ -171,12 +183,14 @@ export async function promote(sock, m, args) {
     const target = mentioned || quoted;
 
     if (!target) {
+        const config = getCachedConfig();
+        const p = config.prefix || "!";
         return `╔══════════════════════════════════╗
 ║  👑 *ℙℝ𝕆𝕄𝕆𝕋𝔼 𝕋𝕆 𝔸𝔻𝕄𝕀ℕ* 👑  ║
 ╚══════════════════════════════════╝
 
-*Usage:* !promote @user
-*Alt:* Reply to a message with !promote`;
+*Usage:* ${p}promote @user
+*Alt:* Reply to a message with ${p}promote`;
     }
 
     try {
@@ -207,12 +221,14 @@ export async function demote(sock, m, args) {
     const target = mentioned || quoted;
 
     if (!target) {
+        const config = getCachedConfig();
+        const p = config.prefix || "!";
         return `╔══════════════════════════════════╗
 ║  📉 *𝔻𝔼𝕄𝕆𝕋𝔼 𝔸𝔻𝕄𝕀ℕ* 📉  ║
 ╚══════════════════════════════════╝
 
-*Usage:* !demote @user
-*Alt:* Reply to a message with !demote`;
+*Usage:* ${p}demote @user
+*Alt:* Reply to a message with ${p}demote`;
     }
 
     try {
@@ -238,14 +254,19 @@ export async function mute(sock, m, args) {
         return `⚠️ Bot must be an admin to mute the group.`;
     }
 
+    const config = getCachedConfig();
+    const p = config.prefix || "!";
+
     try {
         await sock.groupSettingUpdate(remoteJid, "announcement");
         return `╔══════════════════════════════════╗
 ║  🔇 *𝔾ℝ𝕆𝕌ℙ 𝕄𝕌𝕋𝔼𝔻* 🔇  ║
 ╚══════════════════════════════════╝
 
-Only admins can send messages now.
-Use *!unmute* to reopen.`;
+🔒 *Group is now closed.*
+Only admins can send messages.
+
+Use *${p}unmute* to reopen.`;
     } catch (err) {
         return `❌ Failed to mute: ${err.message}`;
     }
@@ -401,6 +422,27 @@ export async function leave(sock, m, args) {
     }
 
     try {
+        const sender = m.key.participant || m.key.remoteJid;
+        const botJid = sock.user?.id;
+
+        // If the message is fromMe, it means the user's personal account is leaving
+        if (m.key.fromMe) {
+            const config = getCachedConfig();
+            const p = config.prefix || "!";
+            await sock.sendMessage(remoteJid, {
+                text: `⚠️ *Warning:* You are using your personal WhatsApp account as the bot. 
+Running ${p}leave will make *YOU* leave this group.
+
+If you just want me to stop responding, use:
+*${p}bot off*
+
+If you really want to leave, type:
+*${p}leave confirm*`
+            });
+
+            if (args[0] !== "confirm") return null;
+        }
+
         await sock.sendMessage(remoteJid, {
             text: `╔══════════════════════════════════╗
 ║  👋 *𝔾𝕆𝕆𝔻𝔹𝕐𝔼* 👋  ║
@@ -475,7 +517,9 @@ export async function setgroupname(sock, m, args) {
 
     const newName = args.join(" ");
     if (!newName) {
-        return `*Usage:* !setgroupname <new name>`;
+        const config = getCachedConfig();
+        const p = config.prefix || "!";
+        return `*Usage:* ${p}setgroupname <new name>`;
     }
 
     try {
@@ -502,7 +546,9 @@ export async function setdesc(sock, m, args) {
 
     const newDesc = args.join(" ");
     if (!newDesc) {
-        return `*Usage:* !setdesc <new description>`;
+        const config = getCachedConfig();
+        const p = config.prefix || "!";
+        return `*Usage:* ${p}setdesc <new description>`;
     }
 
     try {
@@ -516,14 +562,6 @@ export async function setdesc(sock, m, args) {
 // ═══════════════════════════════════════════════════════════════
 // WELCOME & GOODBYE SYSTEM
 // ═══════════════════════════════════════════════════════════════
-
-import {
-    loadGroupSettings,
-    saveGroupSettings,
-    saveInviteCode,
-    getInviteCode,
-    updateGroupName
-} from "../../services/groupSettingsService.js";
 
 /**
  * !welcome on/off - Toggle welcome messages
@@ -541,17 +579,10 @@ export async function welcome(sock, m, args) {
     if (action === "on") {
         settings.welcome.enabled = true;
         saveGroupSettings(remoteJid, settings);
-        return `╔══════════════════════════════════╗
-║  ✅ *𝕎𝔼𝕃ℂ𝕆𝕄𝔼 𝔼ℕ𝔸𝔹𝕃𝔼𝔻* ✅  ║
-╚══════════════════════════════════╝
-
-New members will now receive a welcome message!
-
-*Current message:*
-${settings.welcome.message}
-
-💡 Use *!setwelcome <message>* to change it.
-Use *@user* as placeholder for member name.`;
+        const config = getCachedConfig();
+        const p = config.prefix || "!";
+        return `✅ *Welcome Enabled!* New members will now be greeted.
+💡 Use *${p}setwelcome <message>* to change it.`;
     }
 
     if (action === "off") {
@@ -564,6 +595,8 @@ Use *@user* as placeholder for member name.`;
 Welcome messages have been turned off.`;
     }
 
+    const config = getCachedConfig();
+    const p = config.prefix || "!";
     return `╔══════════════════════════════════╗
 ║  👋 *𝕎𝔼𝕃ℂ𝕆𝕄𝔼 𝕊𝕐𝕊𝕋𝔼𝕄* 👋  ║
 ╚══════════════════════════════════╝
@@ -575,9 +608,9 @@ ${settings.welcome.message}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 *Commands:*
-• !welcome on - Enable
-• !welcome off - Disable
-• !setwelcome <msg> - Set message
+• ${p}welcome on - Enable
+• ${p}welcome off - Disable
+• ${p}setwelcome <msg> - Set message
 
 💡 Use *@user* for member mention`;
 }
@@ -594,11 +627,13 @@ export async function setwelcome(sock, m, args) {
 
     const message = args.join(" ");
     if (!message) {
+        const config = getCachedConfig();
+        const p = config.prefix || "!";
         return `╔══════════════════════════════════╗
 ║  ✏️ *𝕊𝔼𝕋 𝕎𝔼𝕃ℂ𝕆𝕄𝔼* ✏️  ║
 ╚══════════════════════════════════╝
 
-*Usage:* !setwelcome <your message>
+*Usage:* ${p}setwelcome <your message>
 
 *Placeholders:*
 • @user - Member's mention
@@ -606,7 +641,7 @@ export async function setwelcome(sock, m, args) {
 • {count} - Member count
 
 *Example:*
-!setwelcome Welcome @user to our family! 🎉
+${p}setwelcome Welcome @user to our family! 🎉
 You are member #{count} in {group}!`;
     }
 
@@ -637,6 +672,8 @@ export async function goodbye(sock, m, args) {
     if (action === "on") {
         settings.goodbye.enabled = true;
         saveGroupSettings(remoteJid, settings);
+        const config = getCachedConfig();
+        const p = config.prefix || "!";
         return `╔══════════════════════════════════╗
 ║  ✅ *𝔾𝕆𝕆𝔻𝔹𝕐𝔼 𝔼ℕ𝔸𝔹𝕃𝔼𝔻* ✅  ║
 ╚══════════════════════════════════╝
@@ -646,7 +683,7 @@ A farewell message will be sent when members leave!
 *Current message:*
 ${settings.goodbye.message}
 
-💡 Use *!setgoodbye <message>* to change it.`;
+💡 Use *${p}setgoodbye <message>* to change it.`;
     }
 
     if (action === "off") {
@@ -659,6 +696,8 @@ ${settings.goodbye.message}
 Goodbye messages have been turned off.`;
     }
 
+    const config = getCachedConfig();
+    const p = config.prefix || "!";
     return `╔══════════════════════════════════╗
 ║  👋 *𝔾𝕆𝕆𝔻𝔹𝕐𝔼 𝕊𝕐𝕊𝕋𝔼𝕄* 👋  ║
 ╚══════════════════════════════════╝
@@ -670,9 +709,9 @@ ${settings.goodbye.message}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 *Commands:*
-• !goodbye on - Enable
-• !goodbye off - Disable
-• !setgoodbye <msg> - Set message
+• ${p}goodbye on - Enable
+• ${p}goodbye off - Disable
+• ${p}setgoodbye <msg> - Set message
 
 💡 Use *@user* for member mention`;
 }
@@ -689,18 +728,20 @@ export async function setgoodbye(sock, m, args) {
 
     const message = args.join(" ");
     if (!message) {
+        const config = getCachedConfig();
+        const p = config.prefix || "!";
         return `╔══════════════════════════════════╗
 ║  ✏️ *𝕊𝔼𝕋 𝔾𝕆𝕆𝔻𝔹𝕐𝔼* ✏️  ║
 ╚══════════════════════════════════╝
 
-*Usage:* !setgoodbye <your message>
+*Usage:* ${p}setgoodbye <your message>
 
 *Placeholders:*
 • @user - Member's name
 • {group} - Group name
 
 *Example:*
-!setgoodbye Goodbye @user! 👋
+${p}setgoodbye Goodbye @user! 👋
 We'll miss you in {group}!`;
     }
 
@@ -768,6 +809,8 @@ Links will be deleted and user will be removed!`;
 Members can now share links freely.`;
     }
 
+    const config = getCachedConfig();
+    const p = config.prefix || "!";
     return `╔══════════════════════════════════╗
 ║  🔗 *𝔸ℕ𝕋𝕀𝕃𝕀ℕ𝕂 𝕊𝕐𝕊𝕋𝔼𝕄* 🔗  ║
 ╚══════════════════════════════════╝
@@ -776,9 +819,9 @@ Members can now share links freely.`;
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 *Commands:*
-• !antilink on - Enable (warn mode)
-• !antilink kick - Enable (kick mode)
-• !antilink off - Disable
+• ${p}antilink on - Enable (warn mode)
+• ${p}antilink kick - Enable (kick mode)
+• ${p}antilink off - Disable
 
 🛡️ Protects group from spam links!`;
 }
@@ -797,14 +840,16 @@ export async function poll(sock, m, args) {
     const parts = fullText.split("|").map(p => p.trim());
 
     if (parts.length < 3) {
+        const config = getCachedConfig();
+        const p = config.prefix || "!";
         return `╔══════════════════════════════════╗
 ║  📊 *ℂℝ𝔼𝔸𝕋𝔼 ℙ𝕆𝕃𝕃* 📊  ║
 ╚══════════════════════════════════╝
 
-*Usage:* !poll Question | Option1 | Option2 | ...
+*Usage:* ${p}poll Question | Option1 | Option2 | ...
 
 *Example:*
-!poll Best programming language? | JavaScript | Python | Rust
+${p}poll Best programming language? | JavaScript | Python | Rust
 
 You need at least 2 options!`;
     }
@@ -847,12 +892,14 @@ export async function warn(sock, m, args) {
     const target = mentioned || quoted;
 
     if (!target) {
+        const config = getCachedConfig();
+        const p = config.prefix || "!";
         return `╔══════════════════════════════════╗
 ║  ⚠️ *𝕎𝔸ℝℕ 𝕌𝕊𝔼ℝ* ⚠️  ║
 ╚══════════════════════════════════╝
 
-*Usage:* !warn @user
-*Alt:* Reply to a message with !warn
+*Usage:* ${p}warn @user
+*Alt:* Reply to a message with ${p}warn
 
 3 warnings = automatic kick!`;
     }
@@ -903,7 +950,9 @@ export async function resetwarn(sock, m, args) {
     const target = mentioned || quoted;
 
     if (!target) {
-        return `*Usage:* !resetwarn @user`;
+        const config = getCachedConfig();
+        const p = config.prefix || "!";
+        return `*Usage:* ${p}resetwarn @user`;
     }
 
     const key = `${remoteJid}_${target}`;
@@ -911,6 +960,31 @@ export async function resetwarn(sock, m, args) {
     const number = target.split("@")[0];
 
     return `✅ Warnings reset for @${number}`;
+}
+
+/**
+ * !bot on/off - Toggle bot functionality in the group
+ */
+export async function botToggle(sock, m, args) {
+    const remoteJid = m.key.remoteJid;
+    if (!remoteJid.endsWith("@g.us")) return `⚠️ This only works in groups.`;
+
+    const status = args[0]?.toLowerCase();
+    const settings = loadGroupSettings(remoteJid);
+    const config = getCachedConfig();
+    const p = config.prefix || "!";
+
+    if (status === "on") {
+        settings.botEnabled = true;
+        saveGroupSettings(remoteJid, settings);
+        return `✅ *Bot Enabled:* Tervux is now active in this group.`;
+    } else if (status === "off") {
+        settings.botEnabled = false;
+        saveGroupSettings(remoteJid, settings);
+        return `📴 *Bot Disabled:* Tervux will no longer respond to commands in this group (except ${p}bot on).`;
+    }
+
+    return `*Status:* ${settings.botEnabled ? "✅ Active" : "📴 Inactive"}\n\n*Usage:* ${p}bot on/off`;
 }
 
 /**
@@ -922,39 +996,34 @@ export async function rejoin(sock, m, args) {
     if (!targetJid) {
         return `╔══════════════════════════════════╗
 ║  🔄 *ℝ𝔼𝕁𝕆𝕀ℕ 𝔾ℝ𝕆𝕌ℙ* 🔄  ║
-╚══════════════════════════════════╝
+╚════════════════════╚════════════╝
 
 *Usage:* !rejoin <group_id>
 
-*Tip:* You can find group IDs in the logs or by listing saved data (coming soon).
-This only works if the bot was an admin before leaving and saved an invite code.`;
+*How to find ID:* Check the bot logs or use !groupinfo while in the group.`;
     }
 
     const inviteCode = getInviteCode(targetJid);
 
     if (!inviteCode) {
-        return `❌ No saved invite code found for ${targetJid}.
-        
-*Possible reasons:*
-1. Bot was not an admin when it left.
-2. Bot was kicked (couldn't save code).
-3. Data was deleted.
+        return `❌ *Invite Code Not Found*
 
-You must add the bot manually.`;
+I can only rejoin if:
+1. I was an *Admin* when I left.
+2. I successfully saved the invite link.
+3. The link hasn't been revoked.
+
+You might need to add me manually.`;
     }
 
     try {
         await sock.groupAcceptInvite(inviteCode);
         return `✅ Successfully rejoined the group!`;
     } catch (err) {
-        let reason = "Unknown error";
-        if (err.message.includes("401")) reason = "Invite link reset or expired";
-        if (err.message.includes("403")) reason = "Bot is banned from group";
-        if (err.message.includes("409")) reason = "Bot is already in the group";
+        console.error("Rejoin Error:", err);
+        return `❌ *Failed to Rejoin*
 
-        return `❌ Failed to rejoin: ${reason}
-        
-*Error Details:* ${err.message}`;
+*Reason:* ${err.message.includes("403") ? "Bot is banned or link revoked" : err.message}`;
     }
 }
 

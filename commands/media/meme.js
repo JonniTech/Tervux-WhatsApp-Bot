@@ -1,10 +1,14 @@
 import axios from "axios";
+import { getCachedConfig } from "../../services/configService.js";
 
 export const meme = async (sock, m, args) => {
     const chatJid = m.key.remoteJid;
 
+    const config = getCachedConfig();
+    const p = config.prefix || "!";
+
     try {
-        const { data } = await axios.get("https://meme-api.com/gimme", { timeout: 10000 });
+        const { data } = await axios.get("https://meme-api.com/gimme", { timeout: 100000 });
 
         if (!data || !data.url) {
             return `❌ Couldn't fetch a meme right now. Try again!`;
@@ -25,7 +29,7 @@ export const meme = async (sock, m, args) => {
 📂 r/${data.subreddit}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-_Send !meme again for another one_ 🔄`;
+_Send ${p}meme again for another one_ 🔄`;
 
         await sock.sendMessage(chatJid, {
             image: Buffer.from(imageResponse.data),

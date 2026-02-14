@@ -3,9 +3,13 @@ import { PORT } from "./env.js";
 import { whatsappService } from "./services/whatsappService.js";
 import { createServer } from "http";
 import { initSocket } from "./services/socketService.js";
+import { cleanStaleSessions } from "./services/cleanupService.js";
 
 const httpServer = createServer(app);
 initSocket(httpServer);
+
+// Run cleanup on startup
+cleanStaleSessions();
 
 httpServer.listen(PORT, () => {
     console.log(`🚀 Tervux WhatsApp Bot running on port ${PORT}`);

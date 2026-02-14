@@ -5,7 +5,7 @@ export const creator = async (sock, m, args) => {
     // Load creator photo
     let creatorBuffer = null;
     try {
-        const creatorPath = join(process.cwd(), "assets", "creator.jpg");
+        const creatorPath = join(process.cwd(), "assets", "creator.jpeg");
         if (existsSync(creatorPath)) {
             creatorBuffer = readFileSync(creatorPath);
         }

@@ -1,6 +1,9 @@
 import axios from "axios";
+import { getCachedConfig } from "../../services/configService.js";
 
 export const lyrics = async (sock, m, args) => {
+    const config = getCachedConfig();
+    const p = config.prefix || "!";
     const query = args.join(" ");
 
     if (!query) {
@@ -8,8 +11,8 @@ export const lyrics = async (sock, m, args) => {
 ║   🎵 *𝕃𝕐ℝ𝕀ℂ𝕊 𝔽𝕀ℕ𝔻𝔼ℝ* 🎵           ║
 ╚══════════════════════════════════╝
 
-*Usage:* !lyrics <song name>
-*Example:* !lyrics Blinding Lights`;
+*Usage:* ${p}lyrics <song name>
+*Example:* ${p}lyrics Blinding Lights`;
     }
 
     try {
@@ -58,8 +61,8 @@ export const lyrics = async (sock, m, args) => {
 ❌ No lyrics found for "*${query}*"
 
 💡 *Tips:*
-• Try: *!lyrics Artist - Song Title*
-• Example: *!lyrics Ed Sheeran - Shape of You*
+• Try: *${p}lyrics Artist - Song Title*
+• Example: *${p}lyrics Ed Sheeran - Shape of You*
 • Check spelling of song/artist name`;
         }
 

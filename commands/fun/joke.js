@@ -1,4 +1,8 @@
+import { getCachedConfig } from "../../services/configService.js";
+
 export const joke = async (sock, m, args) => {
+    const config = getCachedConfig();
+    const p = config.prefix || "!";
     const jokes = [
         "Why don't scientists trust atoms? Because they make up everything!",
         "Parallel lines have so much in common. It's a shame they'll never meet.",
@@ -21,5 +25,5 @@ export const joke = async (sock, m, args) => {
 ${randomJoke}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🎭 Type *!joke* for another one!`;
+🎭 Type *${p}joke* for another one!`;
 };

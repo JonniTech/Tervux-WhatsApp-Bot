@@ -79,6 +79,7 @@ We hope to see you again! 💫
         enabled: false,
         action: "warn" // warn, kick, delete
     },
+    botEnabled: true,
     antispam: {
         enabled: false,
         maxMessages: 5,

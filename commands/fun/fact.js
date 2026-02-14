@@ -1,4 +1,8 @@
+import { getCachedConfig } from "../../services/configService.js";
+
 export const fact = async (sock, m, args) => {
+    const config = getCachedConfig();
+    const p = config.prefix || "!";
     const facts = [
         "Honey never spoils. You can eat honey from 3,000 years ago.",
         "Octopuses have three hearts and blue blood.",
@@ -23,5 +27,5 @@ export const fact = async (sock, m, args) => {
 ${randomFact}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📚 Type *!fact* for more knowledge!`;
+📚 Type *${p}fact* for more knowledge!`;
 };

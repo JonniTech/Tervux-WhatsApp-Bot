@@ -1,4 +1,8 @@
+import { getCachedConfig } from "../../services/configService.js";
+
 export const eightball = async (sock, m, args) => {
+    const config = getCachedConfig();
+    const p = config.prefix || "!";
     const question = args.join(" ");
 
     if (!question) {
@@ -8,7 +12,7 @@ export const eightball = async (sock, m, args) => {
 
 ❓ Ask me a yes/no question!
 
-*Usage:* !8ball Will I pass my exams?`;
+*Usage:* ${p}8ball Will I pass my exams?`;
     }
 
     const responses = [

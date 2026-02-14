@@ -1,6 +1,9 @@
 import axios from "axios";
+import { getCachedConfig } from "../../services/configService.js";
 
 export const news = async (sock, m, args) => {
+    const config = getCachedConfig();
+    const p = config.prefix || "!";
     try {
         // Primary API: Saurav Tech (NewsAPI wrapper)
         const response = await axios.get("https://saurav.tech/NewsAPI/top-headlines/category/general/us.json", { timeout: 10000 });

@@ -1,6 +1,9 @@
+import { getCachedConfig } from "../../services/configService.js";
 import axios from "axios";
 
 export const github = async (sock, m, args) => {
+    const config = getCachedConfig();
+    const p = config.prefix || "!";
     const username = args[0];
 
     if (!username) {
@@ -8,8 +11,8 @@ export const github = async (sock, m, args) => {
 ║   🐙 *𝔾𝕀𝕋ℍ𝕌𝔹 𝕃𝕆𝕆𝕂𝕌ℙ* 🐙           ║
 ╚══════════════════════════════════╝
 
-*Usage:* !github <username>
-*Example:* !github torvalds`;
+*Usage:* ${p}github <username>
+*Example:* ${p}github torvalds`;
     }
 
     try {

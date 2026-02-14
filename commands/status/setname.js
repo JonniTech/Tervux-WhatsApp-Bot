@@ -1,12 +1,17 @@
+import { getCachedConfig } from "../../services/configService.js";
+
 export const setname = async (sock, m, args) => {
     const name = args.join(" ");
+    const config = getCachedConfig();
+    const p = config.prefix || "!";
+
     if (!name) {
         return `╔══════════════════════════════════╗
 ║     👤 *𝕊𝔼𝕋 ℕ𝔸𝕄𝔼* 👤            ║
 ╚══════════════════════════════════╝
 
-📝 *𝕌𝕤𝕒𝕘𝕖:* !setname [name]
-📌 *𝔼𝕩𝕒𝕞𝕡𝕝𝕖:* !setname Tervux Bot
+📝 *𝕌𝕤𝕒𝕘𝕖:* ${p}setname [name]
+📌 *𝔼𝕩𝕒𝕞𝕡𝕝𝕖:* ${p}setname Tervux Bot
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Update your WhatsApp display name!`;

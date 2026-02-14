@@ -1,4 +1,5 @@
 import axios from "axios";
+import { getCachedConfig } from "../../services/configService.js";
 
 export const translate = async (sock, m, args) => {
     let targetLang = "en";
@@ -18,17 +19,20 @@ export const translate = async (sock, m, args) => {
         textToTranslate = quoted.conversation || quoted.extendedTextMessage?.text || quoted.imageMessage?.caption || quoted.videoMessage?.caption;
     }
 
+    const config = getCachedConfig();
+    const p = config.prefix || "!";
+
     if (!textToTranslate) {
         return `╔══════════════════════════════════╗
-║   🌐 *𝕋𝔼ℝ𝕍𝕌𝕏 𝕋ℝ𝔸ℕ𝕊𝕃𝔸𝕋𝕆ℝ* 🌐    ║
+║   🌐 *𝕋𝔼ℝ𝕏𝕌𝕏 𝕋ℝ𝔸ℕ𝕊𝕃𝔸𝕋𝕆ℝ* 🌐    ║
 ╚══════════════════════════════════╝
 
 📝 *𝕌𝕤𝕒𝕘𝕖:*
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-• *!translate* [text]
-• *!translate --fr* Hello
-• Reply to a message with *!translate*
+• *${p}translate* [text]
+• *${p}translate --fr* Hello
+• Reply to a message with *${p}translate*
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 📌 *𝕃𝕒𝕟𝕘𝕦𝕒𝕘𝕖 ℂ𝕠𝕕𝕖𝕤:*

@@ -1,12 +1,17 @@
+import { getCachedConfig } from "../../services/configService.js";
+
 export const qr = async (sock, m, args) => {
+    const config = getCachedConfig();
+    const p = config.prefix || "!";
+
     const text = args.join(" ");
     if (!text) {
         return `╔══════════════════════════════════╗
 ║     📱 *ℚℝ ℂ𝕆𝔻𝔼 𝕄𝔸𝕂𝔼ℝ* 📱       ║
 ╚══════════════════════════════════╝
 
-📝 *𝕌𝕤𝕒𝕘𝕖:* !qr [text/link]
-📌 *𝔼𝕩𝕒𝕞𝕡𝕝𝕖:* !qr https://example.com
+📝 *𝕌𝕤𝕒𝕘𝕖:* ${p}qr [text/link]
+📌 *𝔼𝕩𝕒𝕞𝕡𝕝𝕖:* ${p}qr https://example.com
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Generate QR codes for any text or URL!`;

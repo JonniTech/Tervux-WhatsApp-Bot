@@ -1,12 +1,16 @@
+import { getCachedConfig } from "../../services/configService.js";
+
 export const fancy = async (sock, m, args) => {
+    const config = getCachedConfig();
+    const p = config.prefix || "!";
     const text = args.join(" ");
     if (!text) {
         return `╔══════════════════════════════════╗
 ║     ✨ *𝔽𝔸ℕℂ𝕐 𝕋𝔼𝕏𝕋 𝕄𝔸𝕂𝔼ℝ* ✨     ║
 ╚══════════════════════════════════╝
 
-📝 *𝕌𝕤𝕒𝕘𝕖:* !fancy [your text]
-📌 *𝔼𝕩𝕒𝕞𝕡𝕝𝕖:* !fancy Tervux Bot
+📝 *𝕌𝕤𝕒𝕘𝕖:* ${p}fancy [your text]
+📌 *𝔼𝕩𝕒𝕞𝕡𝕝𝕖:* ${p}fancy Tervux Bot
 
 Convert any text to stylish fonts!`;
     }

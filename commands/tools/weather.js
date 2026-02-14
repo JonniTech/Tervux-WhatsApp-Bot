@@ -1,14 +1,17 @@
+import { getCachedConfig } from "../../services/configService.js";
 import axios from "axios";
 
 export const weather = async (sock, m, args) => {
+    const config = getCachedConfig();
+    const p = config.prefix || "!";
     const city = args.join(" ");
     if (!city) {
         return `╔══════════════════════════════════╗
 ║    🌤️ *𝕋𝔼ℝ𝕍𝕌𝕏 𝕎𝔼𝔸𝕋ℍ𝔼ℝ* 🌤️      ║
 ╚══════════════════════════════════╝
 
-📝 *𝕌𝕤𝕒𝕘𝕖:* !weather [city]
-📌 *𝔼𝕩𝕒𝕞𝕡𝕝𝕖:* !weather Nairobi
+📝 *𝕌𝕤𝕒𝕘𝕖:* ${p}weather [city]
+📌 *𝔼𝕩𝕒𝕞𝕡𝕝𝕖:* ${p}weather Nairobi
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Get real-time weather updates! 🌍`;

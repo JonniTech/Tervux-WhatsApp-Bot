@@ -1,3 +1,5 @@
+import { getCachedConfig } from "../../services/configService.js";
+
 const stages = {
     approach: {
         title: "🎯 HOW TO APPROACH HER",
@@ -48,6 +50,9 @@ export const crush = async (sock, m, args) => {
     const stage = args[0]?.toLowerCase();
     const validStages = Object.keys(stages);
 
+    const config = getCachedConfig();
+    const p = config.prefix || "!";
+
     if (!stage || !validStages.includes(stage)) {
         return `╔══════════════════════════════════╗
 ║   💘 *ℂℝ𝕌𝕊ℍ 𝔾𝕌𝕀𝔻𝔼* 💘              ║
@@ -55,16 +60,16 @@ export const crush = async (sock, m, args) => {
 
 Choose your stage, king 👑
 
-🎯 *!crush approach*
+🎯 *${p}crush approach*
 _How to approach her & make a first impression_
 
-📱 *!crush texting*
+📱 *${p}crush texting*
 _Master the art of texting her_
 
-💑 *!crush dating*
+💑 *${p}crush dating*
 _How to get closer & build connection_
 
-💗 *!crush confession*
+💗 *${p}crush confession*
 _How to tell her how you feel_
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -84,7 +89,7 @@ ${tipsText}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 📚 *Other stages:*
-${validStages.filter(v => v !== stage).map(v => `• *!crush ${v}*`).join("\n")}
+${validStages.filter(v => v !== stage).map(v => `• *${p}crush ${v}*`).join("\n")}
 
 _You got this, king_ 👑💪`;
 };

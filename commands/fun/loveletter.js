@@ -22,7 +22,11 @@ const closings = [
     "This is me being brave. This is me choosing love over fear. And this is me telling you — you are the most incredible person I've ever known. ✨"
 ];
 
+import { getCachedConfig } from "../../services/configService.js";
+
 export const loveletter = async (sock, m, args) => {
+    const config = getCachedConfig();
+    const p = config.prefix || "!";
     const name = args.join(" ") || "My Love";
     const intro = intros[Math.floor(Math.random() * intros.length)];
     const body = bodies[Math.floor(Math.random() * bodies.length)];
@@ -44,6 +48,6 @@ _Forever yours,_
 _Your Secret Admirer_ 🥀
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📋 *!loveletter <her name>*
+📋 *${p}loveletter <her name>*
 🔄 _Send again for a new letter_`;
 };

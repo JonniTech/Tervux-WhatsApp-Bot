@@ -1,6 +1,8 @@
-const diceEmojis = ["⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
+import { getCachedConfig } from "../../services/configService.js";
 
 export const dice = async (sock, m, args) => {
+    const config = getCachedConfig();
+    const p = config.prefix || "!";
     const count = Math.min(parseInt(args[0]) || 1, 6); // Max 6 dice
     const rolls = [];
     let total = 0;
@@ -23,6 +25,6 @@ ${rollDisplay}
 💯 *Total:* ${total}${count > 1 ? `\n📊 *Average:* ${(total / count).toFixed(1)}` : ""}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-💡 *!dice 3* → Roll 3 dice (max 6)
+💡 *${p}dice 3* → Roll 3 dice (max 6)
 _Roll again?_ 🔄`;
 };

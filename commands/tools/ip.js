@@ -1,6 +1,9 @@
 import axios from "axios";
+import { getCachedConfig } from "../../services/configService.js";
 
 export const ip = async (sock, m, args) => {
+    const config = getCachedConfig();
+    const p = config.prefix || "!";
     const target = args[0];
 
     if (!target) {
@@ -8,10 +11,10 @@ export const ip = async (sock, m, args) => {
 ║   🌐 *𝕀ℙ 𝕃𝕆𝕆𝕂𝕌ℙ* 🌐               ║
 ╚══════════════════════════════════╝
 
-*Usage:* !ip <address or domain>
+*Usage:* ${p}ip <address or domain>
 *Example:*
-• *!ip 8.8.8.8*
-• *!ip google.com*`;
+• *${p}ip 8.8.8.8*
+• *${p}ip google.com*`;
     }
 
     try {

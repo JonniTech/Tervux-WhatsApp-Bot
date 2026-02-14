@@ -135,7 +135,11 @@ const horoscopes = {
 
 const signs = Object.keys(horoscopes);
 
+import { getCachedConfig } from "../../services/configService.js";
+
 export const zodiac = async (sock, m, args) => {
+    const config = getCachedConfig();
+    const p = config.prefix || "!";
     const sign = args[0]?.toLowerCase();
 
     if (!sign || !horoscopes[sign]) {
@@ -148,13 +152,13 @@ export const zodiac = async (sock, m, args) => {
 ║   🔮 *ℤ𝕆𝔻𝕀𝔸ℂ ℍ𝕆ℝ𝕆𝕊ℂ𝕆ℙ𝔼* 🔮       ║
 ╚══════════════════════════════════╝
 
-*Usage:* !zodiac <sign>
+*Usage:* ${p}zodiac <sign>
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ${signList}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-*Example:* !zodiac leo`;
+*Example:* ${p}zodiac leo`;
     }
 
     const h = horoscopes[sign];

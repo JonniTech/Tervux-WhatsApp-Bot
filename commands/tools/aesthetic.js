@@ -37,7 +37,11 @@ function transform(text, map) {
     return text.split("").map(c => map[c] || map[c.toLowerCase()] || c).join("");
 }
 
+import { getCachedConfig } from "../../services/configService.js";
+
 export const aesthetic = async (sock, m, args) => {
+    const config = getCachedConfig();
+    const p = config.prefix || "!";
     const text = args.join(" ");
 
     if (!text) {
@@ -45,8 +49,8 @@ export const aesthetic = async (sock, m, args) => {
 ║   ✨ *𝔸𝔼𝕊𝕋ℍ𝔼𝕋𝕀ℂ 𝕋𝔼𝕏𝕋* ✨          ║
 ╚══════════════════════════════════╝
 
-*Usage:* !aesthetic <text>
-*Example:* !aesthetic hello world`;
+*Usage:* ${p}aesthetic <text>
+*Example:* ${p}aesthetic hello world`;
     }
 
     const vaporwave = transform(text, charMap);

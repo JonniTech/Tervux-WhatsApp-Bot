@@ -1,7 +1,9 @@
-import { updateConfig, invalidateConfigCache } from "../../services/configService.js";
+import { getCachedConfig, updateConfig, invalidateConfigCache } from "../../services/configService.js";
 
 // Helper for toggle commands
 const createToggle = (settingKey, displayName) => async (sock, m, args) => {
+    const config = getCachedConfig();
+    const p = config.prefix || "!";
     const value = args[0]?.toLowerCase();
 
     if (value !== "on" && value !== "off") {
@@ -9,8 +11,8 @@ const createToggle = (settingKey, displayName) => async (sock, m, args) => {
 ║         ❓ *ℍ𝔼𝕃ℙ* ❓             ║
 ╚══════════════════════════════════╝
 
-📝 *U𝕤𝕒𝕘𝕖:* !${displayName.toLowerCase().replace(/ /g, "")} on/off
-📌 *𝔼𝕩𝕒𝕞𝕡𝕝𝕖:* !${displayName.toLowerCase().replace(/ /g, "")} on`;
+📝 *U𝕤𝕒𝕘𝕖:* ${p}${displayName.toLowerCase().replace(/ /g, "")} on/off
+📌 *𝔼𝕩𝕒𝕞𝕡𝕝𝕖:* ${p}${displayName.toLowerCase().replace(/ /g, "")} on`;
     }
 
     const newValue = value === "on";

@@ -1,5 +1,6 @@
 import { loadGroupSettings, saveGroupSettings } from "./groupSettingsService.js";
 import { isAdmin, isBotAdmin, getGroupMetadata } from "../utils/groupUtils.js";
+import { getCachedConfig } from "./configService.js";
 
 /**
  * Handle Group Participants Update (Welcome/Goodbye)
@@ -10,7 +11,10 @@ export async function handleGroupParticipantsUpdate(sock, update) {
     // Only handle add/remove
     if (action !== "add" && action !== "remove") return;
 
-    console.log(`👥 [GroupEvent] Participants update: action=${action}, group=${id}, participants=${participants.join(", ")}`);
+    // Normalize participants (some Baileys versions send objects instead of JIDs)
+    const normalizedParticipants = (update.participants || []).map(p => typeof p === "string" ? p : p.id).filter(Boolean);
+
+    console.log(`👥 [GroupEvent] Participants update: action=${action}, group=${id}, participants=${normalizedParticipants.join(", ")}`);
 
     try {
         const settings = loadGroupSettings(id);
@@ -25,7 +29,7 @@ export async function handleGroupParticipantsUpdate(sock, update) {
         const groupName = metadata?.subject || "Group";
         const desc = metadata?.desc?.toString() || "";
 
-        for (const participant of participants) {
+        for (const participant of normalizedParticipants) {
             let messageText = "";
             let isWelcome = false;
 
@@ -81,14 +85,55 @@ export async function handleGroupMessage(sock, m) {
 
     const settings = loadGroupSettings(remoteJid);
 
+    // Check if bot is disabled for this group
+    if (settings.botEnabled === false) {
+        const config = getCachedConfig();
+        const p = config.prefix || "!";
+        const msgText = (m.message.conversation || m.message.extendedTextMessage?.text || "").toLowerCase().trim();
+
+        // Only allow !bot on to pass through
+        if (msgText === `${p}bot on`) {
+            return false;
+        }
+        return true; // Return true to "consume" the message and stop further processing in whatsappClient.js
+    }
+
     // 1. Antilink Check
     if (settings.antilink?.enabled) {
-        const msgText = m.message.conversation ||
+        const msgText = (
+            m.message.conversation ||
             m.message.extendedTextMessage?.text ||
-            m.message.imageMessage?.caption || "";
+            m.message.imageMessage?.caption ||
+            m.message.videoMessage?.caption ||
+            ""
+        ).toLowerCase();
 
-        // Check for WhatsApp links
-        if (msgText.includes("chat.whatsapp.com")) {
+        // Detect any URL using regex
+        const urlRegex = /(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/i;
+        const hasUrl = urlRegex.test(msgText);
+
+        if (hasUrl) {
+            // Whitelist check: Skip antilink for official domains
+            const whitelist = [
+                "tervux.com",
+                "www.tervux.com",
+                "github.com/JonniTech",
+                "github.com/tervux",
+                "instagram.com/tervux",
+                "wa.me/message/tervux",
+                "wa.me/255785046741",
+                "tervux.portfolio",
+                "nyaganya.tervux.com",
+                "github.com/JonniTech/Tervux-WhatsApp-Bot",
+                "nyaganyamalima47@gmail.com"
+            ];
+
+            const isWhitelisted = whitelist.some(domain => msgText.includes(domain));
+            if (isWhitelisted) {
+                console.log(`🛡️ [Antilink] Skipping whitelisted link in ${remoteJid}`);
+                return false;
+            }
+
             // Check if sender is admin (exempt)
             const senderIsAdmin = await isAdmin(sock, remoteJid, sender);
 
@@ -97,7 +142,6 @@ export async function handleGroupMessage(sock, m) {
 
                 // Check if bot is admin before trying to delete/kick
                 const botIsAdmin = await isBotAdmin(sock, remoteJid);
-
                 if (!botIsAdmin) {
                     await sock.sendMessage(remoteJid, {
                         text: `🚫 *Link Detected!* I need admin privileges to manage antilink.`
@@ -112,13 +156,13 @@ export async function handleGroupMessage(sock, m) {
                 if (settings.antilink.action === "kick") {
                     await sock.groupParticipantsUpdate(remoteJid, [sender], "remove");
                     await sock.sendMessage(remoteJid, {
-                        text: `🚫 *Link Detected!* @${sender.split("@")[0]} has been kicked.`,
+                        text: `🚫 *Link Detected!* @${sender.split("@")[0]} has been kicked for sharing links.`,
                         mentions: [sender]
                     });
                 } else {
-                    // Just warn
+                    // Warn/Delete mode (default)
                     await sock.sendMessage(remoteJid, {
-                        text: `⚠️ @${sender.split("@")[0]}, links are not allowed in this group!`,
+                        text: `⚠️ @${sender.split("@")[0]}, *links are not allowed* in this group! Your message has been deleted.`,
                         mentions: [sender]
                     });
                 }

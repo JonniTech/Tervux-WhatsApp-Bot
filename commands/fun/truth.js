@@ -1,3 +1,5 @@
+import { getCachedConfig } from "../../services/configService.js";
+
 export const truth = async (sock, m, args) => {
     const truths = [
         "Who is your secret crush in this group?",
@@ -14,6 +16,9 @@ export const truth = async (sock, m, args) => {
 
     const randomTruth = truths[Math.floor(Math.random() * truths.length)];
 
+    const config = getCachedConfig();
+    const p = config.prefix || "!";
+
     return `╔══════════════════════════════════╗
 ║    😇 *𝕋ℝ𝕌𝕋ℍ 𝕆ℝ 𝔻𝔸ℝ𝔼* 😇        ║
 ║        ━━ *𝕋ℝ𝕌𝕋ℍ* ━━              ║
@@ -25,5 +30,5 @@ export const truth = async (sock, m, args) => {
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ⚠️ *𝔹𝔼 ℍ𝕆ℕ𝔼𝕊𝕋!* No lying allowed!
-🎲 Use *!dare* if you're too scared`;
+🎲 Use *${p}dare* if you're too scared`;
 };

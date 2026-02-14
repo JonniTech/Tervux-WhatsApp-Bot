@@ -1,4 +1,5 @@
 import axios from "axios";
+import { getCachedConfig } from "../../services/configService.js";
 
 const categories = ["waifu", "neko", "shinobu", "megumin", "bully", "cuddle", "cry", "hug", "awoo", "kiss", "lick", "pat", "smug", "bonk", "yeet", "blush", "smile", "wave", "highfive", "handhold", "nom", "bite", "slap", "happy", "wink", "poke", "dance", "cringe"];
 
@@ -9,6 +10,9 @@ export const waifu = async (sock, m, args) => {
     // Validate category
     const type = categories.includes(category) ? category : "waifu";
     const isSFW = true; // Always SFW
+
+    const config = getCachedConfig();
+    const p = config.prefix || "!";
 
     try {
         const { data } = await axios.get(
@@ -37,7 +41,7 @@ waifu • neko • shinobu • megumin
 hug • kiss • pat • smile • wave
 dance • bonk • yeet • slap • wink
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-*Example:* !waifu neko
+*Example:* ${p}waifu neko
 _Send again for another_ 🔄`;
 
         await sock.sendMessage(chatJid, {

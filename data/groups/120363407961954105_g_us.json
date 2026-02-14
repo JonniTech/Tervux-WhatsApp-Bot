@@ -1,0 +1,26 @@
+{
+  "welcome": {
+    "enabled": true,
+    "message": "welcome @user karibu kwenye group"
+  },
+  "goodbye": {
+    "enabled": true,
+    "message": "╔══════════════════════════════════╗\n║  👋 *𝔾𝕆𝕆𝔻𝔹𝕐𝔼* 👋  ║\n╚══════════════════════════════════╝\n\n@user has left the group.\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nWe hope to see you again! 💫\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  },
+  "antilink": {
+    "enabled": true,
+    "action": "warn"
+  },
+  "botEnabled": false,
+  "antispam": {
+    "enabled": false,
+    "maxMessages": 5,
+    "timeWindow": 10
+  },
+  "groupAntiDelete": {
+    "enabled": false
+  },
+  "inviteCode": "LdIn3DgaLu7ImTErCb5iaD",
+  "lastKnownName": "Test Group",
+  "leftAt": "2026-02-14T12:20:19.174Z"
+}

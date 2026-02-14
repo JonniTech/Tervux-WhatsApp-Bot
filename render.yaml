@@ -8,18 +8,6 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
-      - key: PORT
-        value: 5000
-      - key: PHONE
+      - key: SESSION_ID
         sync: false
-      - key: PREFIX
-        value: "!"
-    # ⚠️ IMPORTANT: To keep your session active after restarts, you need a Persistent Disk.
-    # Disks are a paid feature on Render ($0.25/GB/mo).
-    # If you don't add a disk, you will need to scan QR code every time the bot deploys.
-    # To enable disk, uncomment the lines below and verify the mount path.
-    
-    # disk:
-    #   name: whatsapp-data
-    #   mountPath: /opt/render/project/src/auth_info
-    #   sizeGB: 1
+      

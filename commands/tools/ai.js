@@ -1,11 +1,15 @@
 import OpenAI from "openai";
+import { formatMarkdown } from "../../utils/markdownToWhatsApp.js";
+import { getCachedConfig } from "../../services/configService.js";
 
 const client = new OpenAI({
     apiKey: "4e9fb363e4f2431cab69e20da6ac7047.PVKzsV6Vz9wjDiRZ",
-    baseURL: "https://api.z.ai/api/paas/v4/"
+    baseURL: "https://open.bigmodel.cn/api/paas/v4/"
 });
 
 export const ai = async (sock, m, args) => {
+    const config = getCachedConfig();
+    const p = config.prefix || "!";
     const chatJid = m.key.remoteJid;
     const question = args.join(" ");
 
@@ -14,13 +18,13 @@ export const ai = async (sock, m, args) => {
 ║   🤖 *𝕋𝔼ℝ𝕍𝕌𝕏 𝔸𝕀* 🤖                ║
 ╚══════════════════════════════════╝
 
-*Usage:* !ai <your question>
+*Usage:* ${p}ai <your question>
 
 *Examples:*
-• *!ai* What is the meaning of life?
-• *!ai* Write a poem about love
-• *!ai* Explain quantum physics simply
-• *!ai* Help me with my homework
+• *${p}ai* What is the meaning of life?
+• *${p}ai* Write a poem about love
+• *${p}ai* Explain quantum physics simply
+• *${p}ai* Help me with my homework
 
 🧠 _Powered by Tervux AI_ ⚡`;
     }
@@ -32,11 +36,11 @@ export const ai = async (sock, m, args) => {
 
     try {
         const completion = await client.chat.completions.create({
-            model: "glm-4.6-flash",
+            model: "glm-4.7-flash",
             messages: [
                 {
                     role: "system",
-                    content: `You are Tervux AI, a helpful, friendly, and intelligent AI assistant built into a WhatsApp bot. You are created by Nyaganya Malima Nyaganya (aka Tervux). You answer questions clearly and concisely. Keep responses under 2000 characters for WhatsApp readability. Use emojis occasionally to be engaging. If asked about yourself, mention you are Tervux AI powered by advanced language models.`
+                    content: `You are Tervux AI, a helpful, friendly, and intelligent AI assistant built into a WhatsApp bot. You are created by Nyaganya Malima Nyaganya (aka Tervux). You answer questions clearly and concisely. Keep responses under 2000 characters for WhatsApp readability. Use emojis occasionally to be engaging. If asked about yourself, mention you are Tervux AI powered by advanced language models. Use standard Markdown for formatting (e.g., **bold** for importance, *italics* for emphasis, \`code\` for code snippets).`
                 },
                 {
                     role: "user",
@@ -51,10 +55,13 @@ export const ai = async (sock, m, args) => {
             return `❌ *AI returned no response.* Try again!`;
         }
 
+        // Format the reply for WhatsApp
+        const formattedReply = formatMarkdown(reply);
+
         // Trim if extremely long
-        const trimmed = reply.length > 3000
-            ? reply.substring(0, 3000) + "\n\n_...response trimmed for WhatsApp_ ✂️"
-            : reply;
+        const trimmed = formattedReply.length > 3000
+            ? formattedReply.substring(0, 3000) + "\n\n_...response trimmed for WhatsApp_ ✂️"
+            : formattedReply;
 
         return `╔══════════════════════════════════╗
 ║   🤖 *𝕋𝔼ℝ𝕍𝕌𝕏 𝔸𝕀* 🤖                ║
@@ -76,7 +83,7 @@ ${trimmed}
             return `⏱️ *AI took too long to respond.* Try again with a simpler question!`;
         }
 
-        return `❌ *AI Error:* ${err.message || "Something went wrong"}
+        return `❌ *Network Error:* ${err.message || "Something went wrong"}
 
 💡 _Try again in a moment._`;
     }
